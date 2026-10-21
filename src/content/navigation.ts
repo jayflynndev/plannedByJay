@@ -6,7 +6,7 @@ export const navigation = [
   { label: 'Home', href: '/' },
   { label: 'Explore Holidays', href: '/#holidays' },
   { label: 'Travel Advice', href: '/travel-advice' },
-  { label: 'Why Book With Jay?', href: '/#why-jay' },
+  { label: 'Why Book With Jay?', href: '/why-jay' },
 ];
 export const primaryNavigation = {
   label: 'Plan My Holiday',

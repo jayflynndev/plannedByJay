@@ -7,5 +7,5 @@ export function safeImageUrl(url: string, base: string) {
   return Boolean(base && url.startsWith(prefix) && mediaPattern.test(url.slice(prefix.length)));
 }
 export function articlePaths(slugs: string[]) {
-  return ['/travel-advice', '/sitemap.xml', ...new Set(slugs.map(slug => `/travel-advice/${slug}`))];
+  return ['/', '/travel-advice', '/sitemap.xml', ...new Set(slugs.map(slug => `/travel-advice/${slug}`))];
 }

@@ -10,7 +10,7 @@ export const dynamic = 'force-dynamic';
 export default function PlanMyHoliday() {
   const config = getEnquiryConfig();
   return (
-    <main id="main-content" className="enquiry-page">
+    <main id="main-content" tabIndex={-1} className="enquiry-page">
       <Container>
         <div className="enquiry-intro">
           <p className="eyebrow">{enquiryContent.eyebrow}</p>

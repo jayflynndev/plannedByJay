@@ -34,7 +34,7 @@ test('publishing validation, portable Markdown and failure messages do not hide 
   assert.throws(()=>databaseError({code:'23505'}),/already in use/);
   assert.throws(()=>databaseError({code:'40001'}),/another tab/);
   assert.throws(()=>databaseError({code:'unknown'}),/could not be saved/);
-  assert.deepEqual(articlePaths(['old-url','new-url','old-url']),['/travel-advice','/sitemap.xml','/travel-advice/old-url','/travel-advice/new-url']);
+  assert.deepEqual(articlePaths(['old-url','new-url','old-url']),['/','/travel-advice','/sitemap.xml','/travel-advice/old-url','/travel-advice/new-url']);
 });
 test('save failures never report success or invalidate public caches; successful changes invalidate the listing, sitemap and old URLs',async()=>{
   const input={...editorValue(null),title:'Test',slug:'test',body:'Text',author:'Editor',excerpt:'Description',status:'published'};
@@ -42,7 +42,7 @@ test('save failures never report success or invalidate public caches; successful
   const client={rpc:async()=>({data:{...input,id:admin,revision:1},error})} as unknown as SupabaseClient;
   await assert.rejects(saveArticle(client,input,(...args)=>paths.push(args)),/could not be saved/);assert.equal(paths.length,0);
   error=null;const saved=await saveArticle(client,input,(...args)=>paths.push(args));assert.equal(saved.status,'published');
-  assert.deepEqual(paths,[['/travel-advice'],['/sitemap.xml'],['/travel-advice/test'],['/travel-advice/[slug]','page']]);
+  assert.deepEqual(paths,[['/'],['/travel-advice'],['/sitemap.xml'],['/travel-advice/test'],['/travel-advice/[slug]','page']]);
 });
 test('real Supabase RPC transport consumes the explicit JSON object returned by the CMS transaction',async()=>{
   const input={...editorValue(null),title:'RPC article',slug:'rpc-article',body:'Markdown',excerpt:'A description',author:'Editor'};

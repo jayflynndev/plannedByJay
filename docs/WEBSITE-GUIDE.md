@@ -28,7 +28,7 @@ Open `src/content/home.ts`. Keep quotation marks and commas intact. The content 
 | Starting points | `home.paths.title` and `home.paths.items` |
 | Introduction to Jay | `home.why.title`, `description`, `closing`, `points` |
 | Holiday section | `home.holidays.title`, `description`, `items` |
-| Editorial section | `home.inspiration.title`, `description`, `items` |
+| Editorial heading/link | `home.inspiration.title`, `description`, `action`; cards come from published CMS articles |
 | Final invitation | `home.cta.title`, `description`, `button` |
 
 Section eyebrow labels are also editable. Avoid putting marketing text into components.
@@ -41,19 +41,21 @@ Section eyebrow labels are also editable. Avoid putting marketing text into comp
 4. Update `home.hero.imageAlt` to describe what is actually visible. Recommended size: about 1600 × 1800 pixels. It crops to a tall desktop frame and a broader mobile frame; keep the focal point near the centre.
 5. Save and check localhost on desktop and a narrow mobile viewport. If reusing a filename, refresh the browser; a new filename avoids stale image caches.
 
-Images are rendered using Next.js Image. No remote image requests are needed at runtime. Avoid huge originals; aim for under 500 KB where quality permits.
+Static website photographs are local Next.js Images. CMS editorial images use the existing dedicated Supabase editorial bucket and Next image optimisation. Avoid huge local originals; aim for under 500 KB where quality permits. Changing a local asset or content configuration requires a redeployment; CMS articles/images do not.
 
 ## Other images and Jay's portrait
 
-Category photographs live in `public/images/destinations/`; edit each `home.holidays.items[].src` and `alt`. Use 1200 × 900 (4:3) or larger. Editorial images live in `public/images/home/`; edit `home.inspiration.items[].image` and `alt`. Use around 1200 × 750 (16:10), with room to crop to 16:9 on mobile.
+Category photographs live in `public/images/destinations/`; edit each `home.holidays.items[].src` and `alt`. Use 1200 × 900 (4:3) or larger. Published editorial photographs are chosen in the CMS; use around 1200 × 750 (16:10), allowing a 16:9 crop on mobile. The old sample image files are retained, but sample cards are no longer rendered.
 
-Jay's portrait is deliberately a labelled placeholder, not a stock person. Add a real approved portrait to `public/images/home/jay.jpg`, then set `home.why.portrait` to `/images/home/jay.jpg` and update `portraitAlt`. About 1000 × 1200 works well. Keep the subject centred.
+Add Jay's genuine approved portrait as `public/images/jay/jay-portrait.jpg` or WebP. Use 1200 × 1500 (4:5), sRGB, with EXIF/location metadata removed. Set `home.why.portrait` to `/images/jay/jay-portrait.jpg`, update `portraitAlt`, and adjust `portraitPosition` (initially `50% 35%`). The photo fills/crops the existing desktop/mobile panel; keep face/shoulders clear of edges and check both sizes. Until supplied, the panel uses Planned by Jay typography with no pretend person or public setup notice. No JSX edit is needed. Redeploy after local asset/config changes.
+
+Official original artwork belongs in `public/images/brand/`; see that folder's README. In `site.logos` set each path and `approvedForDisplay` only after receiving permission and checking the brand's display rules. Logos use contain sizing, not cover cropping; never approximate regulatory artwork. A logo is not evidence of a membership number or protection terms.
 
 See `docs/IMAGE-ASSETS.md` for the development photography source register. Images illustrate holiday styles; they are not offers or evidence of destination accessibility.
 
 ## Changing navigation
 
-Edit `src/content/navigation.ts`. Each item has `label` and `href`; the prominent action is `primaryNavigation`, now pointing to `/plan-my-holiday`. Explore Holidays, Travel Advice and Why Jay still use homepage anchors. Footer links reuse this configuration. When a future page is ready, replace its anchor with the actual route. Homepage enquiry buttons are configured in `home.hero.primary`, `home.paths.items[].action`, `home.holidays.actionHref` and `home.cta.href`.
+Edit `src/content/navigation.ts`. Each item has `label` and `href`; `primaryNavigation` points to `/plan-my-holiday`. Travel Advice uses `/travel-advice`; Why Book With Jay uses `/why-jay`. Explore Holidays temporarily links to the existing homepage holiday-style section (`/#holidays`), not an unfinished destination catalogue. Footer links reuse this server-owned configuration. Homepage enquiry buttons live in `home.hero.primary`, `home.paths.items[].action`, `home.holidays.actionHref` and `home.cta.href`.
 
 ## Holiday category cards
 
@@ -61,13 +63,19 @@ In `home.holidays.items`, edit the title, description, src and alt of an object.
 
 ## Editorial previews
 
-Edit `home.inspiration.items`. Each object controls category, title, description, image and alt. Add or reorder complete objects. These are clearly labelled sample previews and deliberately have no article links. Once articles are commissioned and built, introduce real route properties and links in `TravelInspiration.tsx`. Do not present draft titles as published advice.
+Publish through `/admin` to add homepage articles. The latest three published articles (publication date, then update date) supply their title, excerpt, type, image, alt text and real article link. Drafts/archived articles and private notes are excluded. The homepage uses anonymous no-store reads and publishing invalidates `/`, so changes appear without redeployment. An empty/unavailable library hides the preview section, with no fabricated cards. Missing photographs use a neutral editorial panel. `home.inspiration.items` is retained legacy sample data and is not used by the website; do not edit it to publish articles.
+
+## Editing the Why Jay page
+
+`/why-jay` uses `src/content/why-jay.ts`: edit `introduction`, `background`, `priorities`, `steps` and CTA copy there. Keep claims grounded in Jay's supplied background; do not add years of travel-industry experience, lowest-price promises or invented testimonials. These source edits require redeployment. The homepage's shorter introduction remains `home.why`.
+
+The introduction reuses `/images/jay/jay-portrait.jpg` without duplicating the file. Change `portrait.src`, `portrait.alt` and `portrait.objectPosition` in `src/content/why-jay.ts` to update this page's photo, description or crop (horizontal then vertical percentages). The portrait sits beside the introduction on desktop and below it on smaller screens. Review the face/crop on both after changes; the homepage has its own crop settings. These source changes require redeployment.
 
 ## Contact, social and legal details
 
-Open `src/content/site.ts`. Set `site.contact.email` to an approved email string to show the public footer email link. Set `phone` to a real approved number to show a telephone link. The homepage enquiry buttons use the new holiday brief page independently of these public contact details. The private business notification address belongs in `.env.local`, not this content file. Update `site.contact.pending` before launch to reflect the actual availability of contact channels.
+`src/content/site.ts` now holds the supplied business email, trading relationship, New Travel company/VAT details and head-office address. Do not call the head office a registered office or claim independent Planned by Jay membership/licensing. The precise legal entity name/suffix and mandatory disclosure wording still need owner confirmation; the supplied trading name is used without guessing a suffix. Set `phone` only when an approved real number is supplied. Private notification configuration remains separate and unchanged. Empty phone/social fields are simply hidden.
 
-Add approved `{ label, href }` objects to `site.social` and `site.policies` only when their destinations exist. Replace the legal placeholder with approved wording, including the precise agency and protection information. Never infer membership numbers or protection guarantees. Confirm all public wording with the business before release.
+Add approved `{ label, href }` objects to `site.social` for actual profiles. Local policy routes `/privacy`, `/cookies`, `/booking-information` are prepared but return 404 until approved text exists in `src/content/policies.ts` and its `approved` flag is true. Approved populated policies enter footer/sitemap automatically. Keep external policy links in `site.policies` only when their destinations and wording are approved. Setting a policy flag is not privacy approval for enquiry submissions: retain the separate existing enquiry configuration/approval gates. See [PRIVACY-READINESS.md](PRIVACY-READINESS.md). All source/config edits require redeployment.
 
 ## Colours and fonts
 
@@ -75,7 +83,7 @@ Edit the `:root` tokens at the top of `src/app/globals.css`. `--ink`, `--paper`,
 
 ## Adding future pages
 
-The homepage and `/plan-my-holiday` are implemented. Next.js App Router uses folders: `src/app/travel-advice/page.tsx` creates `/travel-advice`. Export a page component and metadata. The shared layout automatically adds the navbar and footer. Store new copy in a separate content file, reuse UI components and document the page. Then change the relevant navigation href. Do not add other pages until requested.
+The homepage, `/why-jay`, enquiry and CMS/public travel-advice routes are implemented. Next.js App Router uses folders for routes; shared layout adds Navbar/Footer. Store editable copy in `src/content`, reuse UI components and document changes. The policy scaffolds remain unpublished until approved. No holiday-offers platform or dedicated Explore Holidays system is implemented.
 
 ## Connecting APIs later
 
@@ -83,7 +91,7 @@ Server-only service helpers live in `src/lib/`; route handlers in `src/app/api/<
 
 ## SEO and release preparation
 
-Edit `site.title` and `site.description` for homepage metadata. `src/app/layout.tsx` currently sets robots to noindex/nofollow because the site is unfinished. Change that only once ready for publication; then add the confirmed production origin and appropriate canonical/social metadata. No fictional domain is configured. Replace development contact, portrait, legal and policy placeholders, review photography rights and final alt text, and check mobile navigation before launch. Deployment requires your explicit approval.
+Edit `site.title` and `site.description` for homepage metadata; Why Jay metadata follows `src/content/why-jay.ts`. Canonicals use the existing SITE_URL/APP_ORIGIN helper: verify the public value is `https://plannedbyjay.com` in production. Root noindex/nofollow and CMS indexing gates remain unchanged pending launch approval. The sitemap includes `/why-jay`, only published articles and only approved populated policies. Review [JAY-LAUNCH-CHECKLIST.md](JAY-LAUNCH-CHECKLIST.md) before approving indexing or submissions. No deployment has been performed automatically.
 
 ## Troubleshooting
 
@@ -163,3 +171,10 @@ New references are six random digits, such as `PBJ-583742`, with no leading zero
 Before testing the updated form, manually apply **only** `supabase/migrations/20261013_friendly_enquiry_references.sql` to your existing Supabase project. Do not rerun the initial table-creation migration. Follow [ENQUIRY-REFERENCES.md](ENQUIRY-REFERENCES.md) for the exact SQL Editor steps and verification queries. Codex has not applied this migration to your project.
 
 Existing enquiries retain their original references, UUIDs, briefs, statuses and immutable notification emails. Existing duplicates return the original reference. New numbers are permanently reserved even after an enquiry is deleted; never remove reservation history. New confirmation and business email use the same accepted short reference. The Copy reference button uses browser clipboard access and offers a manual-copy message if it is unavailable.
+## Phase 5: personal voice and customer journey
+
+Homepage copy stays in `src/content/home.ts`; shared footer copy is `site.footerIntro` in `src/content/site.ts`. Keep the headline “Your holiday. Properly thought through.” Use I/me for Jay’s service and distinguish New Travel Holidays’ booking arrangements. Holiday styles and articles are browsing routes; the Holiday Brief is for someone planning a trip.
+
+The agreed Why Jay copy is in `src/content/why-jay.ts`. `introduction`, `background`, `prioritiesIntro` and each journey step’s `paragraphs` are arrays: keep each paragraph as a separate entry. Edit headings, priorities and CTA there, retaining the genuine quiz/community background and avoiding invented travel experience. The existing portrait and editable crop settings remain shared with the same image file, with separate page configuration.
+
+Enquiry labels/help/messages remain in `src/content/enquiry.ts`; public article introduction/CTA copy is in `src/content/cms.ts`. Copy edits do not authorise changing stored option values, validation, submission gates, privacy approval or CMS permissions. Local content edits need an owner-authorised redeployment; CMS article publishing does not.

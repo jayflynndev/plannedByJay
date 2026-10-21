@@ -4,6 +4,13 @@ import type { Article, Category, Media } from './schema';
 import { databaseError } from './security';
 export { databaseError } from './security';
 import { publicClient } from './client';
+import { cmsConfig } from './config';
+import { loadArticlePreviews } from './previews';
+export async function homepageArticlePreviews() {
+  const client=publicClient();const config=cmsConfig();if(!client||!config)return [];
+  try {return await loadArticlePreviews(client,config.url);}
+  catch {console.warn('Homepage article previews could not be loaded.');return [];}
+}
 export async function categories(client: SupabaseClient) {
   const result = await client.from('content_categories').select('*').order('name');
   databaseError(result.error); return result.data as Category[];

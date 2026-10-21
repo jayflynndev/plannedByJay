@@ -28,7 +28,7 @@ export default async function ArticlePage({params}:Props) {
   const structured={'@context':'https://schema.org','@type':'Article',headline:article.title,description:article.excerpt,
     author:{'@type':'Person',name:article.author},datePublished:article.published_at||undefined,dateModified:article.updated_at,
     mainEntityOfPage:article.canonical_url||`${publicOrigin()}/travel-advice/${article.slug}`,image:media?imageUrl(cmsConfig()!.url,media.storage_path):undefined};
-  return <main id="main-content" className="article-page"><p className="article-back"><Link href="/travel-advice">← All travel articles</Link></p>
+  return <main id="main-content" tabIndex={-1} className="article-page"><p className="article-back"><Link href="/travel-advice">← All travel articles</Link></p>
     <ArticleView article={article} media={media} mediaBase={cmsConfig()!.url} category={cats.find(cat=>cat.id===article.category_id)?.name}/>
     <script type="application/ld+json" dangerouslySetInnerHTML={{__html:JSON.stringify(structured).replace(/</g,'\\u003c')}}/>
   </main>;

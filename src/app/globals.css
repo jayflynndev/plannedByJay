@@ -8,3 +8,36 @@
 @media(max-width:767px){.container{padding:0 22px}.nav-container{min-height:80px}.brand>span{font-size:1.6rem}.hero{padding:40px 0 54px}.hero-grid,.why-grid{grid-template-columns:1fr}.hero-photo{height:440px;margin-top:15px;border-top-left-radius:110px}.hero-copy .eyebrow{max-width:280px}.hero h1{max-width:520px}.photo-stamp{right:-8px;width:105px;height:105px;font-size:1.15rem}.section{padding:60px 0}.paths-grid{grid-template-columns:1fr;gap:28px}.path{display:grid;grid-template-columns:40px 1fr;gap:0 15px}.path-number{grid-row:1/4}.path h3,.path p,.path a{grid-column:2}.path h3{font-size:1.5rem}.path a{max-width:400px}.portrait{min-height:360px;max-width:480px;width:100%}.holiday-grid{grid-template-columns:repeat(2,1fr);gap:28px 18px}.card-copy h3{font-size:1.4rem}.article-grid{grid-template-columns:1fr;gap:40px}.article-photo{aspect-ratio:16/9}.footer-grid{grid-template-columns:1fr 1fr}.footer-grid>div:first-child{grid-column:1/-1}.footer-bottom{flex-direction:column;gap:12px}}
 @media(max-width:479px){.holiday-grid{grid-template-columns:1fr}.hero-photo{height:370px}.button-row{align-items:stretch}.button{gap:20px;padding:14px 18px}.footer-grid{grid-template-columns:1fr}.footer-grid>div:first-child{grid-column:auto}h1{font-size:3.1rem}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;scroll-behavior:auto!important}}
+
+/* Phase 4: existing palette/layout, complete business information and editorial links. */
+.hero-photo,.card-photo,.article-photo{background:var(--sage)}
+.why-action,.inspiration-action{margin-top:28px}
+.article-preview-link{display:block;height:100%;border-radius:4px}
+.article-preview-link:hover h3{text-decoration:underline;text-underline-offset:5px}
+.article-photo-fallback{height:100%;display:grid;place-content:center;padding:24px;font-family:var(--font-heading);font-size:1.5rem;color:var(--ink);text-align:center}
+.article-read-label{display:flex;gap:15px;align-items:center;font-size:.85rem;font-weight:700;margin-top:20px;min-height:44px}
+.footer-contact{display:inline-flex;align-items:center;min-height:44px;font-size:.95rem;overflow-wrap:anywhere}
+.footer nav a,.footer-policies a{display:inline-flex;align-items:center;min-height:44px}
+.footer-social{margin-top:18px}.footer-policies{display:flex;flex-wrap:wrap;gap:12px 22px}
+.trust-information{border-top:1px solid var(--line);padding-top:24px;max-width:100%;overflow-wrap:anywhere}
+.trust-information p{font-size:.8rem;line-height:1.7;margin-bottom:8px}
+.trust-logos{display:flex;flex-wrap:wrap;align-items:center;gap:30px;margin-top:24px}
+.trust-logos img{object-fit:contain;width:auto;max-width:180px;height:70px}
+.why-page h1{max-width:900px;font-size:clamp(2.6rem,5.5vw,4.5rem)}
+.why-page .intro{max-width:780px;margin-top:24px}
+.why-page-background{padding-top:0}.why-page-background p{margin-top:22px;max-width:780px}
+.priorities-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:32px;margin-top:38px}
+.priorities-grid h3,.journey-steps h3{font-family:var(--font-heading);font-size:1.6rem;margin-bottom:12px;line-height:1.25}
+.priorities-grid p,.journey-steps p{max-width:620px}
+.journey-steps{list-style:none;padding:0;margin:36px 0 0;max-width:850px}
+.journey-steps li{display:flex;gap:26px;padding:26px 0;border-top:1px solid var(--line)}
+.journey-steps li>span{font-family:var(--font-heading);font-size:1.7rem;color:var(--accent);flex:0 0 42px}
+.policy-page .container{max-width:900px}.policy-page h1{font-size:clamp(2.5rem,5vw,4rem)}
+.policy-page section{margin-top:36px}.policy-page h2{font-size:1.8rem;margin-bottom:18px}.policy-page p{margin-top:16px}
+@media(max-width:767px){.priorities-grid{grid-template-columns:1fr;gap:26px}.why-page .section{padding-top:54px;padding-bottom:54px}.why-page-background.section{padding-top:0}.journey-steps li{gap:18px}.trust-logos{gap:20px}.trust-logos img{max-width:150px;height:60px}.portrait strong{max-width:240px;line-height:1.35}}
+.why-page-intro-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,380px);gap:clamp(32px,5vw,72px);align-items:center}
+.why-page-portrait{position:relative;width:100%;max-width:380px;aspect-ratio:4/5;background:var(--sage);overflow:hidden;border-radius:4px 4px 100px 4px}
+@media(max-width:900px){.why-page-intro-grid{grid-template-columns:1fr}.why-page-portrait{justify-self:center}}
+
+/* Paragraph spacing for Jay’s longer introduction and planning steps. */
+.why-page .intro p+p,.journey-steps p+p{margin-top:18px}

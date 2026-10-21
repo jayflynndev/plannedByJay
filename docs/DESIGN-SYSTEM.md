@@ -2,7 +2,15 @@
 
 The direction combines a calm editorial layout with a friendly, practical service. Photographs complement plain, readable copy. No carousels or animation libraries.
 
-## Phase 3 editorial and admin components
+## Phase 4 public completion
+
+The existing homepage structure and palette remain. The portrait panel shows genuine owner photography when configured, otherwise brand typography without a public setup notice. `SiteImage` retains the containing layout when a file is missing and retries a changed URL; no replacement person or unofficial logo is generated. Official artwork slots require explicit display approval and use contain sizing.
+
+`/why-jay` reuses Container, Button, section spacing and the sage/forest panels. Its four priorities form a two-column desktop grid and a single mobile column; numbered journey steps are a semantic ordered list. Text stays centrally editable. The footer adds a compact reusable trust-information block with clear New Travel attribution; no giant legal placeholder, empty social notice or unsupported protection promise is shown. Footer links have at least 44px targets. Public main landmarks accept programmatic focus so the existing skip link moves keyboard focus as well as scrolling.
+
+Homepage article cards use the latest published CMS title/excerpt/type and real article URL. Neutral type panels handle missing images; no sample cards appear in empty/unavailable libraries. Cards have visible keyboard focus, readable links and existing responsive image crops. Privacy/cookie/booking layouts exist behind approval gates and are not public draft notices. Mandatory enquiry safety warnings remain unchanged.
+
+## Phase 3 editorial and admin components (existing)
 
 `src/app/cms.css` uses the existing cream, forest, terracotta and sage tokens. Public articles have a 900px maximum width, a narrower 760px reading column, Georgia headings and 17–18px body text with generous spacing. The article title supplies H1; Markdown H1 is safely rendered as H2. Tables scroll inside their own keyboard-focusable region. Featured images retain their proportions; Next Image supplies responsive delivery and optimisation from the dedicated editorial bucket.
 
@@ -33,7 +41,7 @@ The content width is 1200px, including 28px side padding (22px mobile). Desktop 
 
 ## Components
 
-Buttons use clear labels, 3px corners and generous padding; coral is primary, outline secondary. Hover darkens backgrounds without movement. Cards use modest 4px corners and simple typography. Holiday images are 4:3; editorial images 16:10 desktop and 16:9 mobile. The hero has one arched corner and a small decorative stamp; the image is never behind the headline. Portrait placeholders are explicitly labelled.
+Buttons use clear labels, 3px corners and generous padding; coral is primary, outline secondary. Hover darkens backgrounds without movement. Cards use modest 4px corners and simple typography. Holiday images are 4:3; editorial images 16:10 desktop and 16:9 mobile. The hero has one arched corner and a small decorative stamp; the image is never behind the headline. The genuine portrait slot has a branded fallback rather than a public setup placeholder.
 
 ## Responsive behaviour
 

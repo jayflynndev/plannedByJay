@@ -56,7 +56,7 @@ export const enquiryContent = {
     description:
       'Tell Jay about your holiday ideas, dates, travellers and priorities in a simple three-stage holiday brief.',
   },
-  eyebrow: 'Your next holiday starts with a conversation',
+  eyebrow: 'Tell me what you’re planning',
   title: 'Let’s plan your holiday.',
   description:
     'Tell me a little about the holiday you’re planning. You don’t need to have everything worked out, but the more you can tell me about what matters to you, the better I can help.',
@@ -120,11 +120,11 @@ export const enquiryContent = {
     preferences:
       'Please keep this to holiday preferences. Don’t include passport, payment or detailed medical information.',
     requirements:
-      'This simply asks Jay to arrange a further private discussion. Please don’t share medical or disability details here.',
+      'This simply asks me to arrange a further private discussion. Please don’t share medical or disability details here.',
     phone:
       'Optional unless you prefer a telephone conversation. Include the country code for a non-UK number.',
     privacy:
-      'Your holiday brief and contact details will be stored securely for Jay to review, and a summary will be emailed to the business so Jay can respond to your enquiry. This form does not subscribe you to marketing.',
+      'Your holiday brief and contact details will be stored securely for Jay to review, and a summary will be emailed to the business so I can respond to your enquiry. This form does not subscribe you to marketing.',
     privacyPending:
       'Privacy policy: awaiting the approved page. This is a launch dependency.',
     privacyLink: 'Read the privacy policy',
@@ -162,14 +162,14 @@ export const enquiryContent = {
       'You can explore the holiday brief, but submissions aren’t open yet. Contact details and the privacy policy will be confirmed before launch.',
     errorsTitle: 'Please check the following details.',
     failure:
-      'We couldn’t confirm receipt of your brief. Your answers are still here. Please try again with the same details; this won’t create a second enquiry if the first attempt was received.',
+      'I couldn’t confirm receipt of your brief. Your answers are still here. Please try again with the same details; this won’t create a second enquiry if the first attempt was received.',
     conflict:
       'An earlier version of this brief may already have been received. Please restore your previous answers and retry, or contact Jay before sending another enquiry.',
     rateLimit:
       'There have been several enquiries from this session or email address recently. Please wait an hour before trying again.',
     session:
-      'We couldn’t prepare a secure submission. Check that cookies are allowed, then try again.',
-    spam: 'We couldn’t verify this submission. Please refresh the page and try again.',
+      'I couldn’t prepare a secure submission. Check that cookies are allowed, then try again.',
+    spam: 'I couldn’t verify this submission. Please refresh the page and try again.',
     successTitle: 'Thank you, your holiday enquiry has been received.',
     success:
       "I'll review the details you've provided and get back to you using your preferred contact method.",
