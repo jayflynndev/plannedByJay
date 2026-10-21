@@ -1,5 +1,9 @@
 # Application version and form-state investigation
 
+## Current deployment handling — 21 October 2026
+
+The custom source-derived deployment ID/hash salt described in the historical investigation below has been removed. Identical source reused the same custom ID on Vercel, which rejects IDs already assigned to another deployment. Next.js and Vercel now manage native build/deployment identities and asset hashes. See [VERCEL-DEPLOYMENT.md](VERCEL-DEPLOYMENT.md) for the confirmed cause, settings to verify and repeat-deployment checks. Server-owned navigation, the form's Fast Refresh reset and the development compiler-cache safeguard remain unchanged.
+
 ## What was observed and what is confirmed
 
 The owner reproduced an obsolete airport checklist and a Stage 3 error because `departurePreferences` was undefined. Earlier server browser logs also show old client markup against new HTML. Previous cache clearing and a navbar-only snapshot fix did not resolve the application-wide issue.
@@ -12,7 +16,7 @@ An obsolete visible checklist also requires an old client UI module, not just ol
 
 Official behaviour: [Fast Refresh preserves hook state and supports @refresh reset](https://nextjs.org/docs/architecture/fast-refresh); [deploymentId adds asset versioning and version-skew detection](https://nextjs.org/docs/app/api-reference/config/next-config-js/deploymentId).
 
-## Changes
+## Original investigation changes (historical; custom fingerprinting now removed)
 
 - `src/components/enquiry/EnquiryForm.tsx` includes the supported `// @refresh reset` directive. Code edits remount the development form rather than retaining an incompatible draft. This can clear an unfinished brief when a developer edits the component. Back/Continue/Edit retain answers normally; production interactions are unaffected.
 - `scripts/application-version.ts` creates a stable fingerprint from application source, configuration and dependency manifests. It does not read `.env` files or customer records. Identical source gives identical identity; source changes give a new identity.
@@ -23,7 +27,7 @@ Official behaviour: [Fast Refresh preserves hook state and supports @refresh res
 
 Supabase records, immutable email snapshots, provider credentials, schema validation, retry processing, rate limits and spam controls are unchanged.
 
-## Verification completed
+## Original investigation verification (historical)
 
 - All 19 tests, lint, TypeScript and a clean production build pass.
 - The state-lifecycle regression reproduces the missing departure field under retained state and validates fresh initialization after remount.
@@ -35,7 +39,7 @@ Supabase records, immutable email snapshots, provider credentials, schema valida
 
 1. Start one development server with `npm run dev`; no agent-owned dev server is running. Use its printed URL consistently.
 2. Load the new code once with a hard refresh. Then use ordinary refresh repeatedly on `/` and `/plan-my-holiday`.
-3. In DevTools, check `document.documentElement.dataset.dplId` and the `dpl=` query on script requests. They should identify the same application version. After changing source and restarting, a different version is expected.
+3. On Vercel, inspect framework-managed asset/navigation requests for the platform deployment query/header when Skew Protection is enabled. Local development no longer assigns a source-derived `pbj-…` identity, so do not require one in `dataset.dplId`. For local production, rebuild changed code before running `next start`.
 4. Complete Stage 1 and continue to Stage 2. There must be one optional “Where would you prefer to travel from?” text field and no airport checklist. Leave it blank, finish the brief and submit a controlled test only if your existing backend/privacy settings permit it. Inspect the POST payload: `brief.departurePreferences` must be the empty string, not absent or undefined. Check the real record/email separately for a genuine provider test.
 5. Confirm that normal refreshes and menu interactions emit no new hydration warnings. If the old interface still returns, inspect DevTools Application → Service Workers for this exact origin and Network for the script URL/response providing old code. Preserve those findings: they are needed to identify browser interception or a different application origin. No browser registrations were removed speculatively.
 

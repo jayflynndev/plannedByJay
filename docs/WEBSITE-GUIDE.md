@@ -154,7 +154,7 @@ Mobile safeguards include wrapping for long labels/errors/review text and action
 
 See [APPLICATION-VERSION.md](APPLICATION-VERSION.md) for the investigation, remaining browser-verification limit and exact checks. The enquiry form deliberately remounts during Fast Refresh code edits so an older draft cannot survive a field-shape change. This clears unfinished answers during development edits, but normal Back/Continue/Edit operations retain them. The optional departure field still starts as an empty string and strict validation is unchanged.
 
-Next's deployment identity and asset hash salt are derived from source and dependency files by `scripts/application-version.ts`; `.env` secrets are excluded. Restart your single dev server after source changes when testing ordinary browser refreshes. Persistent Turbopack development cache is disabled; no extra server or browser worker is created. Production uses the identity stored with its build, so rebuild before starting changed production code.
+Next.js and Vercel manage native build/deployment identities and asset hashes. The former source-derived custom ID was removed because redeploying unchanged code reused an ID already registered with Vercel. See [VERCEL-DEPLOYMENT.md](VERCEL-DEPLOYMENT.md) for the cause and Vercel settings to verify, including Skew Protection and system environment variables. Do not configure a fixed deployment-ID override. Persistent Turbopack development cache remains disabled, and the navigation/form hydration safeguards remain intact. Rebuild changed code before starting production; restart your single dev server when checking source changes. No extra server is needed.
 
 ## Friendly enquiry references
 
