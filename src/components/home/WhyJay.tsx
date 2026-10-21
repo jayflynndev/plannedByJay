@@ -1,0 +1,5 @@
+import Image from 'next/image';
+import { home } from '@/content/home';
+import { Container } from '@/components/ui/Container';
+/** Personal introduction and optional genuine portrait: src/content/home.ts → why. */
+export function WhyJay() { const content = home.why; return <section id="why-jay" className="section why"><Container className="why-grid"><div className="portrait">{content.portrait ? <Image src={content.portrait} alt={content.portraitAlt} fill sizes="(max-width: 767px) 90vw, 35vw"/> : <><span className="portrait-decoration" aria-hidden="true">J.</span><p className="portrait-label">{content.portraitLabel}</p><strong>{content.portraitPlaceholder}</strong><small>{content.portraitNote}</small></>}</div><div><p className="eyebrow">{content.eyebrow}</p><h2>{content.title}</h2><p className="intro">{content.description}</p><ul className="benefits">{content.points.map(point => <li key={point}><span aria-hidden="true">✓</span>{point}</li>)}</ul><p>{content.closing}</p></div></Container></section>; }

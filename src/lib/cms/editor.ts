@@ -1,0 +1,4 @@
+import type { ArticleInput, Article } from './schema';
+export function editorValue(article:Article|null,editorial?:{sources:string;notes:string}|null):ArticleInput {
+  return {id:article?.id||null,revision:article?.revision||0,title:article?.title||'',slug:article?.slug||'',excerpt:article?.excerpt||'',body:article?.body||'',content_type:article?.content_type||'Travel advice',category_id:article?.category_id||null,status:article?.status||'draft',featured_media_id:article?.featured_media_id||null,featured_alt:article?.featured_alt||'',seo_title:article?.seo_title||'',seo_description:article?.seo_description||'',canonical_url:article?.canonical_url||'',author:article?.author||'',research_date:article?.research_date||'',fact_checked_date:article?.fact_checked_date||'',review_date:article?.review_date||'',sources:editorial?.sources||'',notes:editorial?.notes||''};
+}

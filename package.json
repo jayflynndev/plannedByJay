@@ -1,0 +1,45 @@
+{
+  "name": "planned-by-jay",
+  "version": "0.1.0",
+  "private": true,
+  "engines": { "node": ">=22.13.0" },
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "test:server": "node --conditions=react-server --import tsx --test tests/enquiries.test.ts tests/navigation-config.test.ts tests/enquiry-references.test.ts tests/cms.test.ts",
+    "test:form": "node --import tsx --test tests/enquiry-form.test.tsx tests/cms-editor.test.tsx",
+    "test": "npm run test:server && npm run test:form"
+  },
+  "dependencies": {
+    "@supabase/ssr": "0.12.7",
+    "@supabase/supabase-js": "2.117.3",
+    "next": "16.4.0",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "react-markdown": "10.1.0",
+    "rehype-sanitize": "6.0.0",
+    "remark-gfm": "4.0.1",
+    "server-only": "0.0.1",
+    "sharp": "0.35.5",
+    "zod": "4.6.6"
+  },
+  "devDependencies": {
+    "@electric-sql/pglite": "0.5.9",
+    "@tailwindcss/postcss": "4.3.3",
+    "@testing-library/react": "16.3.3",
+    "@testing-library/user-event": "14.6.7",
+    "@types/jsdom": "30.0.0",
+    "@types/node": "20.19.43",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "eslint": "9.39.5",
+    "eslint-config-next": "16.4.0",
+    "jsdom": "26.1.0",
+    "tailwindcss": "4.3.3",
+    "tsx": "4.23.15",
+    "typescript": "6.0.3"
+  }
+}
