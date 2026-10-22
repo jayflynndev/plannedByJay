@@ -6,6 +6,27 @@ const dom=new JSDOM('<!doctype html><html><body></body></html>',{url:'http://loc
 Object.assign(globalThis,{window:dom.window,self:dom.window,document:dom.window.document,HTMLElement:dom.window.HTMLElement,Node:dom.window.Node,MutationObserver:dom.window.MutationObserver});
 Object.defineProperty(globalThis,'navigator',{value:dom.window.navigator,configurable:true});
 
+test('holiday landing, six shared pages and homepage cards render meaningful routes with accessible headings and real related reading only',async()=>{
+  const {render,cleanup}=await import('@testing-library/react');
+  const {HolidayLanding,HolidayTypePage}=await import('../src/components/holidays/HolidayPages');
+  const {HolidayExperiences}=await import('../src/components/home/HolidayExperiences');
+  const {holidayTypes}=await import('../src/content/holiday-types');
+  try {
+    const landing=render(<HolidayLanding/>);assert.equal(landing.getAllByRole('heading',{level:1}).length,1);
+    for(const item of holidayTypes)assert.ok(landing.container.querySelector(`a[href="/holidays/${item.slug}"]`));cleanup();
+    const home=render(<HolidayExperiences/>);assert.equal(home.container.querySelectorAll('a[href^="/holidays/"]').length,6);assert.equal(home.container.querySelector('a[href="/plan-my-holiday"]'),null);cleanup();
+    for(const item of holidayTypes){
+      const page=render(<HolidayTypePage holiday={item}/>);
+      assert.equal(page.getAllByRole('heading',{level:1}).length,1);assert.ok(page.getByRole('heading',{level:1,name:item.headline}));
+      assert.equal(page.getByRole('link',{name:'Plan My Holiday'}).getAttribute('href'),'/plan-my-holiday');
+      assert.equal(page.queryByText('Useful reading for this kind of holiday'),null);
+      assert.equal(page.container.querySelectorAll('details summary').length,item.questions.length);cleanup();
+    }
+    const related=render(<HolidayTypePage holiday={holidayTypes[0]} articles={[{id:'fixture',title:'A real published guide',slug:'published-guide',excerpt:'Useful advice',content_type:'Travel advice',image:null}]}/>);
+    assert.ok(related.getByRole('link',{name:/A real published guide/}));assert.ok(related.getByRole('heading',{name:'Useful reading for this kind of holiday'}));
+  } finally{cleanup();}
+});
+
 test('public discovery has labelled GET filters, shared pagination, reset, empty and unavailable states',async()=>{
   const {render,cleanup}=await import('@testing-library/react');
   const {ArticleDiscovery}=await import('../src/components/cms/ArticleDiscovery');

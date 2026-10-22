@@ -1,0 +1,25 @@
+import Link from 'next/link';
+import { Container } from '@/components/ui/Container';
+import { Button } from '@/components/ui/Button';
+import { SiteImage } from '@/components/ui/SiteImage';
+import { holidayDiscovery as copy, holidayTypes, holidayType, type HolidayType } from '@/content/holiday-types';
+import type { ArticlePreview } from '@/lib/cms/previews';
+export function HolidayGrid(){return <div className="holiday-grid">{holidayTypes.map(item=><Link className="holiday-card" key={item.slug} href={`/holidays/${item.slug}`}><div className="card-photo"><SiteImage src={item.image.src} alt={item.image.alt} fill sizes="(max-width:479px) 100vw, (max-width:767px) 50vw, 33vw" style={{objectPosition:item.image.position}} fallback={<span className="article-photo-fallback">{copy.imageFallback}</span>}/></div><div className="card-copy"><h2>{item.title}</h2><span aria-hidden="true">↗</span><p>{item.summary}</p></div><span className="article-read-label">{copy.browseLabel} {item.title} <span aria-hidden="true">↗</span></span></Link>)}</div>;}
+export function HolidayLanding(){return <main id="main-content" tabIndex={-1} className="holiday-page"><section className="section"><Container><header className="holiday-intro"><p className="eyebrow">{copy.title}</p><h1>{copy.headline}</h1><p className="intro">{copy.description}</p></header><HolidayGrid/></Container></section><section className="section why"><Container><div className="holiday-narrow"><h2>{copy.serviceTitle}</h2><p className="intro">{copy.serviceBody}</p><Button {...copy.action}/></div></Container></section></main>;}
+export function RelatedHolidayReading({articles}:{articles:ArticlePreview[]}){
+  if(!articles.length)return null;
+  return <section className="section inspiration"><Container><div className="section-heading"><h2>{copy.readingTitle}</h2><p className="intro">{copy.readingBody}</p></div><div className="article-grid">{articles.map(item=><article key={item.id}><Link className="article-preview-link" href={`/travel-advice/${item.slug}`}><div className="article-photo"><SiteImage src={item.image?.src||null} alt={item.image?.alt||''} fill sizes="(max-width:767px) 100vw,33vw" fallback={<span className="article-photo-fallback" aria-hidden="true">{item.content_type}</span>}/></div><p className="eyebrow">{item.content_type}</p><h3>{item.title}</h3><p>{item.excerpt}</p><span className="article-read-label">{copy.readLabel} <span aria-hidden="true">↗</span></span></Link></article>)}</div></Container></section>;
+}
+export function HolidayTypePage({holiday,articles=[]}:{holiday:HolidayType;articles?:ArticlePreview[]}){
+  const others=holiday.alsoExplore.flatMap(slug=>{const item=holidayType(slug);return item?[item]:[];});
+  return <main id="main-content" tabIndex={-1} className="holiday-page"><section className="section holiday-hero"><Container><Link className="holiday-back" href="/holidays">← {copy.backLabel}</Link><div className="holiday-hero-grid"><header><p className="eyebrow">{holiday.title}</p><h1>{holiday.headline}</h1><p className="intro">{holiday.description}</p></header><div className="holiday-hero-photo"><SiteImage src={holiday.image.src} alt={holiday.image.alt} fill sizes="(max-width:767px) calc(100vw - 44px),45vw" style={{objectPosition:holiday.image.position}} fallback={<span className="article-photo-fallback">{copy.imageFallback}</span>}/></div></div></Container></section>
+    <section className="section holiday-explanation"><Container><div className="holiday-narrow">{holiday.introduction.map(item=><div className="holiday-copy-block" key={item.title}><h2>{item.title}</h2><p>{item.body}</p></div>)}</div></Container></section>
+    <section className="section why"><Container><h2>{copy.considerationsTitle}</h2><div className="holiday-planning-grid">{holiday.considerations.map(item=><div key={item.title}><h3>{item.title}</h3><p>{item.body}</p></div>)}</div></Container></section>
+    <section className="section"><Container><h2>{copy.ideasTitle}</h2><div className="holiday-ideas-grid">{holiday.ideas.map(item=><div key={item.title}><h3>{item.title}</h3><p>{item.body}</p></div>)}</div></Container></section>
+    <section className="section holiday-questions"><Container><div className="holiday-narrow"><h2>{copy.questionsTitle}</h2>{holiday.questions.map(item=><details key={item.title}><summary>{item.title}</summary><p>{item.body}</p></details>)}</div></Container></section>
+    <RelatedHolidayReading articles={articles}/>
+    <section className="section holiday-further"><Container><Link className="holiday-library-link" href="/travel-advice">{copy.readingLink} <span aria-hidden="true">↗</span></Link>{others.length>0&&<nav aria-label={copy.alsoTitle}><h2>{copy.alsoTitle}</h2><div className="button-row">{others.map(item=><Button key={item.slug} label={item.title} href={`/holidays/${item.slug}`} secondary/>)}</div></nav>}</Container></section>
+    {/* Future authorised offers would be a separate component here, not editorial cards. */}
+    <section className="section cta"><Container><h2>{holiday.cta.title}</h2><p className="intro">{holiday.cta.body}</p><Button {...holiday.cta.action}/></Container></section>
+  </main>;
+}

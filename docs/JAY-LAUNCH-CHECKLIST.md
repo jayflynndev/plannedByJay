@@ -1,5 +1,13 @@
 # Jay's launch checklist
 
+## Phase 7: holiday discovery
+
+- [x] Added `/holidays` and six configuration-driven guides: family, cruises, couples, city breaks, something different and accessible travel. Existing homepage card photography/layout retained; cards and navbar/footer now lead to guides.
+- [x] Added bounded anonymous published-only related CMS reading, deduplication, safe empty/failure states, unique metadata, sitemap entries, cross-links and one final Holiday Brief action per guide. No offers, prices, new dependency/migration, enquiry changes or policy/indexing activation.
+- [x] Owner editing, taxonomy matching and shared photograph/crop instructions: [HOLIDAY-PAGES-GUIDE.md](HOLIDAY-PAGES-GUIDE.md).
+- [x] 57 tests, lint, TypeScript and production build passed. Seven production routes/unknown-slug 404 checked; all seven layouts and synthetic populated related cards measured at 375/390/440/768/1280px without overflow. Anonymous hosted CMS reads succeeded with no matching reading yet. See the owner guide for evidence limits.
+- [ ] Owner release review: check distinct copy, existing photograph licences/crops and actual hosted related-article tagging/publishing/unpublishing. Existing public launch/enquiry/privacy approvals remain separate. No deployment is authorised or performed by this checklist.
+
 ## Phase 6: article discovery
 
 - [x] Added bounded indexed server-side search, URL-based type/category/tag filters, Reset, pagination and distinct failure/empty states within the existing Travel Advice design.
@@ -32,7 +40,7 @@ Phase 4 prepares the existing site for owner review. No deployment, live-enquiry
 
 - [x] Retained the headline and six-purpose homepage structure, forest/cream/sage/terracotta identity. Public setup messages/sample article cards replaced or hidden: `src/content/home.ts`, `src/components/home/`, `src/app/page.tsx`.
 - [x] Added centrally editable `/why-jay`, including supplied background, whole-holiday priorities, five-stage customer journey and enquiry CTA: `src/content/why-jay.ts`, `src/app/why-jay/page.tsx`.
-- [x] Navigation now links to Why Jay and Travel Advice. Explore Holidays explicitly stays the homepage style section: `src/content/navigation.ts`.
+- [x] Navigation links to Why Jay, Travel Advice and the Phase 7 `/holidays` landing page: `src/content/navigation.ts`.
 - [x] Added supplied trading/contact/company/VAT/head-office information, without independent licensing/protection claims: `src/content/site.ts`, `src/components/layout/TrustInformation.tsx`, `Footer.tsx`.
 - [x] Homepage retrieves up to three published articles through the existing anonymous CMS access boundary, with narrow field projection and missing-image/empty/error fallbacks: `src/lib/cms/previews.ts`, `data.ts`, `TravelInspiration.tsx`. Publishing invalidates `/` as well as existing article routes/sitemap. No redeployment needed for CMS article edits.
 - [x] Prepared real portrait/approved-logo slots and safe image-failure handling: `public/images/jay/README.md`, `public/images/brand/README.md`, `src/components/ui/SiteImage.tsx`.
@@ -72,7 +80,7 @@ An empty article library or missing optional social profile is not itself a tech
 
 - Social profile links and a fuller biography if useful.
 - Additional researched articles/photography, occasional accessibility/performance review and editorial review-date maintenance.
-- A future dedicated Explore Holidays page if it helps customers; do not confuse styles with bookable offers.
+- Maintain the new Explore Holidays guides as planning information; keep any future authorised supplier offers separate from editorial reading.
 - Decide separately whether an offers database, supplier feed or LateCards is appropriate. None is implemented now; it is not a launch dependency.
 - Analytics or additional media formats only after a deliberate purpose/privacy review; no tracking added simply to fill a checklist.
 

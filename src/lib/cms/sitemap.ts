@@ -2,6 +2,7 @@ import 'server-only';
 import type { MetadataRoute } from 'next';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { z } from 'zod';
+import { holidayTypes } from '@/content/holiday-types';
 
 const entry = z.object({
   slug: z.string().max(140).regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/),
@@ -28,6 +29,7 @@ export async function buildPublicSitemap(
 ): Promise<MetadataRoute.Sitemap> {
   const stable: MetadataRoute.Sitemap = [
     { url: origin }, { url: `${origin}/why-jay` }, { url: `${origin}/travel-advice` },
+    { url: `${origin}/holidays` }, ...holidayTypes.map(item=>({url:`${origin}/holidays/${item.slug}`})),
     ...policyLinks.map(policy => ({ url: `${origin}${policy.href}` })),
   ];
   try {

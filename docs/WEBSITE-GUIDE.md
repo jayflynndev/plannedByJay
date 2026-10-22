@@ -1,5 +1,9 @@
 # Your Planned by Jay website
 
+## Phase 7: Explore Holidays
+
+`/holidays` and six reusable holiday-style guides now help visitors explore before enquiring. Navbar/footer Explore Holidays links open the landing page; the existing six homepage cards open their respective `/holidays/…` guides without changing the homepage design. Edit wording, photographs, crops, related taxonomy and final actions in `src/content/holiday-types.ts`. See [HOLIDAY-PAGES-GUIDE.md](HOLIDAY-PAGES-GUIDE.md) for exact editing/addition instructions and image dimensions. Config/asset changes need redeployment; tagging and publishing related CMS articles do not. No offers system, new migration or enquiry preselection is included. Existing enquiry/indexing/policy gates remain unchanged.
+
 ## Phase 6: article discovery and placement
 
 Use the existing article editor's **Discovery & Placement** section to manage reusable tags, homepage featuring and Travel Advice pinning, then save/publish without code or redeployment. Up to eight tags per article and 100 reusable labels overall; destinations/regions can be tags. Unticking removes an association, not the article. Featuring and pinning are independent and public only for published articles. The homepage shows up to three featured articles, or the latest published fallback; pins must match active filters.
@@ -65,7 +69,7 @@ See `docs/IMAGE-ASSETS.md` for the development photography source register. Imag
 
 ## Changing navigation
 
-Edit `src/content/navigation.ts`. Each item has `label` and `href`; `primaryNavigation` points to `/plan-my-holiday`. Travel Advice uses `/travel-advice`; Why Book With Jay uses `/why-jay`. Explore Holidays temporarily links to the existing homepage holiday-style section (`/#holidays`), not an unfinished destination catalogue. Footer links reuse this server-owned configuration. Homepage enquiry buttons live in `home.hero.primary`, `home.paths.items[].action`, `home.holidays.actionHref` and `home.cta.href`.
+Edit `src/content/navigation.ts`. Each item has `label` and `href`; `primaryNavigation` points to `/plan-my-holiday`. Travel Advice uses `/travel-advice`, Why Book With Jay uses `/why-jay` and Explore Holidays uses `/holidays`. Footer links reuse this server-owned configuration. Homepage enquiry buttons live in `home.hero.primary`, `home.paths.items[].action` and `home.cta.href`. The six holiday cards now use their individual `href` values in `home.holidays.items` and lead to planning guides.
 
 ## Holiday category cards
 
@@ -93,7 +97,7 @@ Edit the `:root` tokens at the top of `src/app/globals.css`. `--ink`, `--paper`,
 
 ## Adding future pages
 
-The homepage, `/why-jay`, enquiry and CMS/public travel-advice routes are implemented. Next.js App Router uses folders for routes; shared layout adds Navbar/Footer. Store editable copy in `src/content`, reuse UI components and document changes. The policy scaffolds remain unpublished until approved. No holiday-offers platform or dedicated Explore Holidays system is implemented.
+The homepage, `/why-jay`, enquiry, CMS/public travel-advice and `/holidays` routes are implemented. Next.js App Router uses folders for routes; shared layout adds Navbar/Footer. Store editable copy in `src/content`, reuse UI components and document changes. Policies retain their separate approval guards. Explore Holidays contains editorial planning guides; no holiday-offers platform is implemented.
 
 ## Connecting APIs later
 

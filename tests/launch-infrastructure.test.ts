@@ -25,7 +25,7 @@ test('sitemap selects only public metadata, includes published URLs, handles emp
   assert.ok(normal.some(row=>row.url.endsWith('/booking-information')));
   assert.equal(requests[0].searchParams.get('select'),'slug,updated_at,status');
   assert.equal(requests[0].searchParams.get('status'),'eq.published');
-  mode='empty'; const empty=await run(); assert.equal(empty.length,4); assert.equal(logs.length,0);
+  mode='empty'; const empty=await run(); assert.equal(empty.length,11); assert.equal(logs.length,0);
   mode='outage'; assert.deepEqual(await run(),empty); assert.equal(logs.pop(),'sitemap_stable_only:cms_query_failed');
   mode='draft'; assert.deepEqual(await run(),empty); assert.equal(logs.pop(),'sitemap_stable_only:cms_unavailable');
   await buildPublicSitemap('https://plannedbyjay.com',[],()=>loadSitemapArticles(null),code=>logs.push(code));

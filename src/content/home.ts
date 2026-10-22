@@ -69,41 +69,46 @@ export const home = {
     title: "Find your kind of holiday.",
     description:
       "Browse the styles below for ideas. If you’re planning a trip, tell me which appeals and I’ll research suitable options. These aren’t ready-made offers.",
-    actionLabel: "Discuss this kind of holiday",
-    actionHref: "/plan-my-holiday",
+    actionLabel: "Explore",
     items: [
       {
         title: "Family Holidays",
+        href: "/holidays/family",
         description: "Time together, with room for everyone.",
         src: "/images/destinations/family.jpg",
         alt: "Sunlit beach and turquoise sea",
       },
       {
         title: "Cruises",
+        href: "/holidays/cruises",
         description: "Compare itineraries, time ashore and what’s included.",
         src: "/images/destinations/cruise.jpg",
         alt: "Gentle ocean waves beneath a pale sky",
       },
       {
         title: "Couples Escapes",
+        href: "/holidays/couples",
         description: "A little time just for the two of you.",
         src: "/images/destinations/couples.jpg",
         alt: "Modern white villa with a sunlit swimming pool",
       },
       {
         title: "City Breaks",
+        href: "/holidays/city-breaks",
         description: "Think about location, getting around and time to explore.",
         src: "/images/destinations/city.jpg",
         alt: "Historic European city architecture beside a canal",
       },
       {
         title: "Something Different",
+        href: "/holidays/something-different",
         description: "Touring, several stops or a different way to get away.",
         src: "/images/destinations/different.jpg",
         alt: "Mountain landscape stretching into the distance",
       },
       {
         title: "Accessible Travel",
+        href: "/holidays/accessible",
         description: "Start with what works for you.",
         src: "/images/destinations/accessible.jpg",
         alt: "Open coastal landscape beside calm water; illustrative destination photograph",
