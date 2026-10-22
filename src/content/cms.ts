@@ -1,4 +1,5 @@
-// EDIT HERE: available editorial formats. Keep matching database CHECK values.
+// Initial/fixture formats only. Live choices come from public.content_types;
+// create additional formats through the article editor, not this array.
 export const contentTypes = ['Travel advice', 'Destination guide', 'Holiday comparison', 'Blog', 'Wish You Were Here', 'Inspiration'] as const;
 export const articleStatuses = ['draft', 'published', 'archived'] as const;
 // EDIT HERE: discovery labels/help. Tag names themselves are managed in the CMS.

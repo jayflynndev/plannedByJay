@@ -125,5 +125,28 @@ test('actual discovery migration: indexed title/body/tag search, filters, pinnin
     for(let i=count;i<100;i++)await tag(`Registry fixture ${i}`);
     await assert.rejects(tag('One too many'),/100-tag limit/);
     assert.equal((await tag('japan')).id,japan.id,'existing tag still reusable at registry limit');
+    const originalArticles=(await db.query('select * from public.content_articles order by id')).rows;
+    await db.exec(await readFile('supabase/migrations/20261024_inline_classification.sql','utf8'));
+    assert.deepEqual((await db.query('select * from public.content_articles order by id')).rows,originalArticles,'classification migration leaves every article field unchanged');
+    const classification=async(kind:string,name:string)=>(await as<{item:{id?:string;name:string}}>('authenticated',admin,'select public.cms_create_classification($1,$2) item',[kind,name])).rows[0].item;
+    const category=await classification('category','  Rail   journeys ');
+    assert.deepEqual(await classification('category','RAIL JOURNEYS'),category);
+    const custom=await classification('content-type',' Rail itinerary ');
+    assert.deepEqual(await classification('content-type','RAIL ITINERARY'),custom);
+    await db.query("select set_config('request.jwt.claim.sub',$1,false)",[admin]);
+    await Promise.all(['Concurrent type','concurrent TYPE'].map(name=>db.query("select public.cms_create_classification('content-type',$1)",[name])));
+    await db.query("select set_config('request.jwt.claim.sub','',false)");
+    assert.equal((await db.query("select * from public.content_types where normalised_name='concurrent type'")).rows.length,1);
+    await assert.rejects(as('anon','','select public.cms_create_classification($1,$2)',['category','Forbidden']),/permission denied/);
+    await assert.rejects(as('authenticated',ordinary,'select public.cms_create_classification($1,$2)',['content-type','Forbidden']),/Administrator access/);
+    await assert.rejects(as('authenticated',ordinary,"insert into public.content_types(name) values('Bypass')"),/permission denied/);
+    await assert.rejects(db.query("insert into public.content_types(name) values('rail ITINERARY')"),/unique constraint/);
+    await assert.rejects(db.query("insert into public.content_categories(name) values('rail journeys')"),/already exists/);
+    await assert.rejects(classification('content-type',' '),/1 to 80/);
+    await assert.rejects(classification('unexpected','Name'),/Invalid classification/);
+    const fresh=await save({title:'Rail journey',slug:'rail-journey',content_type:custom.name,category_id:category.id});
+    assert.equal((await search('',custom.name)).articles[0].id,fresh.id);
+    await assert.rejects(save({slug:'unsupported-type',content_type:'Unregistered type'}),/foreign key constraint/);
+    assert.equal((await as('anon','','select name from public.content_types where name=$1',[custom.name])).rows.length,1);
   } finally {await db.close();}
 });

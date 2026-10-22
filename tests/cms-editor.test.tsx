@@ -7,6 +7,39 @@ Object.assign(globalThis,{window:dom.window,self:dom.window,document:dom.window.
 Object.defineProperty(globalThis,'navigator',{value:dom.window.navigator,configurable:true});
 dom.window.confirm=()=>true;
 
+test('inline classifications retain unsaved article content, metadata and the mounted visual editor on success and failure',async()=>{
+  const {render,cleanup,waitFor,fireEvent}=await import('@testing-library/react');
+  const {ArticleEditor}=await import('../src/components/cms/ArticleEditor');const originalFetch=globalThis.fetch;
+  let fail=true;let saved:Record<string,unknown>={};
+  const category={id:'40000000-0000-4000-8000-000000000001',name:'Rail journeys'};
+  globalThis.fetch=async(input,init)=>{
+    const body=JSON.parse(String(init?.body));
+    if(String(input)==='/api/cms/classifications')return fail?Response.json({error:'Creation unavailable'},{status:503}):Response.json({classification:body.kind==='category'?category:{name:'Rail itinerary'}});
+    saved=body;return Response.json({article:{...saved,id:'10000000-0000-4000-8000-000000000003',revision:1}});
+  };
+  const view=render(<ArticleEditor initial={{...editorValue(null),title:'Unsaved railway article',slug:'railway',body:'## Original body\n\nKeep this exact Markdown.',notes:'Private draft note',seo_title:'Rail SEO'}} categories={[]} initialMedia={[]} mediaBase="/fixture" siteOrigin="http://localhost:3000"/>);
+  try {
+    await waitFor(()=>assert.equal((view.getByRole('button',{name:'Markdown source'}) as HTMLButtonElement).disabled,false));
+    const editor=view.getByRole('textbox',{name:'Article body (visual editor)'});
+    fireEvent.change(view.getByLabelText('Category'),{target:{value:'__create'}});
+    fireEvent.change(view.getByLabelText('New category name'),{target:{value:'Rail journeys'}});
+    fireEvent.click(view.getByRole('button',{name:'Create and select'}));
+    await waitFor(()=>assert.ok(view.getByRole('alert').textContent?.includes('Creation unavailable')));
+    assert.equal(view.getByRole('textbox',{name:'Article body (visual editor)'}),editor);
+    assert.equal((view.getByLabelText('Article title') as HTMLInputElement).value,'Unsaved railway article');
+    fail=false;fireEvent.click(view.getByRole('button',{name:'Create and select'}));
+    await waitFor(()=>assert.equal((view.getByLabelText('Category') as HTMLSelectElement).value,category.id));
+    fireEvent.change(view.getByLabelText('Content type'),{target:{value:''}});
+    fireEvent.change(view.getByLabelText('New content type name'),{target:{value:'Rail itinerary'}});fireEvent.click(view.getByRole('button',{name:'Create and select'}));
+    await waitFor(()=>assert.equal((view.getByLabelText('Content type') as HTMLSelectElement).value,'Rail itinerary'));
+    assert.equal(view.getByRole('textbox',{name:'Article body (visual editor)'}),editor);
+    fireEvent.click(view.getByRole('button',{name:'Save draft'}));
+    await waitFor(()=>assert.ok(view.getByText(/Draft saved/)));
+    assert.equal(saved.body,'## Original body\n\nKeep this exact Markdown.');assert.equal(saved.notes,'Private draft note');assert.equal(saved.seo_title,'Rail SEO');assert.equal(saved.category_id,category.id);assert.equal(saved.content_type,'Rail itinerary');
+    fireEvent.click(view.getByRole('button',{name:'Preview article'}));assert.ok(view.getByText('Rail itinerary'));
+  } finally{cleanup();globalThis.fetch=originalFetch;}
+});
+
 test('discovery controls create/reuse tags, preserve placement on save and surface creation failures',async()=>{
   const {render,cleanup,waitFor}=await import('@testing-library/react');const userEvent=(await import('@testing-library/user-event')).default;
   const {ArticleEditor}=await import('../src/components/cms/ArticleEditor');const user=userEvent.setup({document});const originalFetch=globalThis.fetch;
@@ -60,6 +93,8 @@ test('editor warns about unsaved text, retains it on failure, then saves and pub
   globalThis.fetch=async(_input,init)=>{const data=JSON.parse(String(init?.body));sent.push(data);return fail?Response.json({error:'Connection unavailable'},{status:503}):Response.json({article:{...data,id:'10000000-0000-4000-8000-000000000003',revision:1}});};
   const view=render(<ArticleEditor initial={initial} categories={[]} initialMedia={[]} mediaBase="https://example.supabase.co" siteOrigin="http://localhost:3000"/>);
   try {
+    await waitFor(()=>assert.equal((view.getByRole('button',{name:'Markdown source'}) as HTMLButtonElement).disabled,false));
+    await user.click(view.getByRole('button',{name:'Markdown source'}));
     const markdown='## Heading\n\n**Pasted Markdown**\n\n- One\n- Two';await user.type(view.getByLabelText('Article body (Markdown)'),markdown);
     const event=new dom.window.Event('beforeunload',{cancelable:true});window.dispatchEvent(event);assert.equal(event.defaultPrevented,true);
     await user.click(view.getByRole('button',{name:'Save draft'}));await waitFor(()=>assert.ok(view.getByRole('alert').textContent?.includes('Connection unavailable')));

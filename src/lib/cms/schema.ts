@@ -1,12 +1,12 @@
 import { z } from 'zod';
-import { articleStatuses, contentTypes } from '@/content/cms';
+import { articleStatuses } from '@/content/cms';
 const date = z.union([z.literal(''), z.iso.date()]).transform(value => value || null);
 export const articleInput = z.object({
   id: z.uuid().nullable(), revision: z.number().int().min(0),
   title: z.string().trim().min(1).max(180),
   slug: z.string().max(140).regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, 'Use lower-case letters, numbers and single hyphens.'),
   excerpt: z.string().trim().max(500), body: z.string().max(200000),
-  content_type: z.enum(contentTypes), category_id: z.uuid().nullable(), status: z.enum(articleStatuses),
+  content_type: z.string().trim().min(1).max(80), category_id: z.uuid().nullable(), status: z.enum(articleStatuses),
   featured_media_id: z.uuid().nullable(), featured_alt: z.string().trim().max(300),
   seo_title: z.string().trim().max(180), seo_description: z.string().trim().max(500),
   canonical_url: z.union([z.literal(''), z.url({ protocol: /^https$/ })]),

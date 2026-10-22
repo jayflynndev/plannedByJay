@@ -5,7 +5,7 @@ export function databaseError(error: {code?: string} | null) {
   if (!error) return;
   if (error.code === '23505') throw new CmsError('That URL slug or category is already in use. Choose another.');
   if (error.code === '40001') throw new CmsError('This article changed in another tab. Copy your changes, then reload.', 409);
-  if (error.code === '23503') throw new CmsError('An image or category is in use or is no longer available.', 409);
+  if (error.code === '23503') throw new CmsError('An image, category or content type is in use or is no longer available.', 409);
   if (error.code === '42501') throw new CmsError('You do not have permission for this operation.', 403);
   throw new CmsError('The changes could not be saved. Your text is still in the editor. Please try again.', 503);
 }

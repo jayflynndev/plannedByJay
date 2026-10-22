@@ -13,7 +13,7 @@ test('public discovery has labelled GET filters, shared pagination, reset, empty
   const {discoveryCopy}=await import('../src/content/cms');
   const tag={id:'30000000-0000-4000-8000-000000000001',name:'Japan'};
   const {query}=parseDiscoveryQuery({q:'Japan',tag:tag.id});
-  const empty={total:0,articles:[],categories:[],tags:[tag]};
+  const empty={total:0,articles:[],categories:[],tags:[tag],types:['Travel advice','Rail itinerary']};
   try {
     const view=render(<ArticleDiscovery query={query} results={empty}/>);
     assert.equal(view.getByRole('form',{name:'Find travel articles'}).getAttribute('method'),'get');
@@ -21,6 +21,7 @@ test('public discovery has labelled GET filters, shared pagination, reset, empty
     assert.equal((view.getByLabelText('Tag or destination') as HTMLSelectElement).value,tag.id);
     assert.equal(view.getByRole('link',{name:'Reset filters'}).getAttribute('href'),'/travel-advice');
     assert.ok(view.getByText(discoveryCopy.noResults));
+    assert.ok(view.getByRole('option',{name:'Rail itinerary'}),'public filter recognises registry additions');
     view.rerender(<ArticleDiscovery query={query} results={{...empty,total:25}}/>);
     const href=view.getByRole('link',{name:'Next page'}).getAttribute('href')||'';
     assert.ok(href.includes('q=Japan')&&href.includes('tag=')&&href.includes('page=2'));

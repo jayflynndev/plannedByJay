@@ -39,7 +39,7 @@ test('publishing validation, portable Markdown and failure messages do not hide 
 test('save failures never report success or invalidate public caches; successful changes invalidate the listing, sitemap and old URLs',async()=>{
   const input={...editorValue(null),title:'Test',slug:'test',body:'Text',author:'Editor',excerpt:'Description',status:'published'};
   const paths:unknown[]=[];let error:{code:string}|null={code:'network'};
-  const client={rpc:async()=>({data:{...input,id:admin,revision:1},error})} as unknown as SupabaseClient;
+  const client={from:()=>({select:()=>({eq:()=>({maybeSingle:async()=>({data:{name:'Travel advice'},error:null})})})}),rpc:async()=>({data:{...input,id:admin,revision:1},error})} as unknown as SupabaseClient;
   await assert.rejects(saveArticle(client,input,(...args)=>paths.push(args)),/could not be saved/);assert.equal(paths.length,0);
   error=null;const saved=await saveArticle(client,input,(...args)=>paths.push(args));assert.equal(saved.status,'published');
   assert.deepEqual(paths,[['/'],['/travel-advice'],['/sitemap.xml'],['/travel-advice/test'],['/travel-advice/[slug]','page']]);
@@ -48,10 +48,13 @@ test('real Supabase RPC transport consumes the explicit JSON object returned by 
   const input={...editorValue(null),title:'RPC article',slug:'rpc-article',body:'Markdown',excerpt:'A description',author:'Editor'};
   let called=false;
   const client=createClient('https://fixture.supabase.co','sb_publishable_fixture',{auth:{persistSession:false,autoRefreshToken:false},global:{fetch:async(url,init)=>{
+    if(String(url).includes('/content_types?'))return Response.json({name:'Travel advice'});
     called=true;assert.ok(String(url).endsWith('/rest/v1/rpc/cms_save_article'));const body=JSON.parse(String(init?.body));assert.equal(body.p_article.slug,'rpc-article');assert.equal(body.p_revision,0);
     return Response.json({...body.p_article,id:admin,revision:1,updated_at:'2026-10-13T12:00:00Z'});
   }}});
   const saved=await saveArticle(client,input,()=>{});assert.equal(called,true);assert.equal(saved.id,admin);assert.equal(saved.slug,'rpc-article');
+  const missing={from:()=>({select:()=>({eq:()=>({maybeSingle:async()=>({data:null,error:null})})})}),rpc:()=>{throw new Error('must not save unsupported values');}} as unknown as SupabaseClient;
+  await assert.rejects(saveArticle(missing,{...input,content_type:'Unregistered'},()=>{}),/Choose an existing content type/);
 });
 test('image upload decodes content, bounds input, strips location metadata and deduplicates the result',async()=>{
   const jpeg=await sharp({create:{width:80,height:60,channels:3,background:'#839c91'}}).jpeg().withExif({IFD0:{Artist:'Test'},IFD3:{GPSLatitude:'51/1 0/1 0/1',GPSLongitude:'0/1 0/1 0/1'}}).toBuffer();

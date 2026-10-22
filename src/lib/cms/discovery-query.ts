@@ -1,8 +1,7 @@
 import { z } from 'zod';
-import { contentTypes } from '@/content/cms';
 const querySchema=z.object({
   q:z.string().trim().max(120).default(''),
-  type:z.union([z.literal(''),z.enum(contentTypes)]).default(''),
+  type:z.string().trim().max(80).default(''),
   category:z.union([z.literal(''),z.uuid()]).default(''),
   tag:z.union([z.literal(''),z.uuid()]).default(''),
   page:z.coerce.number().int().min(1).max(1000).default(1),

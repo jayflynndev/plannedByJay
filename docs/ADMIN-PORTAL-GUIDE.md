@@ -78,15 +78,27 @@ Keep the existing correct `SUPABASE_URL`. `APP_ORIGIN` must exactly match the br
 ## Publish your first article
 
 1. Open `/admin` → **Create new article**. Enter the title; the slug is suggested until manually edited. Choose a content type/category, excerpt and real author display name.
-2. Paste prepared Markdown into **Article body**. Headings, emphasis, lists, quotes, links and GitHub-style tables retain formatting in **Preview article**. Raw HTML/scripts are ignored. Body `#` headings render as H2, because the article title is already H1; keep further headings in logical order.
+2. Write in the visual **Article body**, or paste formatted text from Word/ChatGPT. Use the toolbar for paragraphs, H2/H3 headings, bold, italic, links, lists and quotations. Unsafe pasted markup is removed; review any conversion notice. Plain text stays literal. For prepared Markdown, use **Paste Markdown** and confirm replacement of the existing body.
 3. **Choose or upload image** → select a phone/PC photograph → **Upload photograph** → **Use image**. Add a meaningful featured-image description for this article. JPEG/PNG/WebP up to 5 MB are decoded, rotated, resized to at most 2,400px and re-encoded without EXIF/GPS. SVG, animated images, corrupt files and inputs exceeding 40 million pixels are refused. Identical processed files are deduplicated.
-4. For inline images, copy a library image link and paste `![Descriptive alt text](COPIED_IMAGE_URL)` into Markdown. Only this project's dedicated editorial bucket UUID.webp URLs render; external trackers and arbitrary images are excluded. Check images in preview. The bucket is public, including unused/draft photographs: do not upload confidential material.
+4. For inline images, choose **Photograph**, select/upload through the existing library and enter a meaningful description before insertion. Only this project's dedicated editorial bucket UUID.webp URLs render; external trackers and arbitrary images are excluded. Check images in preview. The bucket is public, including unused/draft photographs: do not upload confidential material.
 5. SEO title/description use title/excerpt when blank. Check the search preview. Usually leave canonical URL blank; use an HTTPS original URL only when genuinely appropriate.
 6. Add research, fact-check and next-review dates as useful. Sources and editorial notes are **private**, stored in the separately protected `content_editorial` table. They never enter public article queries, previews, metadata or sitemap.
 7. **Save draft** stores private content. Preview desktop/mobile in the editor. **Open saved preview** requires sign-in and shows saved data; live preview includes unsaved changes.
 8. Choose **Publish article** and confirm. Title, valid unique slug, body, excerpt, author and selected-image alt text are required. Visit `/travel-advice/YOUR-SLUG`. No redeployment is required.
 
 Failed saves retain text and show an error, never a false success. Validation errors link to fields. The browser warns before leaving with unsaved edits. There is no autosave: save regularly, especially on mobile where the operating system can terminate a tab without warning.
+
+### Visual editor and portable Markdown
+
+The editor uses pinned Tiptap 3.32.0 open-source packages (MIT), not a paid service. No additional account, subscription, hosted setup or database migration is needed. The owner confirms the earlier Phase 6 discovery migration is already applied; do not repeat it for this editor.
+
+Markdown remains the stored format and the public sanitised renderer is unchanged. Opening an existing article does not rewrite its body. **Markdown source** remains available. Unsupported source (such as raw HTML, footnotes or task lists) opens in source mode intact. Tiptap's Markdown support is beta, so conversion is checked before saving: unsupported visual structures block save/preview and offer a reviewable conversion rather than silently discarding content. Cancelling an unsupported rich paste preserves the article; alternatively insert its words as plain text.
+
+**Insert table** creates a simple header table. Add/remove rows or columns using the contextual controls. Keep one paragraph per cell, without merged cells, embedded images or line breaks; use separate rows for additional entries. Check the public preview. Complex Word tables may need simplification. Undo/redo and familiar bold/italic keyboard shortcuts work in visual mode; toolbar buttons support keyboard navigation. On narrow screens the toolbar wraps and wide tables scroll within the editor.
+
+Local verification covered 375/390/440px layouts, visual formatting, table controls, library-image insertion and a synthetic draft save. Clipboard sanitisation/conversion is covered with Word/ChatGPT-style fixtures; this is not a claim of testing every native Word version or mobile clipboard.
+
+Editor validation: all 53 existing/new tests, lint, TypeScript and the production build passed. No hosted article or provider setting was changed during these checks.
 
 ## Everyday management
 
@@ -95,7 +107,20 @@ Failed saves retain text and show an error, never a false success. Validation er
 - **Archive** retains content and private notes. Open it later to edit or publish again.
 - Changing a slug keeps permanent redirects from previously published URLs while the article is published. Unpublishing hides old redirects too. All assigned slugs remain reserved; choose a new one for conflicts, rather than removing URL history.
 - Revision checks prevent overwriting another tab/editor's changes. On conflict, copy unsaved work, reload and reconcile.
-- `/admin/categories` adds and renames categories, retaining article assignments. Categories are not deleted through the portal. Content types/editor copy live in `src/content/cms.ts`; changing available types also requires a matching database CHECK migration. Renderer configuration is in `src/components/cms/Markdown.tsx`; keep sanitisation enabled.
+- While editing, choose **+ Create new category** or **+ Create new content type**, enter a name and select **Create and select**. The choice is saved and selected without leaving the page. Names differing only in case or repeated spacing reuse the existing choice. Category maintenance remains available at `/admin/categories`. Categories are not deleted through the portal.
+- Under **Discovery & Placement**, enter **New tag name** and choose **Create & select tag**. Classification creation does not save/publish the article: body, photographs, metadata and private notes remain in the current draft. Failures leave your work in place; retry or cancel. Save the article to persist its selections.
+- The editor groups fields into **Article**, **Discovery & Placement**, **SEO** and **Editorial**. Required author details remain visible; SEO defaults can stay blank. Public preview/publishing remain explicit actions.
+- Content types now come from `public.content_types`; client/server input checks bound names, the save service checks registry membership, and the database enforces it with a foreign key. Public filters read that registry and article labels accept its names. SEO remains generic Article metadata, with no fixed content-type mapping to update. `src/content/cms.ts` retains initial fixture formats and editable interface copy, not the live registry. Renderer configuration is in `src/components/cms/Markdown.tsx`; keep sanitisation enabled.
+
+### Manual migration for inline classification
+
+Before releasing this editor update, open the correct Supabase project's SQL Editor and run the complete `supabase/migrations/20261024_inline_classification.sql` file once, after the already-applied `20261023_article_discovery.sql`. Review the project and take your normal backup first. This migration has not been applied automatically.
+
+It creates/seeds the content-type registry, replaces the six-value CHECK with a restrictive foreign key, and adds guarded classification creation plus category duplicate protection. It does not rewrite articles, rename categories, remove legacy duplicates, or touch enquiries. Existing type names remain valid. Existing duplicate categories, if any, remain assigned; new equivalent names reuse an existing row. Renaming to an already-used category name is refused. There is a 100-type registry limit and names are limited to 80 characters. Only allowlisted administrators can create classifications; public/authenticated read access does not grant writes. SQL is transactional: on failure roll back and investigate, rather than removing constraints or rerunning fragments.
+
+Apply this migration before deploying the matching application, then create a draft, add a category/type/tag, save, preview and explicitly publish when ready. Check the new type in `/travel-advice` filters. Classification changes need no further redeployment once this release/migration is installed. Never drop the registry to roll back while articles reference it.
+
+Local classification validation: all 54 tests passed, including the actual migration in disposable PostgreSQL fixtures, admin/non-admin permissions, duplicate reuse, unchanged existing article records, custom-type publishing/search, public filter options and retained drafts after failures. Lint, TypeScript and production build passed. A synthetic browser fixture at 375/390/440px showed no horizontal overflow; inline creation selected the category while retaining the article body. No hosted migration or real article write was performed.
 - `/admin/media` uploads, previews and removes unused photographs. The latest 200 images appear in the library; older selected featured images load separately. Used images cannot be deleted, including draft/archived/inline uses. Remove or replace all uses and save first. Replacements create new objects rather than overwriting shared images.
 - Dashboard figures are real database counts and recent updates. Due reviews cover drafts/published articles with dates today or earlier. No reminders or scheduled publisher exist; `scheduled_at` is an unused future extension point.
 

@@ -46,3 +46,8 @@ export async function publicMedia(client: SupabaseClient, id: string | null) {
   const result = await client.from('content_media').select('*').eq('id',id).maybeSingle();
   databaseError(result.error); return result.data as Media | null;
 }
+
+export async function contentTypeNames(client:SupabaseClient):Promise<string[]> {
+  const result=await client.from('content_types').select('name').order('name').limit(100);
+  databaseError(result.error);return (result.data||[]).map(row=>row.name);
+}
