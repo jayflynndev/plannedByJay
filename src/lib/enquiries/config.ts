@@ -1,6 +1,6 @@
 import 'server-only';
 import { z } from 'zod';
-import { enquiryContent } from '../../content/enquiry';
+import { approvedPolicyHref } from '../../content/policies';
 
 const configSchema = z.object({
   origin: z.url(),
@@ -44,7 +44,7 @@ export function getEnquiryConfig(): EnquiryConfig | null {
     (origin.protocol !== 'https:' ||
       process.env.ENQUIRIES_LIVE_APPROVED !== 'true' ||
       process.env.ENQUIRY_PRIVACY_APPROVED !== 'true' ||
-      !enquiryContent.privacyHref)
+      !approvedPolicyHref('privacy'))
   )
     return null;
   if (Boolean(config.turnstileSecret) !== Boolean(config.turnstileSiteKey))

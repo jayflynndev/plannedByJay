@@ -15,8 +15,9 @@ export const site = {
   business: {
     tradingStatement: 'Planned by Jay is trading on behalf of New Travel Holidays.',
     companyDisplayName: 'New Travel Holidays',
-    // The supplied trading name is confirmed. Do not guess a legal suffix/entity name.
-    legalEntityName: null as string | null,
+    // Verified against Companies House entry 16135195 on 22 October 2026.
+    // This confirms the entity name, not the controller/agency relationship.
+    legalEntityName: 'New Travel Holidays Limited' as string | null,
     partnership: 'New Travel Holidays is a member of Advantage Travel Partnership.',
     registration: 'Registered in England and Wales',
     companyNumber: '16135195',

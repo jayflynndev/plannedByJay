@@ -41,3 +41,10 @@
 
 /* Paragraph spacing for Jay’s longer introduction and planning steps. */
 .why-page .intro p+p,.journey-steps p+p{margin-top:18px}
+/* Policy links and long cookie names remain readable without widening the viewport. */
+.policy-page{overflow-wrap:anywhere}
+.policy-technology{margin-top:24px;padding:22px;background:var(--sage);border:1px solid var(--line);border-radius:4px}
+.policy-technology h3{font-size:1.15rem;line-height:1.5;margin-bottom:16px}
+.policy-technology dl{margin:0}.policy-technology dt{font-weight:700;margin-top:12px}.policy-technology dd{margin:4px 0 0;line-height:1.75}
+.policy-links{padding-left:22px;margin-top:18px}.policy-links li{margin-top:8px}.policy-page a{text-decoration:underline;text-underline-offset:3px}
+.policy-links a{display:inline-block;padding:10px 0;min-height:44px}

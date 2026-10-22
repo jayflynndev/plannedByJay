@@ -30,7 +30,7 @@ Store `SUPABASE_URL` and a server secret API key in `.env.local`; a modern `sb_s
 
 The mobile refinement needs no additional SQL migration. New records use the optional, trimmed `brief.departurePreferences` string (maximum 300 characters). This replaces the form's `departures` array and `departureOther` field inside the existing JSONB column; RPC arguments and tables are unchanged. If no database exists, run the original migration. If already deployed, do not rewrite old records or their fingerprints/email snapshots. Old notifications remain retryable because the processor sends their stored immutable email, not a template reconstructed from the brief. Existing old-format browser submissions should be refreshed rather than sent to the revised strict schema.
 
-The durable record stores the holiday brief, contact details, immutable notification email, reference, received time, notification attempts/status/provider ID and retry fields. Rate keys are HMAC hashes of email and signed session ID; raw IP addresses are not collected. Delete old rate buckets automatically on new accepted traffic. Decide and implement an approved enquiry retention/deletion procedure before launch; there is no invented retention period.
+The durable record stores the holiday brief, contact details, immutable notification email, reference, received time, notification attempts/status/provider ID and retry fields. Rate keys are HMAC hashes of email and signed session ID; raw IP addresses are not collected. Old rate buckets are cleaned on new accepted traffic. Jay has adopted monthly review and normal deletion of inactive unsuccessful enquiries 12 months after last meaningful customer contact. Follow [ENQUIRY-DATA-RETENTION.md](ENQUIRY-DATA-RETENTION.md), including the separately approved `20261022_safe_enquiry_erasure.sql` migration and exact-record RPC. Never use an unguarded row deletion to bypass notification safety.
 
 ## 2. Resend and environment
 
@@ -55,7 +55,7 @@ Use `APP_ORIGIN=http://localhost:3000` for the default development port, with no
 5. Check the actual business inbox and spam folder. Inspect the mobile/email-client rendering, complete field summary and Reply-To behaviour. Do not infer inbox receipt from a 200 API response.
 6. Submit the same brief again to confirm it resolves to the same recent record. Then test a distinct enquiry. Rate limits allow three new briefs per email per UTC hour and five per signed session per UTC hour; exact duplicates do not consume a new quota.
 
-Use synthetic holiday information for tests, not real customer records or medical details. Remove authorised test records through Supabase once testing is complete. A change to recipients affects only new snapshots: existing pending messages retain the original address so retries preserve idempotency.
+Use synthetic holiday information for tests, not real customer records or medical details. Remove individually authorised test records only through the safe erasure procedure after its migration; resolve legacy/attempt blockers first. A change to recipients affects only new snapshots: existing pending messages retain the original address so retries preserve idempotency.
 
 ## 4. Notification statuses and monitoring
 
@@ -68,6 +68,8 @@ Use synthetic holiday information for tests, not real customer records or medica
 | manual_review | Six attempts exhausted or the safe idempotency window expired; operator reconciliation required |
 
 In Supabase SQL Editor, use a restricted operational query that avoids displaying the full customer brief:
+
+After the safe-erasure migration, each claim also creates a separate outstanding-attempt blocker. Completion releases only its own blocker, including a stale completion that cannot change the current lease/status. A crashed worker or failed finish RPC leaves a blocker; it never expires automatically with the 90-second lease. This preserves retry behaviour while preventing unsafe erasure. Do not delete blockers as routine queue maintenance. Legacy/orphan reconciliation is restricted and documented in ENQUIRY-DATA-RETENTION.md.
 
 ```sql
 select reference, received_at, notification_status, notification_attempts,

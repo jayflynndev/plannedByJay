@@ -344,6 +344,12 @@ test('all stages, conditional inputs, preserved answers, focus/error links and d
     assert.ok(view.getByText('Dover cruise port', { exact: false }));
     assert.ok(view.getByText('School holidays', { exact: false }));
     assert.ok(view.getByText('A quieter base'));
+    assert.ok(view.getByText(content.hints.privacy));
+    assert.ok(view.getByText(content.hints.privacyPending));
+    assert.equal(view.queryByRole('link', {name: content.hints.privacyLink}), null);
+    view.rerender(<EnquiryForm enabled={false} privacyHref="/privacy" />);
+    assert.equal(view.getByRole('link', {name: content.hints.privacyLink}).getAttribute('href'), '/privacy');
+    assert.equal(view.queryByText(content.hints.privacyPending), null);
     await user.click(view.getByRole('button', { name: 'Edit The details' }));
     assert.equal(
       (

@@ -24,9 +24,11 @@ import { Turnstile } from './Turnstile';
 export function EnquiryForm({
   enabled,
   turnstileSiteKey,
+  privacyHref = null,
 }: {
   enabled: boolean;
   turnstileSiteKey?: string;
+  privacyHref?: string | null;
 }) {
   const [draft, setDraft] = useState<EnquiryDraft>(initialDraft);
   const [step, setStep] = useState(0);
@@ -652,8 +654,8 @@ export function EnquiryForm({
               </div>
               <div className="privacy-note">
                 <p>{content.hints.privacy}</p>
-                {content.privacyHref ? (
-                  <Link href={content.privacyHref}>
+                {privacyHref ? (
+                  <Link href={privacyHref}>
                     {content.hints.privacyLink}
                   </Link>
                 ) : (

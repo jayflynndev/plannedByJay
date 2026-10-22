@@ -25,6 +25,7 @@ import {
 } from '../src/lib/enquiries/security';
 import type { StoredEnquiry } from '../src/lib/enquiries/store';
 import { parseSubmission } from '../src/lib/enquiries/request';
+import { policies } from '../src/content/policies';
 
 const draft = {
   ...initialDraft,
@@ -294,6 +295,7 @@ test('signed sessions cannot be forged; disabled or unapproved public environmen
   assert.equal(readSession(session, 'other-secret'), null);
   assert.equal(secureEqual('short', 'longer'), false);
   const old = { ...process.env };
+  const originalPrivacy = policies.privacy;
   try {
     process.env.ENQUIRIES_ENABLED = 'false';
     assert.equal(getEnquiryConfig(), null);
@@ -312,7 +314,17 @@ test('signed sessions cannot be forged; disabled or unapproved public environmen
     process.env.APP_ORIGIN = 'https://public.example.com';
     process.env.ENQUIRIES_LIVE_APPROVED = 'false';
     assert.equal(getEnquiryConfig(), null);
+    process.env.ENQUIRIES_LIVE_APPROVED = 'true';
+    process.env.ENQUIRY_PRIVACY_APPROVED = 'true';
+    assert.equal(getEnquiryConfig(), null); // Completed draft is still unapproved.
+    policies.privacy = {...originalPrivacy, approved: true};
+    assert.equal(getEnquiryConfig(), null); // Unresolved review cannot enable public enquiries.
+    policies.privacy = {...originalPrivacy, approved: true, reviewRequired: []};
+    assert.ok(getEnquiryConfig());
+    process.env.ENQUIRIES_LIVE_APPROVED = 'false';
+    assert.equal(getEnquiryConfig(), null); // Publishing is not launch approval.
   } finally {
+    policies.privacy = originalPrivacy;
     for (const key of Object.keys(process.env))
       if (!(key in old)) delete process.env[key];
     Object.assign(process.env, old);

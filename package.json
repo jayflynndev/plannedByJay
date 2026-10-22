@@ -9,7 +9,7 @@
     "start": "next start",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
-    "test:server": "node --conditions=react-server --import tsx --test tests/enquiries.test.ts tests/navigation-config.test.ts tests/enquiry-references.test.ts tests/cms.test.ts tests/public-site.test.ts",
+    "test:server": "node --conditions=react-server --import tsx --test tests/enquiries.test.ts tests/navigation-config.test.ts tests/enquiry-references.test.ts tests/cms.test.ts tests/public-site.test.ts tests/launch-infrastructure.test.ts",
     "test:form": "node --import tsx --test tests/enquiry-form.test.tsx tests/cms-editor.test.tsx tests/public-site-ui.test.tsx",
     "test": "npm run test:server && npm run test:form"
   },

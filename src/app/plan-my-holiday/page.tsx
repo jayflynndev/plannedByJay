@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Container } from '@/components/ui/Container';
 import { EnquiryForm } from '@/components/enquiry/EnquiryForm';
 import { enquiryContent } from '@/content/enquiry';
+import { approvedPolicyHref } from '@/content/policies';
 import { getEnquiryConfig } from '@/lib/enquiries/config';
 import '../enquiry.css';
 export const metadata: Metadata = enquiryContent.metadata;
@@ -20,6 +21,7 @@ export default function PlanMyHoliday() {
         <div className="enquiry-layout">
           <EnquiryForm
             enabled={!!config}
+            privacyHref={approvedPolicyHref('privacy')}
             turnstileSiteKey={config?.turnstileSiteKey}
           />
           <aside className="enquiry-aside">

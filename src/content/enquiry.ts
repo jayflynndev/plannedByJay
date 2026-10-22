@@ -124,13 +124,12 @@ export const enquiryContent = {
     phone:
       'Optional unless you prefer a telephone conversation. Include the country code for a non-UK number.',
     privacy:
-      'Your holiday brief and contact details will be stored securely for Jay to review, and a summary will be emailed to the business so I can respond to your enquiry. This form does not subscribe you to marketing.',
+      'Your details will be used to review and respond to your holiday enquiry and, where appropriate, help arrange your holiday through New Travel Holidays. You can find more information in the Privacy Policy. Sending an enquiry does not subscribe you to marketing.',
     privacyPending:
       'Privacy policy: awaiting the approved page. This is a launch dependency.',
     privacyLink: 'Read the privacy policy',
   },
-  // Set only after the approved privacy page exists. This phase does not create that page.
-  privacyHref: null as string | null,
+  // The server supplies the privacy link only when the central policy is reviewed and published.
   placeholders: {
     departurePreferences: 'e.g. Manchester, Liverpool or flexible',
     destination: 'For example, Italy or a few ideas in Europe',
