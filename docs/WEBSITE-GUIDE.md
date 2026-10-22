@@ -1,5 +1,15 @@
 # Your Planned by Jay website
 
+## Phase 6: article discovery and placement
+
+Use the existing article editor's **Discovery & Placement** section to manage reusable tags, homepage featuring and Travel Advice pinning, then save/publish without code or redeployment. Up to eight tags per article and 100 reusable labels overall; destinations/regions can be tags. Unticking removes an association, not the article. Featuring and pinning are independent and public only for published articles. The homepage shows up to three featured articles, or the latest published fallback; pins must match active filters.
+
+`/travel-advice` has GET search, type/category/tag dropdowns, Reset and 12-result pagination with bookmarkable URL parameters. Indexed server-side search covers titles/excerpts/bodies/tags without downloading the library into the browser. Failures are distinct from no results. Filtered/paginated URLs are noindex and canonical to the main advice index; no thin tag/destination pages are created. Existing article URLs, redirects, article metadata/structured data and sitemap behaviour remain intact.
+
+Editable labels/help: `src/content/cms.ts` (`discoveryCopy`). Query validation: `src/lib/cms/discovery-query.ts`; anonymous data loading: `discovery.ts`; public view: `ArticleDiscovery.tsx`; editor controls: `DiscoverySettings.tsx`. Saves keep existing authorisation/revision/media/slug safeguards and invalidation paths, including `/`, so published placement edits update without redeployment.
+
+**Before release:** Jay/authorised administrator manually reviews/applies `supabase/migrations/20261023_article_discovery.sql` once after the original CMS setup. Exact checks, sequencing and everyday instructions are in [ADMIN-PORTAL-GUIDE.md](ADMIN-PORTAL-GUIDE.md). No hosted migration, environment/secret change or deployment was performed. Enquiries, policy approval and indexing/submission gates are unchanged.
+
 ## Getting started
 
 Use Node.js 22.13 or newer for the full development toolchain. The Phase 3 Supabase SDK requires Node 22+; Node 20.11 is no longer suitable. In VS Code, open D:\plannedByJay and open Terminal → New Terminal.

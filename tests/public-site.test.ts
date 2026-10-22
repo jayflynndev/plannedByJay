@@ -20,7 +20,7 @@ test('homepage query requests only three published previews and strips all non-p
   assert.equal(previews.length,2);assert.equal(previews[0].title,'Published guide');assert.equal(previews[1].image,null);
   assert.equal(previews[0].image?.alt,'A coastline');assert.equal(JSON.stringify(previews).includes('Private'),false);assert.equal('body' in previews[0],false);
   assert.equal(requests[0].searchParams.get('status'),'eq.published');assert.equal(requests[0].searchParams.get('limit'),'3');
-  assert.equal(requests[0].searchParams.get('order'),'published_at.desc,updated_at.desc');assert.ok(!requests[0].searchParams.get('select')?.includes('body'));
+  assert.equal(requests[0].searchParams.get('order'),'homepage_featured.desc,published_at.desc,updated_at.desc,id.asc');assert.ok(!requests[0].searchParams.get('select')?.includes('body'));
   assert.ok(requests.every(url=>!url.pathname.includes('editorial')));
 });
 test('empty CMS libraries need no image query and database failures are not fabricated as articles',async()=>{

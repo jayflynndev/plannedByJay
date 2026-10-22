@@ -10,10 +10,12 @@ export type ArticlePreview = {
 export async function loadArticlePreviews(client:SupabaseClient,mediaBase:string):Promise<ArticlePreview[]> {
   const signal=AbortSignal.timeout(5000);
   const articles=await client.from('content_articles')
-    .select('id,title,slug,excerpt,content_type,status,featured_media_id,featured_alt')
-    .eq('status','published').order('published_at',{ascending:false}).order('updated_at',{ascending:false}).limit(3).abortSignal(signal);
+    .select('id,title,slug,excerpt,content_type,status,featured_media_id,featured_alt,homepage_featured')
+    .eq('status','published').order('homepage_featured',{ascending:false}).order('published_at',{ascending:false}).order('updated_at',{ascending:false}).order('id').limit(3).abortSignal(signal);
   databaseError(articles.error);
-  const published=(articles.data||[]).filter(article=>article.status==='published').slice(0,3);
+  const candidates=(articles.data||[]).filter(article=>article.status==='published').slice(0,3);
+  const featured=candidates.filter(article=>article.homepage_featured===true);
+  const published=featured.length?featured:candidates;
   const ids=[...new Set(published.flatMap(article=>article.featured_media_id?[article.featured_media_id]:[]))];
   const media=ids.length?await client.from('content_media').select('id,storage_path,width,height').in('id',ids).abortSignal(signal):{data:[],error:null};
   databaseError(media.error);

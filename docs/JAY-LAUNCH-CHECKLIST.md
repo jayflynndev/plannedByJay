@@ -1,5 +1,15 @@
 # Jay's launch checklist
 
+## Phase 6: article discovery
+
+- [x] Added bounded indexed server-side search, URL-based type/category/tag filters, Reset, pagination and distinct failure/empty states within the existing Travel Advice design.
+- [x] Added reusable normalised tags and separate Featured on Homepage / Pinned in Travel Advice controls. Article URLs, categories, media, editorial privacy, publishing/revision guards and invalidation retained.
+- [x] Prepared non-destructive `20261023_article_discovery.sql` with indexes, RLS and guarded admin writes. No hosted execution, content publishing, enquiry change or policy-flag change.
+- [x] 47 tests, lint, TypeScript and production build passed; local responsive fixtures and filtered-page metadata/error handling checked. Hosted discovery remains a post-migration/release verification.
+- [ ] Jay/authorised administrator: review/apply that migration once **before** releasing the application, following [ADMIN-PORTAL-GUIDE.md](ADMIN-PORTAL-GUIDE.md), then verify saved settings and signed-out published/draft behaviour. This is separate from the earlier enquiry-erasure migration and existing launch approvals.
+
+This phase adds no offers, destination pages, external search service or tracking.
+
 ## Current policy completion — 22 October 2026
 
 - [x] Recorded the confirmed New Travel GDPR agreement for website-collected customer information; registrations remain closed facts. Operational enquiry/privacy contact is Jay, coordinating with New Travel.

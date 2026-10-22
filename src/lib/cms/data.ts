@@ -1,6 +1,6 @@
 import 'server-only';
 import type { SupabaseClient } from '@supabase/supabase-js';
-import type { Article, Category, Media } from './schema';
+import type { Article, Category, Media, Tag } from './schema';
 import { databaseError } from './security';
 export { databaseError } from './security';
 import { publicClient } from './client';
@@ -21,7 +21,15 @@ export async function mediaList(client: SupabaseClient) {
 }
 export async function getArticle(client: SupabaseClient, id: string) {
   const result = await client.from('content_articles').select('*').eq('id',id).maybeSingle();
-  databaseError(result.error); return result.data as Article | null;
+  databaseError(result.error);
+  if (!result.data) return null;
+  const links=await client.from('content_article_tags').select('tag_id').eq('article_id',id).limit(8);
+  databaseError(links.error);
+  return {...result.data,tag_ids:(links.data||[]).map(link=>link.tag_id)} as Article;
+}
+export async function tags(client: SupabaseClient): Promise<Tag[]> {
+  const result=await client.from('content_tags').select('id,name').order('name').limit(100);
+  databaseError(result.error); return result.data||[];
 }
 export async function publishedArticles() {
   const client = publicClient(); if (!client) return [];

@@ -7,6 +7,32 @@ Object.assign(globalThis,{window:dom.window,self:dom.window,document:dom.window.
 Object.defineProperty(globalThis,'navigator',{value:dom.window.navigator,configurable:true});
 dom.window.confirm=()=>true;
 
+test('discovery controls create/reuse tags, preserve placement on save and surface creation failures',async()=>{
+  const {render,cleanup,waitFor}=await import('@testing-library/react');const userEvent=(await import('@testing-library/user-event')).default;
+  const {ArticleEditor}=await import('../src/components/cms/ArticleEditor');const user=userEvent.setup({document});const originalFetch=globalThis.fetch;
+  const tag={id:'30000000-0000-4000-8000-000000000001',name:'Japan'};
+  let fail=true;let saved:Record<string,unknown>={};
+  globalThis.fetch=async(input,init)=>{
+    if(String(input)==='/api/cms/tags')return fail?Response.json({error:'Tag creation unavailable'},{status:503}):Response.json({tag});
+    saved=JSON.parse(String(init?.body));return Response.json({article:{...saved,id:'10000000-0000-4000-8000-000000000003',revision:1}});
+  };
+  const view=render(<ArticleEditor initial={{...editorValue(null),title:'Fixture draft',slug:'fixture-draft'}} categories={[]} initialTags={[tag]} initialMedia={[]} mediaBase="/fixture" siteOrigin="http://localhost:3000"/>);
+  try {
+    await user.click(view.getByLabelText('Japan'));
+    await user.click(view.getByLabelText('Featured on Homepage'));await user.click(view.getByLabelText('Pinned in Travel Advice'));
+    await user.type(view.getByLabelText('New tag name'),'JAPAN');await user.click(view.getByRole('button',{name:'Create & select tag'}));
+    await waitFor(()=>assert.ok(view.getByRole('alert').textContent?.includes('Tag creation unavailable')));
+    assert.equal((view.getByLabelText('Japan') as HTMLInputElement).checked,true);
+    fail=false;await user.click(view.getByRole('button',{name:'Create & select tag'}));
+    await waitFor(()=>assert.ok(view.getByText(/Selected tag: Japan/)));
+    assert.equal(view.getAllByLabelText('Japan').length,1,'normalised reuse does not duplicate choices');
+    await user.click(view.getByRole('button',{name:'Save draft'}));await waitFor(()=>assert.ok(view.getByText(/Draft saved/)));
+    assert.deepEqual(saved.tag_ids,[tag.id]);assert.equal(saved.homepage_featured,true);assert.equal(saved.advice_pinned,true);
+    await user.click(view.getByLabelText('Japan'));await user.click(view.getByRole('button',{name:'Save draft'}));
+    await waitFor(()=>assert.deepEqual(saved.tag_ids,[]));
+  } finally {globalThis.fetch=originalFetch;cleanup();}
+});
+
 test('Markdown preserves paste formatting and blocks script/HTML, unsafe links and external image trackers',async()=>{
   const {renderToStaticMarkup}=await import('react-dom/server');const {Markdown}=await import('../src/components/cms/Markdown');
   const html=renderToStaticMarkup(<Markdown mediaBase="https://example.supabase.co" body={'# Heading\n\n**Bold** and *italic*\n\n- One\n- Two\n\n> Quote\n\n| A | B |\n| --- | --- |\n| C | D |\n\n[Bad](javascript:alert%281%29)\n\n![Tracker](https://evil.example/track.jpg)\n\n<script>alert(1)</script>\n\n<img src=x onerror=alert(1) />'}/>);

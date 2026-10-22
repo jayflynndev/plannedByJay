@@ -85,6 +85,7 @@ test('CMS migrations enforce RLS, publication, protected notes, slug history, op
     const enquiryColumns=await db.query("select column_name from information_schema.columns where table_name='holiday_enquiries' order by ordinal_position");
     await db.exec(await readFile('supabase/migrations/20261014_editorial_cms.sql','utf8'));
     await db.exec(await readFile('supabase/migrations/20261014_editorial_storage.sql','utf8'));
+    await db.exec(await readFile('supabase/migrations/20261023_article_discovery.sql','utf8'));
     assert.deepEqual((await db.query("select column_name from information_schema.columns where table_name='holiday_enquiries' order by ordinal_position")).rows,enquiryColumns.rows);
     await db.query('insert into cms_private.administrators(user_id) values($1)',[admin]);
     const draft=articleInput.parse({...editorValue(null),title:'First article',slug:'first-article',excerpt:'Useful advice',body:'# Heading\n\nContent',author:'Test author'});

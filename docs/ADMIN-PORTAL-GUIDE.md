@@ -1,5 +1,46 @@
 # Planned by Jay content portal
 
+## Phase 6: discovery setup
+
+Before releasing this version, Jay or the authorised Supabase administrator must manually apply **only** `supabase/migrations/20261023_article_discovery.sql` in the existing project's SQL Editor. Confirm the original `20261014_editorial_cms.sql` and storage setup are installed, review the complete new file and backup arrangements, then run it once as database owner. Do not rerun initial migrations, reset tables or select a different project. The separate enquiry-erasure migration is independent, not a prerequisite. Codex has not applied anything to hosted Supabase.
+
+The transaction adds `content_tags`, `content_article_tags`, two placement booleans, an indexed search vector, RLS and guarded functions. It backfills search vectors without changing existing wording, statuses, revisions, categories, media, private notes or slug history. Both flags default to false; no tags are seeded. The original guarded save becomes an internal core; the extended wrapper retains revision/media/slug checks and saves tags/placement in the same transaction. No new credentials or environment variables are needed. If installation fails, it rolls back; investigate instead of deleting tables or repeatedly running setup SQL.
+
+Verify installation with these read-only checks:
+
+```sql
+select to_regclass('public.content_tags'), to_regclass('public.content_article_tags');
+select column_name from information_schema.columns
+where table_schema='public' and table_name='content_articles'
+  and column_name in ('homepage_featured','advice_pinned','search_document');
+select indexname from pg_indexes where schemaname='public'
+  and indexname in ('content_articles_search','content_articles_featured','content_articles_placement');
+```
+
+Then separately authorise the application release and refresh the editor. The earlier application can save through the compatible database wrapper. Releasing new code **before** the migration leaves discovery unavailable and prevents the new editor loading tags; homepage previews use their existing safe error fallback. Never bypass RLS to fix that ordering mistake.
+
+## Tag, feature and pin without code
+
+In **Create/Edit article → Discovery & Placement**:
+
+1. Tick existing tags, or enter **New tag name → Create & select tag**. Case and extra spacing reuse the same tag. Destination/region names can be ordinary tags. Limits: **eight per article**, **40 characters per name**, **100 reusable tags** overall. No default taxonomy was created.
+2. Untick and save to remove an association. The tag and article remain intact. Creation saves the reusable label immediately; attachment to the article needs **Save draft** or **Save published changes**. Failures are shown and preserve selections/text.
+3. **Featured on Homepage** controls the existing homepage preview, separately from the featured photograph. If any published articles are featured, show only those, up to three: latest original publication, then latest edit, then UUID for ties. With none featured, use the latest published fallback. Drafts/archives never appear.
+4. **Pinned in Travel Advice** places a matching published article above ordinary results. It never bypasses search/type/category/tag filters. Multiple pins sort by search relevance when searching, then latest publication and UUID. Without search, publication date and UUID break ties. Pinning does not feature an article on the homepage.
+5. Save/publish explicitly as before. Draft settings have no public effect until publication. Published tag/placement edits and unpublishing invalidate homepage/index/article/sitemap paths without redeployment. Revision conflicts, unsaved warnings, image controls and private editorial notes remain protected.
+
+Visitors use `/travel-advice`: enter words, choose type/category/tag dropdowns and press **Search & filter**. PostgreSQL English full-text matching covers title, excerpt, body and tags (whole words/stems, not arbitrary substrings). URL parameters preserve choices for bookmarks/sharing. **Reset filters** clears them and returns to page one. Results are **12 per page**, up to page 1000; only that page's public summaries/images load. Unused/draft-only tags are not public choices. A failed read shows “temporarily unavailable”, distinct from an empty library/no matches.
+
+Filtered/paginated URLs are noindex and canonical to the main index. No tag/destination routes or extra sitemap entries are created; existing indexing approval is unchanged. No external search provider, dependency, tracking or persistent browser storage was added.
+
+## Phase 6 verification and release check
+
+Local SQL fixtures cover preservation, RLS/permissions, tag reuse/limits, title/excerpt/body/tag search, combined filters, matching-only pins, pagination, atomic revisions/tags and slug history. Transport/UI tests cover narrow projections, featuring/fallback, saved controls, errors and URL/reset. Browser mobile checks use local synthetic presentation fixtures, not a production admin login. No hosted content was edited or published.
+
+Final local validation: **47 tests passed**, plus lint, TypeScript and production build. Existing CMS media/slug/RLS regressions also run with the new migration installed in the local fixture database. Search/filter and editor presentation fixtures had no horizontal overflow at 375/390/440px window widths (360/375/425px document widths with scrollbars), and desktop 1280px. Public inputs/selects were at least 48px high; checkbox labels at least 44px. The fixture GET form retained selections in the URL and Reset cleared them. Local production HTTP confirmed noindex/canonical metadata, retained search text and a clear unavailable notice during the current CMS transport failure. This does not verify hosted search before the manual migration/release.
+
+After the approved migration/release, use Jay's own draft/test article to check save/reopen, selected tags and both toggles, then publish/unpublish updates when authorised. Check signed-out discovery excludes drafts/private notes, homepage placement, filtered results, old slug redirects and `/sitemap.xml`. Check pagination when enough genuine articles exist; do not publish synthetic fixtures merely to fill the library.
+
 Phase 3 publishes travel articles from Supabase without VS Code, commits or redeployment. Markdown is the portable source format. Enquiries, notification snapshots, references, Resend and customer permissions remain separate and unchanged. Nothing has been applied to hosted Supabase or deployed by Codex.
 
 ## One-time manual setup

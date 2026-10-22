@@ -1,14 +1,16 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
-import type { ArticleInput, Category, Media } from '@/lib/cms/schema';
+import type { ArticleInput, Category, Media, Tag } from '@/lib/cms/schema';
 import { slugify } from '@/lib/cms/schema';
 import { contentTypes } from '@/content/cms';
 import { ArticleView } from './ArticleView';
 import { MediaLibrary } from './MediaLibrary';
+import { DiscoverySettings } from './DiscoverySettings';
 type Errors=Record<string,string[]>;
-export function ArticleEditor({initial,categories,initialMedia,mediaBase,siteOrigin}:{initial:ArticleInput;categories:Category[];initialMedia:Media[];mediaBase:string;siteOrigin:string}) {
+export function ArticleEditor({initial,categories,initialMedia,mediaBase,siteOrigin,initialTags=[]}:{initial:ArticleInput;categories:Category[];initialMedia:Media[];mediaBase:string;siteOrigin:string;initialTags?:Tag[]}) {
   const [value,setValue]=useState(initial);const [saved,setSaved]=useState(JSON.stringify(initial));
   const [busy,setBusy]=useState(false);const [message,setMessage]=useState('');const [errors,setErrors]=useState<Errors>({});
+  const [tagBusy,setTagBusy]=useState(false);
   const [failed,setFailed]=useState(false);const [mode,setMode]=useState<'edit'|'preview'>('edit');const [width,setWidth]=useState<'desktop'|'mobile'>('desktop');
   const [selected,setSelected]=useState(initialMedia.find(image=>image.id===initial.featured_media_id)||null);
   const [availableMedia,setAvailableMedia]=useState(initialMedia);
@@ -25,6 +27,7 @@ export function ArticleEditor({initial,categories,initialMedia,mediaBase,siteOri
     setErrors(previous=>{const nextErrors={...previous};delete nextErrors[key];return nextErrors;});setMessage('');
   }
   async function save(status:ArticleInput['status']) {
+    if(tagBusy)return;
     if(status==='published' && value.status!=='published' && !window.confirm('Publish this article on the public website?'))return;
     setBusy(true);setMessage('');setErrors({});
     try {
@@ -60,6 +63,8 @@ export function ArticleEditor({initial,categories,initialMedia,mediaBase,siteOri
         {library&&<MediaLibrary initialMedia={availableMedia} mediaBase={mediaBase} onUploaded={media=>setAvailableMedia(list=>list.some(item=>item.id===media.id)?list:[media,...list])} onSelect={media=>{setSelected(media);change('featured_media_id',media.id);setLibrary(false);}}/>}
       </details>
     </section><section className="cms-stack" aria-label="Article details">
+      <DiscoverySettings initialTags={initialTags} selected={value.tag_ids||[]} featured={value.homepage_featured||false} pinned={value.advice_pinned||false}
+        onTags={ids=>change('tag_ids',ids)} onFeatured={next=>change('homepage_featured',next)} onPinned={next=>change('advice_pinned',next)} onBusy={setTagBusy}/>
       <details open><summary>Search & sharing</summary>{field('seo_title','SEO page title',{max:180,hint:'Leave blank to use the article title.'})}{field('seo_description','Meta description',{area:true,max:500,hint:'Leave blank to use the short description.'})}
         {field('canonical_url','Canonical URL (optional)',{type:'url',hint:'Usually leave blank. Use only for a genuine original article published elsewhere; HTTPS required.'})}
         <div className="cms-search-preview"><small>{siteOrigin}/travel-advice/{value.slug}</small><h3>{value.seo_title||value.title||'Article title'}</h3><p>{value.seo_description||value.excerpt}</p></div>
@@ -68,13 +73,13 @@ export function ArticleEditor({initial,categories,initialMedia,mediaBase,siteOri
         {field('sources','Research sources (private)',{area:true,max:30000})}{field('notes','Editorial notes (private)',{area:true,max:30000})}<p className="cms-hint">Sources and notes are saved privately and never included in public article data.</p>
       </details>
       <section className="cms-card"><h2>Publication</h2><p>Current status: <strong>{value.status}</strong></p><p>Save draft removes an article from the public website. Publish is always an explicit choice.</p>
-        <div className="cms-stack"><button type="button" className="button button-secondary" disabled={busy} onClick={()=>save('draft')}>{busy?'Saving…':value.status==='published'?'Unpublish & save draft':'Save draft'}</button>
-          <button type="button" className="button" disabled={busy} onClick={()=>save('published')}>{value.status==='published'?'Save published changes':'Publish article'}</button>
-          <button type="button" className="cms-text-button" disabled={busy} onClick={()=>{if(window.confirm('Archive this article privately and remove it from the public website?'))void save('archived');}}>Archive article</button>
+        <div className="cms-stack"><button type="button" className="button button-secondary" disabled={busy||tagBusy} onClick={()=>save('draft')}>{busy?'Saving…':value.status==='published'?'Unpublish & save draft':'Save draft'}</button>
+          <button type="button" className="button" disabled={busy||tagBusy} onClick={()=>save('published')}>{value.status==='published'?'Save published changes':'Publish article'}</button>
+          <button type="button" className="cms-text-button" disabled={busy||tagBusy} onClick={()=>{if(window.confirm('Archive this article privately and remove it from the public website?'))void save('archived');}}>Archive article</button>
         </div>{value.id&&<p><a href={`/admin/articles/${value.id}/preview`}>Open saved preview</a> (save changes first)</p>}{value.status==='published'&&<p><a href={`/travel-advice/${value.slug}`}>View live article</a></p>}
       </section>
     </section></fieldset>
-    {mode==='preview'&&<section aria-label="Live article preview"><div className="cms-actions"><button type="button" className="button button-secondary" aria-pressed={width==='desktop'} onClick={()=>setWidth('desktop')}>Desktop</button><button type="button" className="button button-secondary" aria-pressed={width==='mobile'} onClick={()=>setWidth('mobile')}>Mobile</button><button type="button" className="button" disabled={busy} onClick={()=>save(value.status==='published'?'published':'draft')}>Save {value.status==='published'?'published changes':'draft'}</button></div>
+    {mode==='preview'&&<section aria-label="Live article preview"><div className="cms-actions"><button type="button" className="button button-secondary" aria-pressed={width==='desktop'} onClick={()=>setWidth('desktop')}>Desktop</button><button type="button" className="button button-secondary" aria-pressed={width==='mobile'} onClick={()=>setWidth('mobile')}>Mobile</button><button type="button" className="button" disabled={busy||tagBusy} onClick={()=>save(value.status==='published'?'published':'draft')}>Save {value.status==='published'?'published changes':'draft'}</button></div>
       <p className="cms-hint">Live preview includes unsaved changes. This preview is private.</p><div className={`cms-preview ${width==='mobile'?'cms-preview-mobile':''}`}><ArticleView article={value} media={selected} mediaBase={mediaBase} category={categories.find(cat=>cat.id===value.category_id)?.name}/></div>
     </section>}
   </>;

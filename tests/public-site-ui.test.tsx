@@ -6,6 +6,33 @@ const dom=new JSDOM('<!doctype html><html><body></body></html>',{url:'http://loc
 Object.assign(globalThis,{window:dom.window,self:dom.window,document:dom.window.document,HTMLElement:dom.window.HTMLElement,Node:dom.window.Node,MutationObserver:dom.window.MutationObserver});
 Object.defineProperty(globalThis,'navigator',{value:dom.window.navigator,configurable:true});
 
+test('public discovery has labelled GET filters, shared pagination, reset, empty and unavailable states',async()=>{
+  const {render,cleanup}=await import('@testing-library/react');
+  const {ArticleDiscovery}=await import('../src/components/cms/ArticleDiscovery');
+  const {parseDiscoveryQuery}=await import('../src/lib/cms/discovery-query');
+  const {discoveryCopy}=await import('../src/content/cms');
+  const tag={id:'30000000-0000-4000-8000-000000000001',name:'Japan'};
+  const {query}=parseDiscoveryQuery({q:'Japan',tag:tag.id});
+  const empty={total:0,articles:[],categories:[],tags:[tag]};
+  try {
+    const view=render(<ArticleDiscovery query={query} results={empty}/>);
+    assert.equal(view.getByRole('form',{name:'Find travel articles'}).getAttribute('method'),'get');
+    assert.equal((view.getByLabelText('Search articles') as HTMLInputElement).value,'Japan');
+    assert.equal((view.getByLabelText('Tag or destination') as HTMLSelectElement).value,tag.id);
+    assert.equal(view.getByRole('link',{name:'Reset filters'}).getAttribute('href'),'/travel-advice');
+    assert.ok(view.getByText(discoveryCopy.noResults));
+    view.rerender(<ArticleDiscovery query={query} results={{...empty,total:25}}/>);
+    const href=view.getByRole('link',{name:'Next page'}).getAttribute('href')||'';
+    assert.ok(href.includes('q=Japan')&&href.includes('tag=')&&href.includes('page=2'));
+    view.rerender(<ArticleDiscovery query={query} results={null} error={discoveryCopy.unavailable}/>);
+    assert.ok(view.getByRole('alert').textContent?.includes('temporarily unavailable'));
+    assert.equal(view.queryByText(discoveryCopy.noResults),null,'failure is not an empty result');
+    view.rerender(<ArticleDiscovery query={parseDiscoveryQuery({}).query} results={empty}/>);
+    assert.equal((view.getByLabelText('Search articles') as HTMLInputElement).value,'','reset navigation remounts uncontrolled fields');
+    assert.equal((view.getByLabelText('Tag or destination') as HTMLSelectElement).value,'');
+  } finally {cleanup();}
+});
+
 test('policy documents render semantic headings, real links, cookie inventory and a stable review date',async()=>{
   const {render,cleanup}=await import('@testing-library/react');
   const {PolicyDocument}=await import('../src/components/layout/PolicyDocument');
