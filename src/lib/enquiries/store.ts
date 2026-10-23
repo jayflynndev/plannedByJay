@@ -20,7 +20,7 @@ export type ReceiveResult = {
     | 'duplicate'
     | 'conflict'
     | 'rate_limited'
-    | 'reference_collision';
+    | 'reference_collision' | 'offer_unavailable';
   id?: string;
   reference?: string;
 };
@@ -60,8 +60,11 @@ export class EnquiryStore {
     fingerprint: string;
     sessionHash: string;
     emailHash: string;
+    offerReference?: string;
+    offerVersion?: string;
   }) {
-    return this.rpc<ReceiveResult>('receive_holiday_enquiry_v2', {
+    return this.rpc<ReceiveResult>(input.offerReference?'receive_holiday_offer_enquiry':'receive_holiday_enquiry_v2', {
+      ...(input.offerReference?{p_offer_reference:input.offerReference,p_offer_version:input.offerVersion}:{}),
       p_id: input.id,
       p_reference: input.reference,
       p_received_at: input.receivedAt,

@@ -174,8 +174,10 @@ export const submissionSchema = z
     brief: enquirySchema,
     website: z.string().max(200),
     turnstileToken: z.string().max(2048).optional(),
+    offerReference: z.string().regex(/^PBJO-[A-F0-9]{8}$/).optional(),
+    offerVersion: z.iso.datetime({offset:true}).optional(),
   })
-  .strict();
+  .strict().superRefine((value,context)=>{if(Boolean(value.offerReference)!==Boolean(value.offerVersion))context.addIssue({code:'custom',path:['offerReference'],message:'Reload the selected offer before enquiring.'});});
 export type Enquiry = z.output<typeof enquirySchema>;
 export type EnquiryDraft = {
   destinationChoice: string;

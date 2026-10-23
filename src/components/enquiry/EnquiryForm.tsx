@@ -25,12 +25,15 @@ export function EnquiryForm({
   enabled,
   turnstileSiteKey,
   privacyHref = null,
+  offerContext = null,
 }: {
   enabled: boolean;
   turnstileSiteKey?: string;
   privacyHref?: string | null;
+  offerContext?:{reference:string;title:string;price:string;updatedAt:string}|null;
 }) {
   const [draft, setDraft] = useState<EnquiryDraft>(initialDraft);
+  const [includeOffer,setIncludeOffer]=useState(true);
   const [step, setStep] = useState(0);
   const [errors, setErrors] = useState<FieldErrors>({});
   const [sending, setSending] = useState(false);
@@ -244,6 +247,7 @@ export function EnquiryForm({
           brief: draft,
           website,
           turnstileToken: token,
+          ...(offerContext&&includeOffer?{offerReference:offerContext.reference,offerVersion:offerContext.updatedAt}:{}),
         }),
         signal: AbortSignal.timeout(45000),
       });
@@ -264,6 +268,7 @@ export function EnquiryForm({
         if (failingStep >= 0) setStep(failingStep);
       } else {
         const safeMessages: Record<string, string> = {
+          offerUnavailable: 'This offer is no longer current. You can untick the offer reference and send a general Holiday Brief instead. No enquiry has been saved for this attempt.',
           unavailable: content.messages.unavailable,
           conflict: content.messages.conflict,
           rateLimit: content.messages.rateLimit,
@@ -338,6 +343,7 @@ export function EnquiryForm({
     );
   return (
     <div className="enquiry-form-wrap">
+      {offerContext&&<section className="offer-enquiry-context"><h2>Holiday you were exploring</h2><p>{offerContext.title} · {offerContext.reference}</p><p>{offerContext.price}. Price and availability will be reconfirmed.</p><label><input type="checkbox" checked={includeOffer} disabled={sending} onChange={e=>{setIncludeOffer(e.target.checked);submissionId.current=null;}}/>Include this offer reference with my enquiry</label></section>}
       <ol className="form-progress" aria-label={content.controls.progress}>
         {content.steps.map((item, index) => (
           <li

@@ -47,7 +47,7 @@ The Holiday Brief questions, records, validation and activation gates are unchan
 
 Complex bookings need the appropriate authorised New Travel structure, with organiser/responsibilities identified. Accessibility remains individual and supplier-confirmed: no blanket guarantees, inspection claims or requests for detailed medical information. Metadata is ordinary page/Open Graph information, with no invented ratings/offers or FAQ schema. Root indexing restrictions remain unchanged.
 
-Future authorised offers would use a separate component before the final CTA, distinct from editorial cards. There is no offer feed, empty promotional section or integration now.
+Phase 8 now supplies a separate `OfferSection` before the final CTA, distinct from editorial cards. It appears only for current, permitted offers explicitly associated with the guide's holiday type. Otherwise it is omitted. Its **View Holiday Offers** button opens the actual type-filtered `/holiday-offers` listing. There is no automatic supplier feed or empty promotional section. The offers system has its own manual migrations and independent owner/supplier approval gates; see [HOLIDAY-OFFERS-GUIDE.md](HOLIDAY-OFFERS-GUIDE.md). Installing the Phase 7 guides alone does not activate offers.
 
 Before release, review copy/photography rights, card destinations, mobile crops and actual hosted related-reading publication/unpublication. Local fixtures do not prove hosted CMS availability. No deployment or live activation is performed by this guide.
 

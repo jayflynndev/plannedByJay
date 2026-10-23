@@ -1,5 +1,9 @@
 # Planned by Jay content portal
 
+## Phase 8: curated holiday offers
+
+The portal now includes **Holiday offers** and **Suppliers**, separate from editorial articles. Add suppliers inline while editing offers, save partial drafts, duplicate/reverify, manage permitted images, preview, then publish/pause/expire/archive through explicit controls. Publication remains locked behind a private owner launch gate, active confirmed supplier permission, complete recent checks and per-offer review. No suppliers/offers are pre-approved or imported. Read [HOLIDAY-OFFERS-GUIDE.md](HOLIDAY-OFFERS-GUIDE.md) for the already-applied Phase 8 migrations, new manual Phase 8.1 migration, owner setup, Friday review workflow, expiry rules and offer-specific enquiry snapshots. Do not activate the gate merely to try the UI. Existing article management is unchanged.
+
 ## Phase 6: discovery setup
 
 Before releasing this version, Jay or the authorised Supabase administrator must manually apply **only** `supabase/migrations/20261023_article_discovery.sql` in the existing project's SQL Editor. Confirm the original `20261014_editorial_cms.sql` and storage setup are installed, review the complete new file and backup arrangements, then run it once as database owner. Do not rerun initial migrations, reset tables or select a different project. The separate enquiry-erasure migration is independent, not a prerequisite. Codex has not applied anything to hosted Supabase.
@@ -142,10 +146,18 @@ Local classification validation: all 54 tests passed, including the actual migra
 
 Admin: `/admin/login`, `/admin/reset-password`, `/admin/auth/callback`, `/admin`, `/admin/articles`, `/admin/articles/new`, `/admin/articles/[id]/edit`, `/admin/articles/[id]/preview`, `/admin/media`, `/admin/categories`. Public: `/travel-advice`, `/travel-advice/[slug]`, `/sitemap.xml`. APIs: `/api/cms/auth`, `/api/cms/articles`, `/api/cms/articles/status`, `/api/cms/categories`, `/api/cms/media`.
 
-Every protected page/operation verifies a server session and allowlist membership; database/storage policies provide a second boundary. Mutations verify Origin. The refresh Proxy is scoped to admin/CMS routes. Session cookies are HttpOnly, SameSite=Lax and Secure over HTTPS. Private responses are no-store and noindex. There is no public signup, enquiry dashboard or offers integration.
+Every protected page/operation verifies a server session and allowlist membership; database/storage policies provide a second boundary. Mutations verify Origin. The refresh Proxy is scoped to admin/CMS routes. Session cookies are HttpOnly, SameSite=Lax and Secure over HTTPS. Private responses are no-store and noindex. There is no public signup or enquiry dashboard; offer management uses the existing protected CMS boundary.
 
 Run `npm test`, `npm run lint`, `npm run typecheck`, `npm run build` with Node 22.13+. Disposable PGlite tests apply migrations and exercise anon/non-admin/admin policies, drafts/notes, publication, old URLs, conflicts, Storage restrictions and enquiry isolation. Component tests cover Markdown safety, hydration, save failures, unsaved work and preview. These do not prove hosted Auth/SMTP/Storage setup or real email delivery.
 
 After manual setup, use signed-in and signed-out browsers: create a draft and confirm its public URL/sitemap entry are absent; publish; check body and metadata; rename and check redirect; edit; unpublish and check both URLs; attempt used-photo deletion; try an unallowlisted account; test recovery and sign-out. Review 375/390/440px, tablet and desktop before launch. No live configuration or deployment has been performed.
 
 See [CMS-VALIDATION.md](CMS-VALIDATION.md) for the executed local checks, real browser layout review and precise limits of the hosted-service verification.
+
+## Phase 8.1 supplier and pricing disclosures
+
+New Travel's general network advertising permission is confirmed. Inline or standalone, record each supplier's network membership/basis, restrictions and approval separately. Fill **Public supplier identity** (legal name, business/service address, business email/contact, official website, applicable verified ATOL facts and authorised artwork). Private contacts/account references/evidence stay private. No existing supplier is automatically approved.
+
+In the offer, record flights/ATOL classification with a supported reason, matching adults/children/occupancy, full-price confirmation, any genuinely uncalculable mandatory charges and calculation method, and promotion/booking conditions. Pending/missing information blocks publication, not partial draft saves. Supplier facts are reused. Supplier edits change linked offer versions/revisions: copy unsaved work before reloading an open editor.
+
+See the [Friday checklist](SUPPLIER-OFFER-COMPLIANCE.md) and [manual migration instructions](HOLIDAY-OFFERS-GUIDE.md) for **20261027_supplier_offer_disclosures.sql**. Do not rerun the already-applied Phase 8 migrations or activate gates to test the UI.

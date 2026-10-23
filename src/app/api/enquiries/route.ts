@@ -28,7 +28,7 @@ export async function POST(request: Request) {
   try {
     const result = await parseSubmission(request);
     if (!result.ok) return reply(result.body, result.status);
-    const { brief, submissionId, turnstileToken } = result.data;
+    const { brief, submissionId, turnstileToken, offerReference, offerVersion } = result.data;
     if (!(await verifyTurnstile(turnstileToken, config)))
       return reply({ code: 'spam' }, 403);
     const store = new EnquiryStore(config);
@@ -40,6 +40,8 @@ export async function POST(request: Request) {
         reference,
         receivedAt,
         brief,
+        offerReference,
+        offerVersion,
         email: buildNotification(
           brief,
           reference,
@@ -47,11 +49,12 @@ export async function POST(request: Request) {
           config.from,
           config.to,
         ),
-        fingerprint: hash(JSON.stringify(brief), config.secret),
+        fingerprint: hash(offerReference?JSON.stringify({brief,offerReference,offerVersion}):JSON.stringify(brief), config.secret),
         sessionHash: hash(`session:${session}`, config.secret),
         emailHash: hash(`email:${brief.email}`, config.secret),
       }),
     );
+    if (received.outcome === 'offer_unavailable')return reply({code:'offerUnavailable'},409);
     if (received.outcome === 'rate_limited')
       return reply({ code: 'rateLimit' }, 429);
     if (received.outcome === 'conflict')

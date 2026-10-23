@@ -1,0 +1,5 @@
+import {z} from 'zod';
+const value=z.string().trim().max(100).default('');
+export const offersQuery=z.object({q:value,destination:value,type:z.enum(['','family','cruises','couples','city-breaks','something-different','accessible']).default(''),supplier:z.union([z.literal(''),z.uuid()]).default(''),departure:value,month:z.union([z.literal(''),z.string().regex(/^\d{4}-(?:0[1-9]|1[0-2])$/)]).default(''),min:z.union([z.literal(''),z.coerce.number().int().min(0).max(1000000)]).default(''),max:z.union([z.literal(''),z.coerce.number().int().min(0).max(1000000)]).default(''),board:value,page:z.coerce.number().int().min(1).max(1000).default(1)}).refine(v=>v.min===''||v.max===''||v.min<=v.max,{message:'Minimum price must not exceed maximum.'});
+export type OffersQuery=z.output<typeof offersQuery>;
+export function offerHref(query:OffersQuery,page=query.page){const p=new URLSearchParams();for(const [key,val] of Object.entries({...query,page}))if(val!==''&&!(key==='page'&&val===1))p.set(key,String(val));return `/holiday-offers${p.size?`?${p}`:''}`;}
