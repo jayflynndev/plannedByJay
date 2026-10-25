@@ -3,8 +3,8 @@ import { Container } from '@/components/ui/Container';
 import { Button } from '@/components/ui/Button';
 import { SiteImage } from '@/components/ui/SiteImage';
 import { holidayDiscovery as copy, holidayTypes, holidayType, type HolidayType } from '@/content/holiday-types';
-import type { ArticlePreview } from '@/lib/cms/previews';
-import type {PublicOffer} from '@/lib/offers/data';
+import type { ArticlePreview } from '@/types/public-content';
+import type {HolidayOffer as PublicOffer} from '@/types/public-content';
 import {OfferSection} from '@/components/offers/OfferViews';
 import {offersCopy} from '@/content/offers';
 export function HolidayGrid(){return <div className="holiday-grid">{holidayTypes.map(item=><Link className="holiday-card" key={item.slug} href={`/holidays/${item.slug}`}><div className="card-photo"><SiteImage src={item.image.src} alt={item.image.alt} fill sizes="(max-width:479px) 100vw, (max-width:767px) 50vw, 33vw" style={{objectPosition:item.image.position}} fallback={<span className="article-photo-fallback">{copy.imageFallback}</span>}/></div><div className="card-copy"><h2>{item.title}</h2><span aria-hidden="true">↗</span><p>{item.summary}</p></div><span className="article-read-label">{copy.browseLabel} {item.title} <span aria-hidden="true">↗</span></span></Link>)}</div>;}

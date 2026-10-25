@@ -11,22 +11,11 @@
     "start": "next start",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
-    "test:server": "node --conditions=react-server --import tsx --test tests/enquiries.test.ts tests/navigation-config.test.ts tests/enquiry-references.test.ts tests/cms.test.ts tests/public-site.test.ts tests/launch-infrastructure.test.ts tests/article-discovery.test.ts tests/holiday-pages.test.ts tests/offers.test.ts tests/preferred-supplier-import.test.ts",
-    "test:form": "node --import tsx --test tests/enquiry-form.test.tsx tests/cms-editor.test.tsx tests/public-site-ui.test.tsx tests/rich-text.test.tsx tests/offers-ui.test.tsx tests/offers-discovery.test.tsx",
+    "test:server": "node --conditions=react-server --import tsx --test tests/navigation-config.test.ts tests/public-site.test.ts tests/holiday-pages.test.ts",
+    "test:form": "node --import tsx --test tests/public-site-ui.test.tsx tests/frontend-only.test.tsx",
     "test": "npm run test:server && npm run test:form"
   },
   "dependencies": {
-    "@supabase/ssr": "0.12.7",
-    "@supabase/supabase-js": "2.117.3",
-    "@tiptap/core": "3.32.0",
-    "@tiptap/extension-image": "3.32.0",
-    "@tiptap/extension-paragraph": "3.32.0",
-    "@tiptap/extension-table": "3.32.0",
-    "@tiptap/markdown": "3.32.0",
-    "@tiptap/pm": "3.32.0",
-    "@tiptap/react": "3.32.0",
-    "@tiptap/starter-kit": "3.32.0",
-    "dompurify": "3.4.17",
     "next": "16.4.0",
     "react": "19.3.0",
     "react-dom": "19.3.0",
@@ -35,12 +24,9 @@
     "remark-gfm": "4.0.1",
     "remark-parse": "11.0.0",
     "server-only": "0.0.1",
-    "sharp": "0.35.5",
-    "unified": "11.0.5",
-    "zod": "4.6.6"
+    "sharp": "0.35.5"
   },
   "devDependencies": {
-    "@electric-sql/pglite": "0.5.9",
     "@tailwindcss/postcss": "4.3.3",
     "@testing-library/react": "16.3.3",
     "@testing-library/user-event": "14.6.7",

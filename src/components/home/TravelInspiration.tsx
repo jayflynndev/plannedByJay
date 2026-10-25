@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { SiteImage } from '@/components/ui/SiteImage';
-import type { ArticlePreview } from '@/lib/cms/previews';
+import type { ArticlePreview } from '@/types/public-content';
 import { Button } from '@/components/ui/Button';
 import { home } from '@/content/home';
 import { Container } from '@/components/ui/Container';

@@ -29,11 +29,11 @@ test('holiday landing, six shared pages and homepage cards render meaningful rou
 
 test('public discovery has labelled GET filters, shared pagination, reset, empty and unavailable states',async()=>{
   const {render,cleanup}=await import('@testing-library/react');
-  const {ArticleDiscovery}=await import('../src/components/cms/ArticleDiscovery');
-  const {parseDiscoveryQuery}=await import('../src/lib/cms/discovery-query');
-  const {discoveryCopy}=await import('../src/content/cms');
+  const {ArticleDiscovery}=await import('../src/components/articles/ArticleDiscovery');
+
+  const {discoveryCopy}=await import('../src/content/articles');
   const tag={id:'30000000-0000-4000-8000-000000000001',name:'Japan'};
-  const {query}=parseDiscoveryQuery({q:'Japan',tag:tag.id});
+  const query={q:'Japan',tag:tag.id,type:'',category:'',page:1};
   const empty={total:0,articles:[],categories:[],tags:[tag],types:['Travel advice','Rail itinerary']};
   try {
     const view=render(<ArticleDiscovery query={query} results={empty}/>);
@@ -49,7 +49,7 @@ test('public discovery has labelled GET filters, shared pagination, reset, empty
     view.rerender(<ArticleDiscovery query={query} results={null} error={discoveryCopy.unavailable}/>);
     assert.ok(view.getByRole('alert').textContent?.includes('temporarily unavailable'));
     assert.equal(view.queryByText(discoveryCopy.noResults),null,'failure is not an empty result');
-    view.rerender(<ArticleDiscovery query={parseDiscoveryQuery({}).query} results={empty}/>);
+    view.rerender(<ArticleDiscovery query={{q:'',tag:'',type:'',category:'',page:1}} results={empty}/>);
     assert.equal((view.getByLabelText('Search articles') as HTMLInputElement).value,'','reset navigation remounts uncontrolled fields');
     assert.equal((view.getByLabelText('Tag or destination') as HTMLSelectElement).value,'');
   } finally {cleanup();}

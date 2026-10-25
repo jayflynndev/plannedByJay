@@ -156,30 +156,5 @@ export const enquiryContent = {
     reference: 'Your enquiry reference',
     honeypot: 'Leave this field empty',
   },
-  messages: {
-    unavailable:
-      'You can explore the holiday brief, but submissions aren’t open yet. Contact details and the privacy policy will be confirmed before launch.',
-    errorsTitle: 'Please check the following details.',
-    failure:
-      'I couldn’t confirm receipt of your brief. Your answers are still here. Please try again with the same details; this won’t create a second enquiry if the first attempt was received.',
-    conflict:
-      'An earlier version of this brief may already have been received. Please restore your previous answers and retry, or contact Jay before sending another enquiry.',
-    rateLimit:
-      'There have been several enquiries from this session or email address recently. Please wait an hour before trying again.',
-    session:
-      'I couldn’t prepare a secure submission. Check that cookies are allowed, then try again.',
-    spam: 'I couldn’t verify this submission. Please refresh the page and try again.',
-    successTitle: 'Thank you, your holiday enquiry has been received.',
-    success:
-      "I'll review the details you've provided and get back to you using your preferred contact method.",
-    referenceNote:
-      "You don't need to remember this number, but it's useful if you contact me about your enquiry.",
-    copyReference: 'Copy reference',
-    referenceCopied: 'Reference copied',
-    referenceCopyFailed:
-      'Copy was unavailable. You can select and copy the reference above.',
-    successLink: 'Back to the homepage',
-    challenge: 'Please complete the verification before sending your brief.',
-    challengeFailure: 'Verification is unavailable. Please try again later.',
-  },
+  messages:{unavailable:'Holiday enquiries are temporarily unavailable. This is a read-only preview: these fields cannot collect or send your information.'},
 };

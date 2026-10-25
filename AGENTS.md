@@ -1,6 +1,6 @@
 # Planned by Jay project rules
 
-Build one page at a time; the homepage and Phase 2 holiday enquiry page are authorised. Keep editable content in src/content, reuse established components, preserve working functionality and avoid unnecessary dependencies. Document significant features and update docs/WEBSITE-GUIDE.md when editing instructions change. Use British English. Never invent business credentials, prices, reviews, personal travel experience, protection claims or legal wording. Do not deploy, connect external services or enable public enquiry submissions without explicit approval. Run tests, lint, typecheck and production build after substantial enquiry changes. Keep customer enquiry records and provider credentials server-side. Provider acceptance must never be labelled as confirmed inbox delivery. Preserve durable enquiry records when notifications fail.
+This workspace currently contains the public frontend only. Preserve the established design, static assets and editable content in src/content. Use British English and avoid unnecessary dependencies. Do not invent business credentials, prices, reviews, travel experience, protection claims or legal wording. Enquiry fields are a disabled presentation only. Do not build a replacement backend, restore archived data, deploy, enable submissions or run the hosted reset without separate explicit instructions. Update docs/WEBSITE-GUIDE.md when editing instructions change.
 
 <!-- BEGIN:nextjs-agent-rules -->
 

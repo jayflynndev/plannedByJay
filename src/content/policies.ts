@@ -11,7 +11,8 @@ export type Policy = {
 };
 
 // EDIT HERE: Original application-specific drafts, last edited 22 October 2026.
-// Not approval: see docs/POLICY-APPROVAL-CHECKLIST.md for missing factual decisions.
+// Historical application text is preserved, not newly approved by demolition.
+// Previous research/checklists are retained in the private recovery archive.
 // A document stays 404/unlinked/out of the sitemap until reviewed AND explicitly approved.
 export const policies: Record<PolicyKey, Policy> = {
   privacy: {
