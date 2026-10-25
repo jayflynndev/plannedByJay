@@ -3,7 +3,7 @@ import { useRef, useState } from 'react';
 import Image from 'next/image';
 import type { Media } from '@/lib/cms/schema';
 import { imageUrl } from '@/lib/cms/urls';
-export function MediaLibrary({initialMedia,mediaBase,onSelect,onUploaded,allowDelete=false}:{initialMedia:Media[];mediaBase:string;onSelect?:(media:Media)=>void;onUploaded?:(media:Media)=>void;allowDelete?:boolean}) {
+export function MediaLibrary({initialMedia,mediaBase,onSelect,onUploaded,allowDelete=false,selectedId=''}:{initialMedia:Media[];mediaBase:string;onSelect?:(media:Media)=>void;onUploaded?:(media:Media)=>void;allowDelete?:boolean;selectedId?:string}) {
   const [media,setMedia]=useState(initialMedia);const [busy,setBusy]=useState(false);const [error,setError]=useState('');const [notice,setNotice]=useState('');
   const input=useRef<HTMLInputElement>(null);
   async function upload() {
@@ -21,9 +21,9 @@ export function MediaLibrary({initialMedia,mediaBase,onSelect,onUploaded,allowDe
   return <section className="cms-media"><h2>Image library</h2><p>JPEG, PNG or WebP, up to 5 MB. Landscape photographs work well for featured images. Images are resized to at most 2,400 pixels and location metadata is removed.</p>
     <div className="cms-upload"><label>Choose a photograph<input ref={input} type="file" accept="image/jpeg,image/png,image/webp" disabled={busy}/></label><button type="button" className="button" onClick={upload} disabled={busy}>{busy?'Please wait…':'Upload photograph'}</button></div>
     {error&&<p role="alert" className="cms-error">{error}</p>}{notice&&<p role="status" className="cms-notice">{notice}</p>}
-    <div className="cms-media-grid">{media.map(item=><div className="cms-card" key={item.id}><Image src={imageUrl(mediaBase,item.storage_path)} alt="" width={item.width} height={item.height} sizes="(max-width: 600px) 100vw, 300px"/>
+    <div className="cms-media-grid">{media.map(item=><div className={`cms-card ${selectedId===item.id?'cms-media-selected':''}`} key={item.id}><Image src={imageUrl(mediaBase,item.storage_path)} alt="" width={item.width} height={item.height} sizes="(max-width: 600px) 100vw, 300px"/>
       <p>{item.original_name}</p><small>{item.width} × {item.height} · {Math.round(item.bytes/1024)} KB</small><div className="cms-actions">
-        {onSelect&&<button type="button" className="button button-secondary" disabled={busy} onClick={()=>onSelect(item)}>Use image</button>}
+        {onSelect&&<button type="button" className="button button-secondary" disabled={busy} aria-pressed={selectedId===item.id} onClick={()=>onSelect(item)}>{selectedId===item.id?'Selected image':'Use image'}</button>}
         <button type="button" className="cms-text-button" onClick={async()=>{try{await navigator.clipboard.writeText(imageUrl(mediaBase,item.storage_path));setNotice('Image link copied. Paste it into Markdown with descriptive alt text.');}catch{setError('Copy is unavailable. Open the image link and copy its address.');}}}>Copy image link</button>
         <a href={imageUrl(mediaBase,item.storage_path)} target="_blank" rel="noopener noreferrer">Open image</a>{allowDelete&&<button type="button" className="cms-text-button" disabled={busy} onClick={()=>remove(item)}>Remove</button>}
       </div></div>)}</div>{!media.length&&<p>Your uploaded photographs will appear here.</p>}

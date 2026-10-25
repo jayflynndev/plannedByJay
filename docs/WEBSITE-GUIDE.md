@@ -1,10 +1,10 @@
 # Your Planned by Jay website
 
-## Phase 8: curated offers, awaiting marketing approval
+## Suppliers and holiday offers
 
-Manage offers and their reusable suppliers through `/admin/holiday-offers` and `/admin/suppliers`. The new public listing/detail routes remain 404 until a separate private owner gate is explicitly approved; all supplier permissions begin pending. Homepage and holiday-guide offer sections stay hidden without permitted current offers. Existing guides/articles remain available. No booking engine, external supplier feed or payment system is added.
+Use **Suppliers** to search, add, edit or archive a record. Enter business details once; existing incomplete preferred records remain available. Use **Holiday Offers > Add Offer**, enter the holiday, price, dates, photo and categories, then save a draft, preview and publish. There is no supplier approval questionnaire, lookup integration or seven-day publication limit. Only actual supplier deadlines expire promotions. Existing articles, enquiries and the separate site launch setting are unchanged.
 
-See [HOLIDAY-OFFERS-GUIDE.md](HOLIDAY-OFFERS-GUIDE.md) before manually applying `20261025_curated_holiday_offers.sql` and `20261026_offer_enquiry_snapshots.sql`, in order after their documented prerequisites. They have not been applied to the hosted project. No environment credentials or live-enquiry/indexing/policy flags are changed. Routine offers/suppliers are CMS edits without redeployment. Shared offer interface copy is in `src/content/offers.ts`; validation/price rules are in `src/lib/offers/schema.ts` and matching SQL, not homepage marketing copy. Offer-specific enquiries attach an optional server-resolved immutable quote context while retaining the existing Holiday Brief and notification protections.
+See [HOLIDAY-OFFERS-GUIDE.md](HOLIDAY-OFFERS-GUIDE.md) for the short everyday workflow and the one consolidated manual **20261030** migration. Do not rerun historical imports or older supplier/offer migrations. Current shared customer wording is in `src/content/offers.ts`.
 
 ## Phase 7: Explore Holidays
 
@@ -230,7 +230,3 @@ See [LAUNCH-HANDOVER.md](LAUNCH-HANDOVER.md) for the current completed/approval/
 ### Booking Information approval recorded
 
 Booking Information is now explicitly approved in `src/content/policies.ts`, with `approved: true` and `reviewRequired: []`. The existing footer/sitemap automatically include `/booking-information` and its route renders on the next owner-authorised deployment. Privacy and Cookies remain unapproved; enquiry/indexing flags are separate and unchanged. Follow [PRIVACY-FINAL-ACTIONS.md](PRIVACY-FINAL-ACTIONS.md) for the short remaining controller, basis, retention and provider-account decisions rather than reopening confirmed New Travel details. No deployment is performed automatically.
-
-### Supplier offer disclosures (Phase 8.1)
-
-Edit public legal/contact/verified ATOL facts in **Suppliers**, including inline from an offer. Agent/account/evidence fields stay private. New Travel's general permission is confirmed; record individual network membership and restrictions. Publication now requires supported ATOL classification, complete party pricing and conditions; incomplete drafts remain supported. See [SUPPLIER-OFFER-COMPLIANCE.md](SUPPLIER-OFFER-COMPLIANCE.md) and the new manual migration in [HOLIDAY-OFFERS-GUIDE.md](HOLIDAY-OFFERS-GUIDE.md). No launch/enquiry gate was enabled.

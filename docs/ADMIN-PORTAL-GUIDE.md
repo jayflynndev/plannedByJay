@@ -1,8 +1,10 @@
 # Planned by Jay content portal
 
-## Phase 8: curated holiday offers
+## Suppliers and holiday offers
 
-The portal now includes **Holiday offers** and **Suppliers**, separate from editorial articles. Add suppliers inline while editing offers, save partial drafts, duplicate/reverify, manage permitted images, preview, then publish/pause/expire/archive through explicit controls. Publication remains locked behind a private owner launch gate, active confirmed supplier permission, complete recent checks and per-offer review. No suppliers/offers are pre-approved or imported. Read [HOLIDAY-OFFERS-GUIDE.md](HOLIDAY-OFFERS-GUIDE.md) for the already-applied Phase 8 migrations, new manual Phase 8.1 migration, owner setup, Friday review workflow, expiry rules and offer-specific enquiry snapshots. Do not activate the gate merely to try the UI. Existing article management is unchanged.
+Use **Suppliers** to search, add, edit or archive a record. Enter business details once; existing incomplete preferred records remain available. Use **Holiday Offers > Add Offer**, enter the holiday, price, dates, photo and categories, then save a draft, preview and publish. There is no supplier approval questionnaire, lookup integration or seven-day publication limit. Only actual supplier deadlines expire promotions. Existing articles, enquiries and the separate site launch setting are unchanged.
+
+See [HOLIDAY-OFFERS-GUIDE.md](HOLIDAY-OFFERS-GUIDE.md) for the short everyday workflow and the one consolidated manual **20261030** migration. Do not rerun historical imports or older supplier/offer migrations. Current shared customer wording is in `src/content/offers.ts`.
 
 ## Phase 6: discovery setup
 
@@ -153,11 +155,3 @@ Run `npm test`, `npm run lint`, `npm run typecheck`, `npm run build` with Node 2
 After manual setup, use signed-in and signed-out browsers: create a draft and confirm its public URL/sitemap entry are absent; publish; check body and metadata; rename and check redirect; edit; unpublish and check both URLs; attempt used-photo deletion; try an unallowlisted account; test recovery and sign-out. Review 375/390/440px, tablet and desktop before launch. No live configuration or deployment has been performed.
 
 See [CMS-VALIDATION.md](CMS-VALIDATION.md) for the executed local checks, real browser layout review and precise limits of the hosted-service verification.
-
-## Phase 8.1 supplier and pricing disclosures
-
-New Travel's general network advertising permission is confirmed. Inline or standalone, record each supplier's network membership/basis, restrictions and approval separately. Fill **Public supplier identity** (legal name, business/service address, business email/contact, official website, applicable verified ATOL facts and authorised artwork). Private contacts/account references/evidence stay private. No existing supplier is automatically approved.
-
-In the offer, record flights/ATOL classification with a supported reason, matching adults/children/occupancy, full-price confirmation, any genuinely uncalculable mandatory charges and calculation method, and promotion/booking conditions. Pending/missing information blocks publication, not partial draft saves. Supplier facts are reused. Supplier edits change linked offer versions/revisions: copy unsaved work before reloading an open editor.
-
-See the [Friday checklist](SUPPLIER-OFFER-COMPLIANCE.md) and [manual migration instructions](HOLIDAY-OFFERS-GUIDE.md) for **20261027_supplier_offer_disclosures.sql**. Do not rerun the already-applied Phase 8 migrations or activate gates to test the UI.

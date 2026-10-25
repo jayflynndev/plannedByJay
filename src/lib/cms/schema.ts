@@ -28,5 +28,5 @@ export type Article = Omit<z.output<typeof articleInput>, 'sources' | 'notes' | 
 };
 export type Category = { id: string; name: string };
 export type Tag = { id: string; name: string };
-export type Media = { id: string; storage_path: string; original_name: string; sha256: string; width: number; height: number; bytes: number; created_at: string };
+export type Media = { description?: string; id: string; storage_path: string; original_name: string; sha256: string; width: number; height: number; bytes: number; created_at: string };
 export const slugify = (title: string) => title.normalize('NFKD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 140).replace(/-$/, '');

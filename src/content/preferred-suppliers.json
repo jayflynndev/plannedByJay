@@ -1,0 +1,314 @@
+{
+  "source": "Prefered list.xlsx",
+  "sheet": "Sheet1",
+  "range": "A2:A78",
+  "entries": [
+    {
+      "name": "AmaWaterways",
+      "cell": "A2"
+    },
+    {
+      "name": "Ambassador Cruise Lines",
+      "cell": "A3"
+    },
+    {
+      "name": "Anex Tour",
+      "cell": "A4"
+    },
+    {
+      "name": "APT",
+      "cell": "A5"
+    },
+    {
+      "name": "Arbitrip",
+      "cell": "A6"
+    },
+    {
+      "name": "Attraction World",
+      "cell": "A7"
+    },
+    {
+      "name": "Audley Travel",
+      "cell": "A8"
+    },
+    {
+      "name": "Bedsonline",
+      "cell": "A9"
+    },
+    {
+      "name": "Bookabed",
+      "cell": "A10"
+    },
+    {
+      "name": "Caribtours",
+      "cell": "A11"
+    },
+    {
+      "name": "Citalia",
+      "cell": "A12"
+    },
+    {
+      "name": "Crystal",
+      "cell": "A13"
+    },
+    {
+      "name": "DFDS",
+      "cell": "A14"
+    },
+    {
+      "name": "Drive Away",
+      "cell": "A15"
+    },
+    {
+      "name": "Easyjet",
+      "cell": "A16"
+    },
+    {
+      "name": "EasyJet flights",
+      "cell": "A18"
+    },
+    {
+      "name": "Emirates Holidays",
+      "cell": "A19"
+    },
+    {
+      "name": "Ethiad Holidays",
+      "cell": "A20"
+    },
+    {
+      "name": "ExpediaTaap",
+      "cell": "A21"
+    },
+    {
+      "name": "Explora Journeys",
+      "cell": "A22"
+    },
+    {
+      "name": "Faremine",
+      "cell": "A23"
+    },
+    {
+      "name": "Flexible Autos",
+      "cell": "A24"
+    },
+    {
+      "name": "G-Adventures",
+      "cell": "A25"
+    },
+    {
+      "name": "Globus",
+      "cell": "A26"
+    },
+    {
+      "name": "Goldmedal",
+      "cell": "A27"
+    },
+    {
+      "name": "Holiday Extras",
+      "cell": "A28"
+    },
+    {
+      "name": "Hoseasosns",
+      "cell": "A29"
+    },
+    {
+      "name": "Hurtigruten",
+      "cell": "A30"
+    },
+    {
+      "name": "If Only",
+      "cell": "A31"
+    },
+    {
+      "name": "Imagine Cruises",
+      "cell": "A32"
+    },
+    {
+      "name": "Inghams",
+      "cell": "A33"
+    },
+    {
+      "name": "Jet2",
+      "cell": "A34"
+    },
+    {
+      "name": "Jetsetflights",
+      "cell": "A35"
+    },
+    {
+      "name": "JTA",
+      "cell": "A36"
+    },
+    {
+      "name": "Just Go Holidays",
+      "cell": "A37"
+    },
+    {
+      "name": "Kuoni",
+      "cell": "A38"
+    },
+    {
+      "name": "Lounge Pass",
+      "cell": "A39"
+    },
+    {
+      "name": "Mercury Holidays",
+      "cell": "A40"
+    },
+    {
+      "name": "MSC",
+      "cell": "A41"
+    },
+    {
+      "name": "National Holidays",
+      "cell": "A42"
+    },
+    {
+      "name": "Neilson Active Holidays",
+      "cell": "A43"
+    },
+    {
+      "name": "New Market Holidays",
+      "cell": "A44"
+    },
+    {
+      "name": "NCL Cruises",
+      "cell": "A45"
+    },
+    {
+      "name": "Oceania Cruise",
+      "cell": "A46"
+    },
+    {
+      "name": "Olympic Holidays",
+      "cell": "A47"
+    },
+    {
+      "name": "P&O/Cunard",
+      "cell": "A48"
+    },
+    {
+      "name": "P&O Ferries Irish Routes",
+      "cell": "A49"
+    },
+    {
+      "name": "P&O Ferries Other Routes",
+      "cell": "A50"
+    },
+    {
+      "name": "Princess",
+      "cell": "A51"
+    },
+    {
+      "name": "Railbookers",
+      "cell": "A52"
+    },
+    {
+      "name": "RedSea Holidays",
+      "cell": "A53"
+    },
+    {
+      "name": "Riu Pro",
+      "cell": "A54"
+    },
+    {
+      "name": "Riviera Travel",
+      "cell": "A55"
+    },
+    {
+      "name": "Sandals",
+      "cell": "A56"
+    },
+    {
+      "name": "Santas Lapland",
+      "cell": "A57"
+    },
+    {
+      "name": "Silversea",
+      "cell": "A58"
+    },
+    {
+      "name": "Sixt",
+      "cell": "A59"
+    },
+    {
+      "name": "Solmar Villas",
+      "cell": "A60"
+    },
+    {
+      "name": "Stena Line",
+      "cell": "A61"
+    },
+    {
+      "name": "Stuba",
+      "cell": "A62"
+    },
+    {
+      "name": "Sun Hotels",
+      "cell": "A63"
+    },
+    {
+      "name": "SunTransfers",
+      "cell": "A64"
+    },
+    {
+      "name": "Sunvil",
+      "cell": "A65"
+    },
+    {
+      "name": "Teldar Travel",
+      "cell": "A66"
+    },
+    {
+      "name": "Teldar Corporate",
+      "cell": "A67"
+    },
+    {
+      "name": "Titan Travel",
+      "cell": "A68"
+    },
+    {
+      "name": "Travelpack",
+      "cell": "A69"
+    },
+    {
+      "name": "Tui",
+      "cell": "A70"
+    },
+    {
+      "name": "Us Airtours",
+      "cell": "A71"
+    },
+    {
+      "name": "UTC Travel",
+      "cell": "A72"
+    },
+    {
+      "name": "Virgin Voyages",
+      "cell": "A73"
+    },
+    {
+      "name": "WDTC - Walt Disney World",
+      "cell": "A74"
+    },
+    {
+      "name": "WDTC - Disneyland Paris",
+      "cell": "A75"
+    },
+    {
+      "name": "Webbeds",
+      "cell": "A76"
+    },
+    {
+      "name": "WendyWu",
+      "cell": "A77"
+    },
+    {
+      "name": "Cruisingpower",
+      "cell": "A78"
+    }
+  ],
+  "duplicates_removed": [
+    "A17"
+  ]
+}

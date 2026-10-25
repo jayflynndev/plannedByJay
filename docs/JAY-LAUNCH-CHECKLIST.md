@@ -1,14 +1,16 @@
-# Phase 8.1 supplier-offer refinement
+# Supplier and offer handover
 
-- [x] New Travel general advertising permission recorded as confirmed; individual supplier membership, restrictions and asset rights remain separate.
-- [x] Public supplier legal/contact/ATOL fields added with private agent/account/evidence separation. Supported ATOL classification, party counts, full-price confirmation and conditions required for publication; partial drafts retained.
-- [x] Visible card/detail disclosures and future-only supplier snapshots added. Existing records, immutable emails and global/enquiry gates preserved.
-- [ ] Owner: manually review/apply **only** `20261027_supplier_offer_disclosures.sql` per [HOLIDAY-OFFERS-GUIDE.md](HOLIDAY-OFFERS-GUIDE.md). Both Phase 8 migrations are already applied; do not rerun. No hosted SQL was executed here.
-- [ ] Owner: verify individual supplier/product facts, applicable protection wording and licensed artwork using the [Friday checklist](SUPPLIER-OFFER-COMPLIANCE.md). No blanket legal approval is claimed.
-- [ ] Check expanded cards/details and editors at 375/390/440px and desktop. Browser unavailable during Phase 8.1; visual verification remains outstanding. Local tests/lint/TypeScript/build passed.
-- [ ] Separate explicit launch approval remains required. No offers/enquiries were activated or deployed by this refinement.
+- [x] Simple searchable supplier directory and practical offer form replace lookup/approval entry.
+- [x] Existing research and records preserved; no bulk onboarding required.
+- [x] Actual supplier deadlines replace universal seven-day expiry.
+- [x] 68 local tests, lint, TypeScript and production build passed. No browser was connected for visual responsive verification; hosted behaviour was not exercised.
+- [ ] Jay manually reviews/applies consolidated migration 20261030 before releasing the matching app.
+- [ ] Owner checks a saved offer preview, relevant category/Featured placement and the existing enquiry reference link.
+- [ ] Real browser mobile/desktop review if not already available.
 
-Earlier sections below are historical phase-specific checklists; statements about future offers refer to those earlier phases.
+Use [HOLIDAY-OFFERS-GUIDE.md](HOLIDAY-OFFERS-GUIDE.md). No deployment, launch-setting change or live-enquiry activation is authorised by this checklist.
+
+Earlier phase-specific launch records (unchanged):
 
 # Jay's launch checklist
 

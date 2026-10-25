@@ -1,0 +1,3187 @@
+{
+  "researched_on": "2026-10-24",
+  "workbook": "Prefered list.xlsx",
+  "sheet": "Sheet1",
+  "range": "A2:A78",
+  "duplicate_removed": "Easyjet at A17; 77 non-empty workbook rows, 76 distinct names",
+  "scope": "Private owner-review dataset; no current CAA-register certification or artwork permission implied.",
+  "permission_basis": "Dale's written confirmation: It's no worries at all to put whatever offers you see from suppliers we work with on your site as long as you stipulate who the offer is with. Date of original confirmation not supplied; not invented. Does not grant supplier-specific artwork rights.",
+  "records": [
+    {
+      "workbook_name": "AmaWaterways",
+      "cell": "A2",
+      "display_name": "AmaWaterways",
+      "website": "https://www.amawaterways.com",
+      "specialism": "River cruises",
+      "legal_name": "AmaWaterways Limited",
+      "company_number": "10184331",
+      "registered_address": "ABBOTS PLACE SUITE A, WALNUT TREE CLOSE, GUILDFORD, UNITED KINGDOM, GU1 4RW",
+      "business_address": "Suite A, Abbots Place, Walnut Tree Close, Guildford, Surrey GU1 4RW",
+      "public_contact": "amares-intl@amawaterways.com",
+      "atol_holder": "AmaWaterways Limited",
+      "atol_number": "11232",
+      "atol_assessment": "Official supplier states this ATOL for qualifying flight-inclusive arrangements; current CAA register entry not independently confirmed. Check the actual organiser/certificate for each offer.",
+      "issues": [],
+      "sources": [
+        {
+          "url": "https://www.amawaterways.com/uk/terms-conditions/booking-sales",
+          "fields": [
+            "legal_name",
+            "company_number",
+            "atol_holder",
+            "atol_number",
+            "website",
+            "specialism"
+          ],
+          "note": "Official supplier page accessed/search-index extract; facts are supplier-stated, not a current registry certification."
+        },
+        {
+          "url": "https://www.amawaterways.com/uk/help/contact-us",
+          "fields": [
+            "business_address",
+            "public_contact"
+          ],
+          "note": "Official supplier page accessed/search-index extract; facts are supplier-stated, not a current registry certification."
+        },
+        {
+          "url": "https://data.companieshouse.gov.uk/doc/company/10184331.json",
+          "fields": [
+            "company_number",
+            "registered_address"
+          ],
+          "note": "Actual account-free Companies House profile read; status Active. Registered address stays private and is not substituted for a business/contact address.",
+          "checked_at": "2026-10-24T17:10:49.549Z"
+        }
+      ],
+      "registry_check": {
+        "name": "AMAWATERWAYS LIMITED",
+        "status": "Active",
+        "checked_at": "2026-10-24T17:10:49.549Z",
+        "url": "https://data.companieshouse.gov.uk/doc/company/10184331.json"
+      }
+    },
+    {
+      "workbook_name": "Ambassador Cruise Lines",
+      "cell": "A3",
+      "display_name": "Ambassador Cruise Line",
+      "website": "https://www.ambassadorcruiseline.com",
+      "specialism": "Ocean cruises",
+      "legal_name": "Ambassador Cruise Holidays Limited",
+      "company_number": "13299365",
+      "registered_address": "LEVEL 5A MAPLE HOUSE, 149 TOTTENHAM COURT ROAD, LONDON, UNITED KINGDOM, W1T 7NF",
+      "business_address": "Gateway House, Stonehouse Lane, Purfleet, Essex RM19 1NS",
+      "public_contact": "sales@ambassadorcruiseline.com",
+      "atol_holder": "",
+      "atol_number": "",
+      "atol_assessment": "Not established; do not advertise ATOL protection from this record.",
+      "issues": [],
+      "sources": [
+        {
+          "url": "https://www.ambassadorcruiseline.com/information/terms-conditions/",
+          "fields": [
+            "legal_name",
+            "company_number",
+            "business_address",
+            "public_contact",
+            "website",
+            "specialism"
+          ],
+          "note": "Official supplier page accessed/search-index extract; facts are supplier-stated, not a current registry certification."
+        },
+        {
+          "url": "https://data.companieshouse.gov.uk/doc/company/13299365.json",
+          "fields": [
+            "company_number",
+            "registered_address"
+          ],
+          "note": "Actual account-free Companies House profile read; status Active. Registered address stays private and is not substituted for a business/contact address.",
+          "checked_at": "2026-10-24T17:10:49.558Z"
+        }
+      ],
+      "registry_check": {
+        "name": "AMBASSADOR CRUISE HOLIDAYS LIMITED",
+        "status": "Active",
+        "checked_at": "2026-10-24T17:10:49.558Z",
+        "url": "https://data.companieshouse.gov.uk/doc/company/13299365.json"
+      }
+    },
+    {
+      "workbook_name": "Anex Tour",
+      "cell": "A4",
+      "display_name": "Anex Tour",
+      "website": "https://anextour.co.uk",
+      "specialism": "Package holidays",
+      "legal_name": "Travel Vogue Ltd",
+      "company_number": "02857123",
+      "registered_address": "BRUNSWICK HOUSE REGENT PARK, 297 KINGSTON ROAD, LEATHERHEAD,, ENGLAND, KT22 7LU",
+      "business_address": "1st Floor, Brunswick House, Regent Park, 297 Kingston Road, Leatherhead, Surrey KT22 7LU",
+      "public_contact": "info@anextour.co.uk",
+      "atol_holder": "Travel Vogue Ltd",
+      "atol_number": "5869",
+      "atol_assessment": "Official supplier states this ATOL for qualifying flight-inclusive arrangements; current CAA register entry not independently confirmed. Check the actual organiser/certificate for each offer.",
+      "issues": [
+        "Terms heading says ANEX TOUR LIMITED but operative contract names Travel Vogue Ltd; postcode typo KT2 in booking terms differs from KT22 on contact page. Retain contract entity and contact-page postcode; confirm on supplier agreement before advertising."
+      ],
+      "sources": [
+        {
+          "url": "https://anextour.co.uk/booking-conditions/",
+          "fields": [
+            "legal_name",
+            "company_number",
+            "atol_holder",
+            "atol_number",
+            "website",
+            "specialism"
+          ],
+          "note": "Official supplier page accessed/search-index extract; facts are supplier-stated, not a current registry certification."
+        },
+        {
+          "url": "https://anextour.co.uk/terms-of-use/",
+          "fields": [
+            "registered_address"
+          ],
+          "note": "Official supplier page accessed/search-index extract; facts are supplier-stated, not a current registry certification."
+        },
+        {
+          "url": "https://anextour.co.uk/contact-us/",
+          "fields": [
+            "business_address",
+            "public_contact"
+          ],
+          "note": "Official supplier page accessed/search-index extract; facts are supplier-stated, not a current registry certification."
+        },
+        {
+          "url": "https://data.companieshouse.gov.uk/doc/company/02857123.json",
+          "fields": [
+            "company_number",
+            "registered_address"
+          ],
+          "note": "Actual account-free Companies House profile read; status Active. Registered address stays private and is not substituted for a business/contact address.",
+          "checked_at": "2026-10-24T17:10:49.564Z"
+        }
+      ],
+      "registry_check": {
+        "name": "TRAVEL VOGUE LIMITED",
+        "status": "Active",
+        "checked_at": "2026-10-24T17:10:49.564Z",
+        "url": "https://data.companieshouse.gov.uk/doc/company/02857123.json"
+      }
+    },
+    {
+      "workbook_name": "APT",
+      "cell": "A5",
+      "display_name": "APT",
+      "website": "https://www.aptouring.com/en-gb",
+      "specialism": "Escorted tours and river cruises",
+      "legal_name": "Australian Pacific Touring (U.K) Limited",
+      "company_number": "01662539",
+      "registered_address": "3RD FLOOR 52 GROSVENOR GARDENS, LONDON, UNITED KINGDOM, SW1W 0AU",
+      "business_address": "3rd Floor, 52 Grosvenor Gardens, London SW1W 0AU",
+      "public_contact": "Public contact page: https://www.aptouring.com/en-gb/connect-with-us/contact-us",
+      "atol_holder": "",
+      "atol_number": "",
+      "atol_assessment": "Not established; do not advertise ATOL protection from this record.",
+      "issues": [],
+      "sources": [
+        {
+          "url": "https://www.aptouring.com/en-gb/terms-and-conditions",
+          "fields": [
+            "legal_name",
+            "company_number",
+            "business_address",
+            "website",
+            "specialism"
+          ],
+          "note": "Official indexed terms identified entity/address; subsequent full-page fetch timed out. No ATOL number inferred from older brochures."
+        },
+        {
+          "url": "https://www.aptouring.com/en-gb/connect-with-us/contact-us",
+          "fields": [
+            "public_contact"
+          ],
+          "note": "Public contact page available; no general email established. No contact attempt made."
+        },
+        {
+          "url": "https://data.companieshouse.gov.uk/doc/company/01662539.json",
+          "fields": [
+            "company_number",
+            "registered_address"
+          ],
+          "note": "Actual account-free Companies House profile read; status Active. Registered address stays private and is not substituted for a business/contact address.",
+          "checked_at": "2026-10-24T17:10:49.607Z"
+        }
+      ],
+      "registry_check": {
+        "name": "AUSTRALIAN PACIFIC TOURING (U.K.) LIMITED",
+        "status": "Active",
+        "checked_at": "2026-10-24T17:10:49.607Z",
+        "url": "https://data.companieshouse.gov.uk/doc/company/01662539.json"
+      }
+    },
+    {
+      "workbook_name": "Arbitrip",
+      "cell": "A6",
+      "display_name": "Arbitrip",
+      "website": "https://arbitrip.com",
+      "specialism": "Business hotel booking platform",
+      "legal_name": "",
+      "company_number": "",
+      "registered_address": "",
+      "business_address": "",
+      "public_contact": "",
+      "atol_holder": "",
+      "atol_number": "",
+      "atol_assessment": "Component, distributor or platform: ATOL is not inherent to the standalone service. No own licence established; any flight-inclusive package needs its actual organiser checked.",
+      "issues": [
+        "Official terms identify Arigato Advanced Travel Technology Ltd (Israel 515225480), with some services through Arbitrip UK Limited. Confirm which entity contracts with New Travel; no single entity assigned."
+      ],
+      "sources": [
+        {
+          "url": "https://arbitrip.com/about-us/",
+          "fields": [
+            "website",
+            "specialism"
+          ],
+          "note": "Official supplier page accessed/search-index extract; facts are supplier-stated, not a current registry certification."
+        },
+        {
+          "url": "https://s3.amazonaws.com/arbitrip/ArbitripTermsPrivacy.pdf",
+          "fields": [],
+          "note": "Terms identify Israeli platform operator and UK service entity; contract-specific identity unresolved."
+        }
+      ]
+    },
+    {
+      "workbook_name": "Attraction World",
+      "cell": "A7",
+      "display_name": "Attraction World",
+      "website": "https://www.attractionworld.com",
+      "specialism": "Attraction tickets",
+      "legal_name": "Attraction World Limited",
+      "company_number": "05346727",
+      "registered_address": "FIRST FLOOR NEW OXFORD HOUSE, WATERLOO STREET, BIRMINGHAM, UNITED KINGDOM, B2 5UG",
+      "business_address": "",
+      "public_contact": "",
+      "atol_holder": "",
+      "atol_number": "",
+      "atol_assessment": "Component, distributor or platform: ATOL is not inherent to the standalone service. No own licence established; any flight-inclusive package needs its actual organiser checked.",
+      "issues": [
+        "Website terms restrict automated copying/monitoring. No continuing crawl or artwork reuse; company detail supported by public sister-brand booking terms."
+      ],
+      "sources": [
+        {
+          "url": "https://www.attractionworld.com/PDF/terms_of_use.pdf",
+          "fields": [
+            "legal_name",
+            "website",
+            "specialism"
+          ],
+          "note": "Official supplier page accessed/search-index extract; facts are supplier-stated, not a current registry certification."
+        },
+        {
+          "url": "https://www.attractiontix.co.uk/terms-and-conditions",
+          "fields": [
+            "company_number",
+            "registered_address"
+          ],
+          "note": "Official supplier page accessed/search-index extract; facts are supplier-stated, not a current registry certification."
+        },
+        {
+          "url": "https://data.companieshouse.gov.uk/doc/company/05346727.json",
+          "fields": [
+            "company_number",
+            "registered_address"
+          ],
+          "note": "Actual account-free Companies House profile read; status Active. Registered address stays private and is not substituted for a business/contact address.",
+          "checked_at": "2026-10-24T17:10:49.608Z"
+        }
+      ],
+      "registry_check": {
+        "name": "ATTRACTION WORLD LIMITED",
+        "status": "Active",
+        "checked_at": "2026-10-24T17:10:49.608Z",
+        "url": "https://data.companieshouse.gov.uk/doc/company/05346727.json"
+      }
+    },
+    {
+      "workbook_name": "Audley Travel",
+      "cell": "A8",
+      "display_name": "Audley Travel",
+      "website": "https://www.audleytravel.com",
+      "specialism": "Tailor-made travel",
+      "legal_name": "Audley Travel Group Limited",
+      "company_number": "03190720",
+      "registered_address": "NEW MILL, NEW MILL LANE, WITNEY, OXFORDSHIRE, OX29 9SX",
+      "business_address": "",
+      "public_contact": "Public contact page: https://www.audleytravel.com/contact-us",
+      "atol_holder": "Audley Travel Group Limited",
+      "atol_number": "4817",
+      "atol_assessment": "Official supplier states this ATOL for qualifying flight-inclusive arrangements; current CAA register entry not independently confirmed. Check the actual organiser/certificate for each offer.",
+      "issues": [],
+      "sources": [
+        {
+          "url": "https://www.audleytravel.com/contact-us/offices",
+          "fields": [
+            "legal_name",
+            "company_number",
+            "registered_address",
+            "website",
+            "specialism"
+          ],
+          "note": "Official supplier page accessed/search-index extract; facts are supplier-stated, not a current registry certification."
+        },
+        {
+          "url": "https://www.audleytravel.com/about-us/financial-protection",
+          "fields": [
+            "atol_holder",
+            "atol_number"
+          ],
+          "note": "Official supplier page accessed/search-index extract; facts are supplier-stated, not a current registry certification."
+        },
+        {
+          "url": "https://www.audleytravel.com/contact-us",
+          "fields": [
+            "public_contact"
+          ],
+          "note": "Public contact page available; no general email established. No contact attempt made."
+        },
+        {
+          "url": "https://data.companieshouse.gov.uk/doc/company/03190720.json",
+          "fields": [
+            "company_number",
+            "registered_address"
+          ],
+          "note": "Actual account-free Companies House profile read; status Active. Registered address stays private and is not substituted for a business/contact address.",
+          "checked_at": "2026-10-24T17:10:49.663Z"
+        }
+      ],
+      "registry_check": {
+        "name": "AUDLEY TRAVEL GROUP LIMITED",
+        "status": "Active",
+        "checked_at": "2026-10-24T17:10:49.663Z",
+        "url": "https://data.companieshouse.gov.uk/doc/company/03190720.json"
+      }
+    },
+    {
+      "workbook_name": "Bedsonline",
+      "cell": "A9",
+      "display_name": "Bedsonline",
+      "website": "https://discover.bedsonline.com",
+      "specialism": "Trade accommodation and travel components",
+      "legal_name": "BEDSONLINE, S.L.U.",
+      "company_number": "B-28931681",
+      "registered_address": "Complejo Mirall Balear, Cami de Son Fangos 100, Torre A, 5a Planta, 3A-4A, 07007 Palma de Mallorca, Spain",
+      "business_address": "",
+      "public_contact": "",
+      "atol_holder": "",
+      "atol_number": "",
+      "atol_assessment": "Component, distributor or platform: ATOL is not inherent to the standalone service. No own licence established; any flight-inclusive package needs its actual organiser checked.",
+      "issues": [],
+      "sources": [
+        {
+          "url": "https://discover.bedsonline.com/en-en/legal-statement",
+          "fields": [
+            "legal_name",
+            "company_number",
+            "registered_address",
+            "website",
+            "specialism"
+          ],
+          "note": "Official supplier page accessed/search-index extract; facts are supplier-stated, not a current registry certification."
+        }
+      ]
+    },
+    {
+      "workbook_name": "Bookabed",
+      "cell": "A10",
+      "display_name": "BookaBed",
+      "website": "https://www.bookabed.co.uk",
+      "specialism": "Trade accommodation",
+      "legal_name": "BookaBed AG",
+      "company_number": "CHE-268.565.836",
+      "registered_address": "",
+      "business_address": "Haldenstrasse 5, CH-6340 Baar, Switzerland",
+      "public_contact": "info@bookabed.co.uk",
+      "atol_holder": "",
+      "atol_number": "",
+      "atol_assessment": "Component, distributor or platform: ATOL is not inherent to the standalone service. No own licence established; any flight-inclusive package needs its actual organiser checked.",
+      "issues": [],
+      "sources": [
+        {
+          "url": "https://www.bookabed.co.uk/contact-us",
+          "fields": [
+            "legal_name",
+            "company_number",
+            "business_address",
+            "public_contact",
+            "website",
+            "specialism"
+          ],
+          "note": "Official supplier page accessed/search-index extract; facts are supplier-stated, not a current registry certification."
+        }
+      ]
+    },
+    {
+      "workbook_name": "Caribtours",
+      "cell": "A11",
+      "display_name": "Caribtours",
+      "website": "https://www.caribtours.co.uk",
+      "specialism": "Luxury and Caribbean holidays",
+      "legal_name": "Caribtours Limited",
+      "company_number": "01402297",
+      "registered_address": "126-128 NEW KINGS ROAD, LONDON, UNITED KINGDOM, SW6 4LZ",
+      "business_address": "126 New Kings Road, Fulham, London SW6 4LZ",
+      "public_contact": "Public contact page: https://www.caribtours.co.uk/Contact-us",
+      "atol_holder": "Caribtours Limited",
+      "atol_number": "2674",
+      "atol_assessment": "Official supplier states this ATOL for qualifying flight-inclusive arrangements; current CAA register entry not independently confirmed. Check the actual organiser/certificate for each offer.",
+      "issues": [],
+      "sources": [
+        {
+          "url": "https://www.caribtours.co.uk/about-us/terms-and-conditions/",
+          "fields": [
+            "legal_name",
+            "company_number",
+            "registered_address",
+            "atol_holder",
+            "atol_number",
+            "website",
+            "specialism"
+          ],
+          "note": "Official supplier page accessed/search-index extract; facts are supplier-stated, not a current registry certification."
+        },
+        {
+          "url": "https://www.caribtours.co.uk/Contact-us",
+          "fields": [
+            "business_address"
+          ],
+          "note": "Official supplier page accessed/search-index extract; facts are supplier-stated, not a current registry certification."
+        },
+        {
+          "url": "https://www.caribtours.co.uk/Contact-us",
+          "fields": [
+            "public_contact"
+          ],
+          "note": "Public contact page available; no general email established. No contact attempt made."
+        },
+        {
+          "url": "https://data.companieshouse.gov.uk/doc/company/01402297.json",
+          "fields": [
+            "company_number",
+            "registered_address"
+          ],
+          "note": "Actual account-free Companies House profile read; status Active. Registered address stays private and is not substituted for a business/contact address.",
+          "checked_at": "2026-10-24T17:10:49.734Z"
+        }
+      ],
+      "registry_check": {
+        "name": "CARIBTOURS LIMITED",
+        "status": "Active",
+        "checked_at": "2026-10-24T17:10:49.734Z",
+        "url": "https://data.companieshouse.gov.uk/doc/company/01402297.json"
+      }
+    },
+    {
+      "workbook_name": "Citalia",
+      "cell": "A12",
+      "display_name": "Citalia",
+      "website": "https://www.citalia.com",
+      "specialism": "Italy holidays",
+      "legal_name": "Specialist Holidays (Travel) Limited",
+      "company_number": "00446617",
+      "registered_address": "4TH FLOOR, WEST POINT, SPRINGFIELD ROAD, HORSHAM, WEST SUSSEX, ENGLAND, RH12 2PD",
+      "business_address": "",
+      "public_contact": "customeroperations@citalia.com",
+      "atol_holder": "Specialist Holidays (Travel) Limited",
+      "atol_number": "0285",
+      "atol_assessment": "Official supplier states this ATOL for qualifying flight-inclusive arrangements; current CAA register entry not independently confirmed. Check the actual organiser/certificate for each offer.",
+      "issues": [
+        "Official November 2024 PDF names this company and ATOL 0285. Current Companies House registered office differs from PDF Surbiton office; registered office kept private and no stale business address inferred. Public email is customer operations."
+      ],
+      "sources": [
+        {
+          "url": "https://www.citalia.com/about/faqs/",
+          "fields": [
+            "website",
+            "specialism"
+          ],
+          "note": "Official FAQ states ATOL 0285; exact holder not established in retrieved extract."
+        },
+        {
+          "url": "https://www.citalia.com/-/media/Files/Booking-Terms-and-Conditions-2024/Citaliabookingtermsandconditions--final--20092024.pdf?hash=1E5D91FFE44FE5C80142A53E60E86A8C&rev=a105b94f5427488e860fbf4b6c4ebb55",
+          "fields": [
+            "public_contact"
+          ],
+          "note": "Official supplier page accessed/search-index extract; facts are supplier-stated, not a current registry certification."
+        },
+        {
+          "url": "https://www.citalia.com/-/media/Files/Booking-Terms-and-Conditions-2024/Citaliabookingtermsandconditions--final--14112024.pdf?hash=81CFE09FB8103690331520ACC4F08110&rev=ae004285eeda46cf940acf943031eea1",
+          "fields": [
+            "legal_name",
+            "company_number",
+            "atol_holder",
+            "atol_number"
+          ],
+          "note": "Official supplier page accessed/search-index extract; facts are supplier-stated, not a current registry certification."
+        },
+        {
+          "url": "https://data.companieshouse.gov.uk/doc/company/00446617.json",
+          "fields": [
+            "company_number",
+            "registered_address"
+          ],
+          "note": "Actual account-free Companies House profile read; status Active. Registered address stays private and is not substituted for a business/contact address.",
+          "checked_at": "2026-10-24T17:14:09.365Z"
+        }
+      ],
+      "registry_check": {
+        "name": "SPECIALIST HOLIDAYS (TRAVEL) LIMITED",
+        "status": "Active",
+        "checked_at": "2026-10-24T17:14:09.365Z",
+        "url": "https://data.companieshouse.gov.uk/doc/company/00446617.json"
+      }
+    },
+    {
+      "workbook_name": "Crystal",
+      "cell": "A13",
+      "display_name": "Crystal",
+      "website": "",
+      "specialism": "Cruises or ski holidays — identity unresolved",
+      "legal_name": "",
+      "company_number": "",
+      "registered_address": "",
+      "business_address": "",
+      "public_contact": "",
+      "atol_holder": "",
+      "atol_number": "",
+      "atol_assessment": "Not established; do not advertise ATOL protection from this record.",
+      "issues": [
+        "Workbook says only Crystal. Confirm Crystal Cruises versus Crystal Ski. Cruise terms identify Crystal Cruises Ltd (Bahamas), while UK company 14275143 is not automatically the carrier. No candidate identity imported."
+      ],
+      "sources": [
+        {
+          "url": "https://www.crystalcruises.com/legal/contract-uk",
+          "fields": [],
+          "note": "Candidate only: cruise carrier; workbook identity not established."
+        }
+      ]
+    },
+    {
+      "workbook_name": "DFDS",
+      "cell": "A14",
+      "display_name": "DFDS",
+      "website": "https://www.dfds.com",
+      "specialism": "Ferries",
+      "legal_name": "",
+      "company_number": "",
+      "registered_address": "",
+      "business_address": "",
+      "public_contact": "",
+      "atol_holder": "",
+      "atol_number": "",
+      "atol_assessment": "Component, distributor or platform: ATOL is not inherent to the standalone service. No own licence established; any flight-inclusive package needs its actual organiser checked.",
+      "issues": [
+        "Passenger contracting entity depends on route. Do not use freight-company contacts or staging-site emails; confirm applicable passenger entity from current route terms."
+      ],
+      "sources": [
+        {
+          "url": "https://www.dfds.com/en-gb/passenger-ferries",
+          "fields": [
+            "website",
+            "specialism"
+          ],
+          "note": "Official supplier page accessed/search-index extract; facts are supplier-stated, not a current registry certification."
+        }
+      ]
+    },
+    {
+      "workbook_name": "Drive Away",
+      "cell": "A15",
+      "display_name": "Drive Away",
+      "website": "",
+      "specialism": "Car hire — identity unresolved",
+      "legal_name": "",
+      "company_number": "",
+      "registered_address": "",
+      "business_address": "",
+      "public_contact": "",
+      "atol_holder": "",
+      "atol_number": "",
+      "atol_assessment": "Component, distributor or platform: ATOL is not inherent to the standalone service. No own licence established; any flight-inclusive package needs its actual organiser checked.",
+      "issues": [
+        "No reliable UK supplier identity established. Confirm the Drive Away portal/domain from New Travel; unrelated Companies House name matches and Australian DriveAway are not sufficient."
+      ],
+      "sources": []
+    },
+    {
+      "workbook_name": "Easyjet",
+      "cell": "A16",
+      "display_name": "easyJet",
+      "website": "https://www.easyjet.com",
+      "specialism": "Airline or holidays — division unresolved",
+      "legal_name": "",
+      "company_number": "",
+      "registered_address": "",
+      "business_address": "",
+      "public_contact": "",
+      "atol_holder": "",
+      "atol_number": "",
+      "atol_assessment": "Not established; do not advertise ATOL protection from this record.",
+      "issues": [
+        "Workbook separately lists EasyJet flights. Confirm this row means easyJet holidays before assigning easyJet holidays Limited (11927917; ATOL 11694). No holiday-company identity imported."
+      ],
+      "sources": [
+        {
+          "url": "https://www.easyjet.com/en/holidays/info/booking-conditions",
+          "fields": [
+            "website",
+            "specialism"
+          ],
+          "note": "Candidate holidays division only; workbook row ambiguous."
+        }
+      ]
+    },
+    {
+      "workbook_name": "EasyJet flights",
+      "cell": "A18",
+      "display_name": "easyJet flights",
+      "website": "https://www.easyjet.com",
+      "specialism": "Flight-only airline",
+      "legal_name": "easyJet Airline Company Limited",
+      "company_number": "03034606",
+      "registered_address": "HANGAR 89 LONDON LUTON AIRPORT, LUTON, BEDFORDSHIRE, LU2 9PF",
+      "business_address": "",
+      "public_contact": "",
+      "atol_holder": "",
+      "atol_number": "",
+      "atol_assessment": "Component, distributor or platform: ATOL is not inherent to the standalone service. No own licence established; any flight-inclusive package needs its actual organiser checked.",
+      "issues": [
+        "Airline company named in holidays terms; actual operating carrier can differ by flight. Do not apply easyJet holidays ATOL 11694 to flight-only bookings."
+      ],
+      "sources": [
+        {
+          "url": "https://www.easyjet.com/en/holidays/info/booking-conditions",
+          "fields": [
+            "legal_name",
+            "company_number",
+            "registered_address",
+            "website",
+            "specialism"
+          ],
+          "note": "Official supplier page accessed/search-index extract; facts are supplier-stated, not a current registry certification."
+        },
+        {
+          "url": "https://data.companieshouse.gov.uk/doc/company/03034606.json",
+          "fields": [
+            "company_number",
+            "registered_address"
+          ],
+          "note": "Actual account-free Companies House profile read; status Active. Registered address stays private and is not substituted for a business/contact address.",
+          "checked_at": "2026-10-24T17:10:49.751Z"
+        }
+      ],
+      "registry_check": {
+        "name": "EASYJET AIRLINE COMPANY LIMITED",
+        "status": "Active",
+        "checked_at": "2026-10-24T17:10:49.751Z",
+        "url": "https://data.companieshouse.gov.uk/doc/company/03034606.json"
+      }
+    },
+    {
+      "workbook_name": "Emirates Holidays",
+      "cell": "A19",
+      "display_name": "Emirates Holidays",
+      "website": "",
+      "specialism": "Airline holidays — UK contract entity unresolved",
+      "legal_name": "",
+      "company_number": "",
+      "registered_address": "",
+      "business_address": "",
+      "public_contact": "",
+      "atol_holder": "",
+      "atol_number": "",
+      "atol_assessment": "Not established; do not advertise ATOL protection from this record.",
+      "issues": [
+        "Could not establish current UK contract entity from accessible official evidence. Third-party dnata terms not imported. Confirm current official UK booking conditions/domain via New Travel."
+      ],
+      "sources": []
+    },
+    {
+      "workbook_name": "Ethiad Holidays",
+      "cell": "A20",
+      "display_name": "Etihad Holidays",
+      "website": "https://www.etihadholidays.co.uk",
+      "specialism": "Flight-inclusive holidays",
+      "legal_name": "Capital Holidays (International) Sole Proprietorship L.L.C",
+      "company_number": "2243312",
+      "registered_address": "",
+      "business_address": "Abu Dhabi National Exhibition Centre, Khaleej Al Arabi Street, PO Box 5546, Abu Dhabi, UAE",
+      "public_contact": "",
+      "atol_holder": "Capital Holidays (International) Sole Proprietorship L.L.C",
+      "atol_number": "11125",
+      "atol_assessment": "Official supplier states this ATOL for qualifying flight-inclusive arrangements; current CAA register entry not independently confirmed. Check the actual organiser/certificate for each offer.",
+      "issues": [
+        "Company identifier is an Abu Dhabi commercial licence, not a UK Companies House number; original workbook spelling Ethiad retained privately."
+      ],
+      "sources": [
+        {
+          "url": "https://www.etihadholidays.co.uk/terms-and-conditions/",
+          "fields": [
+            "legal_name",
+            "company_number",
+            "business_address",
+            "atol_holder",
+            "atol_number",
+            "website",
+            "specialism"
+          ],
+          "note": "Official supplier page accessed/search-index extract; facts are supplier-stated, not a current registry certification."
+        }
+      ]
+    },
+    {
+      "workbook_name": "ExpediaTaap",
+      "cell": "A21",
+      "display_name": "Expedia TAAP",
+      "website": "https://www.expediataap.co.uk",
+      "specialism": "Travel-agent booking programme",
+      "legal_name": "",
+      "company_number": "",
+      "registered_address": "",
+      "business_address": "",
+      "public_contact": "",
+      "atol_holder": "Expedia, Inc.",
+      "atol_number": "5788",
+      "atol_assessment": "Official supplier states this ATOL for qualifying flight-inclusive arrangements; current CAA register entry not independently confirmed. Check the actual organiser/certificate for each offer.",
+      "issues": [
+        "Official UK TAAP states Expedia, Inc. ATOL 5788 for qualifying packages. Payment/service entities vary; consumer Expedia terms are not proof of the New Travel TAAP contracting entity. Legal-name field withheld."
+      ],
+      "sources": [
+        {
+          "url": "https://www.expediataap.co.uk/",
+          "fields": [
+            "website",
+            "specialism",
+            "atol_holder",
+            "atol_number"
+          ],
+          "note": "Official supplier page accessed/search-index extract; facts are supplier-stated, not a current registry certification."
+        }
+      ]
+    },
+    {
+      "workbook_name": "Explora Journeys",
+      "cell": "A22",
+      "display_name": "Explora Journeys",
+      "website": "https://explorajourneys.com",
+      "specialism": "Luxury ocean cruises",
+      "legal_name": "",
+      "company_number": "",
+      "registered_address": "",
+      "business_address": "",
+      "public_contact": "",
+      "atol_holder": "",
+      "atol_number": "",
+      "atol_assessment": "Not established; do not advertise ATOL protection from this record.",
+      "issues": [
+        "UK terms page identified but full legal text inaccessible to research tool. Confirm exact carrier/organiser and any flight-package licence; do not inherit MSC ATOL by group association."
+      ],
+      "sources": [
+        {
+          "url": "https://explorajourneys.com/uk/en/legal/booking-terms-and-conditions",
+          "fields": [
+            "website",
+            "specialism"
+          ],
+          "note": "Official indexed terms located; full fetch unavailable; entity/licence not inferred."
+        }
+      ]
+    },
+    {
+      "workbook_name": "Faremine",
+      "cell": "A23",
+      "display_name": "Faremine",
+      "website": "https://faremine.com",
+      "specialism": "Trade flights and holidays",
+      "legal_name": "Gazelle Travel Limited",
+      "company_number": "01526617",
+      "registered_address": "42-44 HIGH STREET, NORTHWOOD, ENGLAND, HA6 1BL",
+      "business_address": "42-44 High Street, Northwood, Middlesex HA6 1BL",
+      "public_contact": "reservations@faremine.com",
+      "atol_holder": "Gazelle Travel Limited",
+      "atol_number": "4067",
+      "atol_assessment": "Official supplier states this ATOL for qualifying flight-inclusive arrangements; current CAA register entry not independently confirmed. Check the actual organiser/certificate for each offer.",
+      "issues": [],
+      "sources": [
+        {
+          "url": "https://faremine.com/contact/",
+          "fields": [
+            "legal_name",
+            "company_number",
+            "registered_address",
+            "business_address",
+            "atol_holder",
+            "atol_number",
+            "website",
+            "specialism"
+          ],
+          "note": "Official supplier page accessed/search-index extract; facts are supplier-stated, not a current registry certification."
+        },
+        {
+          "url": "https://faremine.com/contact/",
+          "fields": [
+            "public_contact"
+          ],
+          "note": "Published reservations/customer-service address; not a private agent contact."
+        },
+        {
+          "url": "https://data.companieshouse.gov.uk/doc/company/01526617.json",
+          "fields": [
+            "company_number",
+            "registered_address"
+          ],
+          "note": "Actual account-free Companies House profile read; status Active. Registered address stays private and is not substituted for a business/contact address.",
+          "checked_at": "2026-10-24T17:10:49.733Z"
+        }
+      ],
+      "registry_check": {
+        "name": "GAZELLE TRAVEL LIMITED",
+        "status": "Active",
+        "checked_at": "2026-10-24T17:10:49.733Z",
+        "url": "https://data.companieshouse.gov.uk/doc/company/01526617.json"
+      }
+    },
+    {
+      "workbook_name": "Flexible Autos",
+      "cell": "A24",
+      "display_name": "Flexible Autos",
+      "website": "https://www.flexibleautos.com",
+      "specialism": "Trade car hire",
+      "legal_name": "Flexiblecarhire.com Ltd",
+      "company_number": "",
+      "registered_address": "",
+      "business_address": "Suite 6, Hoddesdon Enterprise Centre, Pindar Road, Hoddesdon, Hertfordshire EN11 0FJ",
+      "public_contact": "reservations@flexibleautos.com",
+      "atol_holder": "",
+      "atol_number": "",
+      "atol_assessment": "Component, distributor or platform: ATOL is not inherent to the standalone service. No own licence established; any flight-inclusive package needs its actual organiser checked.",
+      "issues": [
+        "Do not confuse with unrelated Flexautos Ltd / flexautos.co.uk."
+      ],
+      "sources": [
+        {
+          "url": "https://www.flexibleautos.com/tier4_uk/Default.aspx",
+          "fields": [
+            "legal_name",
+            "public_contact",
+            "website",
+            "specialism"
+          ],
+          "note": "Official supplier page accessed/search-index extract; facts are supplier-stated, not a current registry certification."
+        },
+        {
+          "url": "https://www.flexiblecarhire.com/",
+          "fields": [
+            "business_address"
+          ],
+          "note": "Official supplier page accessed/search-index extract; facts are supplier-stated, not a current registry certification."
+        }
+      ]
+    },
+    {
+      "workbook_name": "G-Adventures",
+      "cell": "A25",
+      "display_name": "G Adventures",
+      "website": "https://www.gadventures.com",
+      "specialism": "Small-group adventure tours",
+      "legal_name": "",
+      "company_number": "",
+      "registered_address": "",
+      "business_address": "",
+      "public_contact": "",
+      "atol_holder": "G Adventures Limited",
+      "atol_number": "10808",
+      "atol_assessment": "Official supplier states this ATOL for qualifying flight-inclusive arrangements; current CAA register entry not independently confirmed. Check the actual organiser/certificate for each offer.",
+      "issues": [
+        "Tour operator is G Adventures Inc. (Barbados); G Adventures Limited may act as UK disclosed agent and holds stated ATOL 10808. Choose actual contracting entity from confirmation, not one blanket legal-name field."
+      ],
+      "sources": [
+        {
+          "url": "https://www.gadventures.com/terms-conditions/booking-terms/uk-booking-terms/",
+          "fields": [
+            "website",
+            "specialism",
+            "atol_holder",
+            "atol_number"
+          ],
+          "note": "Official supplier page accessed/search-index extract; facts are supplier-stated, not a current registry certification."
+        }
+      ]
+    },
+    {
+      "workbook_name": "Globus",
+      "cell": "A26",
+      "display_name": "Globus",
+      "website": "https://www.globusjourneys.co.uk",
+      "specialism": "Escorted tours",
+      "legal_name": "Cosmos Tours Limited",
+      "company_number": "",
+      "registered_address": "",
+      "business_address": "Fourth Floor, Gateway House, 28 The Quadrant, Richmond, Surrey TW9 1DN",
+      "public_contact": "Public contact page: https://www.globusjourneys.co.uk/contact/",
+      "atol_holder": "Cosmos Tours Limited",
+      "atol_number": "1082",
+      "atol_assessment": "Official supplier states this ATOL for qualifying flight-inclusive arrangements; current CAA register entry not independently confirmed. Check the actual organiser/certificate for each offer.",
+      "issues": [],
+      "sources": [
+        {
+          "url": "https://www.globusjourneys.co.uk/terms/",
+          "fields": [
+            "legal_name",
+            "atol_holder",
+            "atol_number",
+            "website",
+            "specialism"
+          ],
+          "note": "Official supplier page accessed/search-index extract; facts are supplier-stated, not a current registry certification."
+        },
+        {
+          "url": "https://www.globusjourneys.co.uk/contact/",
+          "fields": [
+            "business_address"
+          ],
+          "note": "Official supplier page accessed/search-index extract; facts are supplier-stated, not a current registry certification."
+        },
+        {
+          "url": "https://www.globusjourneys.co.uk/contact/",
+          "fields": [
+            "public_contact"
+          ],
+          "note": "Public contact page; general email not established."
+        }
+      ]
+    },
+    {
+      "workbook_name": "Goldmedal",
+      "cell": "A27",
+      "display_name": "Gold Medal",
+      "website": "https://www.goldmedal.co.uk",
+      "specialism": "Trade tailor-made holidays",
+      "legal_name": "Gold Medal Travel Group Limited",
+      "company_number": "01376076",
+      "registered_address": "LANCASTER HOUSE, CENTURION WAY, LEYLAND, ENGLAND, PR26 6TX",
+      "business_address": "Lancaster House, Centurion Way, Leyland, Lancashire PR26 6TX",
+      "public_contact": "",
+      "atol_holder": "",
+      "atol_number": "",
+      "atol_assessment": "Not established; do not advertise ATOL protection from this record.",
+      "issues": [
+        "Official March 2024 terms state ATOL 2916. Current November 2025 terms identified entity/address but licence not reconfirmed in retrieved text; pair withheld pending current check."
+      ],
+      "sources": [
+        {
+          "url": "https://media.goldmedal.co.uk/media/ahgppnas/gm-booking-conditions-essential-information-nov-25.pdf",
+          "fields": [
+            "legal_name",
+            "company_number",
+            "business_address",
+            "website",
+            "specialism"
+          ],
+          "note": "Official supplier page accessed/search-index extract; facts are supplier-stated, not a current registry certification."
+        },
+        {
+          "url": "https://media.goldmedal.co.uk/media/0ukdvcr4/gm-booking-conditions-essential-information-mar-2024.pdf",
+          "fields": [],
+          "note": "Older official ATOL 2916 evidence only; not imported as current."
+        },
+        {
+          "url": "https://data.companieshouse.gov.uk/doc/company/01376076.json",
+          "fields": [
+            "company_number",
+            "registered_address"
+          ],
+          "note": "Actual account-free Companies House profile read; status Active. Registered address stays private and is not substituted for a business/contact address.",
+          "checked_at": "2026-10-24T17:10:49.869Z"
+        }
+      ],
+      "registry_check": {
+        "name": "GOLD MEDAL TRAVEL GROUP LIMITED",
+        "status": "Active",
+        "checked_at": "2026-10-24T17:10:49.869Z",
+        "url": "https://data.companieshouse.gov.uk/doc/company/01376076.json"
+      }
+    },
+    {
+      "workbook_name": "Holiday Extras",
+      "cell": "A28",
+      "display_name": "Holiday Extras",
+      "website": "https://www.holidayextras.com",
+      "specialism": "Airport parking, hotels and travel extras",
+      "legal_name": "Holiday Extras Limited",
+      "company_number": "01693250",
+      "registered_address": "ASHFORD ROAD, NEWINGREEN, HYTHE, KENT, CT21 4JF",
+      "business_address": "",
+      "public_contact": "",
+      "atol_holder": "",
+      "atol_number": "",
+      "atol_assessment": "Component, distributor or platform: ATOL is not inherent to the standalone service. No own licence established; any flight-inclusive package needs its actual organiser checked.",
+      "issues": [
+        "Holiday Extras Cover Limited is a separate insurance entity; do not substitute its company or regulatory details."
+      ],
+      "sources": [
+        {
+          "url": "https://www.holidayextras.com/about-us/company-information.html",
+          "fields": [
+            "legal_name",
+            "company_number",
+            "website",
+            "specialism"
+          ],
+          "note": "Official supplier page accessed/search-index extract; facts are supplier-stated, not a current registry certification."
+        },
+        {
+          "url": "https://data.companieshouse.gov.uk/doc/company/01693250.json",
+          "fields": [
+            "company_number",
+            "registered_address"
+          ],
+          "note": "Actual account-free Companies House profile read; status Active. Registered address stays private and is not substituted for a business/contact address.",
+          "checked_at": "2026-10-24T17:10:49.870Z"
+        }
+      ],
+      "registry_check": {
+        "name": "HOLIDAY EXTRAS LIMITED",
+        "status": "Active",
+        "checked_at": "2026-10-24T17:10:49.870Z",
+        "url": "https://data.companieshouse.gov.uk/doc/company/01693250.json"
+      }
+    },
+    {
+      "workbook_name": "Hoseasosns",
+      "cell": "A29",
+      "display_name": "Hoseasons",
+      "website": "https://www.hoseasons.co.uk",
+      "specialism": "UK accommodation",
+      "legal_name": "Awaze Vacation Rentals Ltd",
+      "company_number": "",
+      "registered_address": "",
+      "business_address": "",
+      "public_contact": "",
+      "atol_holder": "",
+      "atol_number": "",
+      "atol_assessment": "Component, distributor or platform: ATOL is not inherent to the standalone service. No own licence established; any flight-inclusive package needs its actual organiser checked.",
+      "issues": [
+        "Terms of use identify website operator; actual accommodation contract/provider must be checked for the specific product."
+      ],
+      "sources": [
+        {
+          "url": "https://www.hoseasons.co.uk/legal/terms-of-use",
+          "fields": [
+            "legal_name",
+            "website",
+            "specialism"
+          ],
+          "note": "Official supplier page accessed/search-index extract; facts are supplier-stated, not a current registry certification."
+        }
+      ]
+    },
+    {
+      "workbook_name": "Hurtigruten",
+      "cell": "A30",
+      "display_name": "Hurtigruten",
+      "website": "https://www.hurtigruten.com/en-gb",
+      "specialism": "Norwegian coastal cruising",
+      "legal_name": "",
+      "company_number": "",
+      "registered_address": "",
+      "business_address": "",
+      "public_contact": "uk.sales@hurtigruten.com",
+      "atol_holder": "",
+      "atol_number": "",
+      "atol_assessment": "Not established; do not advertise ATOL protection from this record.",
+      "issues": [
+        "Do not confuse Hurtigruten with HX. Current UK contracting entity and applicable flight-package licence not established."
+      ],
+      "sources": [
+        {
+          "url": "https://www.hurtigruten.com/en-gb/help/contact",
+          "fields": [
+            "public_contact",
+            "website",
+            "specialism"
+          ],
+          "note": "Official supplier page accessed/search-index extract; facts are supplier-stated, not a current registry certification."
+        }
+      ]
+    },
+    {
+      "workbook_name": "If Only",
+      "cell": "A31",
+      "display_name": "If Only",
+      "website": "https://www.ifonly.net",
+      "specialism": "Luxury tailor-made holidays",
+      "legal_name": "If Only Holidays Ltd",
+      "company_number": "SC268032",
+      "registered_address": "ABBEY HOUSE 2ND FLOOR, 10 BOTHWELL STREET, GLASGOW, SCOTLAND, G2 6LU",
+      "business_address": "10 Bothwell Street, Glasgow G2 6LU",
+      "public_contact": "info@ifonly.net",
+      "atol_holder": "",
+      "atol_number": "",
+      "atol_assessment": "Not established; do not advertise ATOL protection from this record.",
+      "issues": [],
+      "sources": [
+        {
+          "url": "https://www.ifonlyholidays.com/documents/bookingconditions.pdf",
+          "fields": [
+            "legal_name",
+            "company_number",
+            "business_address",
+            "public_contact",
+            "website",
+            "specialism"
+          ],
+          "note": "Official supplier page accessed/search-index extract; facts are supplier-stated, not a current registry certification."
+        },
+        {
+          "url": "https://data.companieshouse.gov.uk/doc/company/SC268032.json",
+          "fields": [
+            "company_number",
+            "registered_address"
+          ],
+          "note": "Actual account-free Companies House profile read; status Active. Registered address stays private and is not substituted for a business/contact address.",
+          "checked_at": "2026-10-24T17:10:49.869Z"
+        }
+      ],
+      "registry_check": {
+        "name": "IF ONLY HOLIDAYS LIMITED",
+        "status": "Active",
+        "checked_at": "2026-10-24T17:10:49.869Z",
+        "url": "https://data.companieshouse.gov.uk/doc/company/SC268032.json"
+      }
+    },
+    {
+      "workbook_name": "Imagine Cruises",
+      "cell": "A32",
+      "display_name": "Imagine Cruising",
+      "website": "https://www.imaginecruising.co.uk",
+      "specialism": "Cruise and stay packages",
+      "legal_name": "Imagine Cruising Limited",
+      "company_number": "06803008",
+      "registered_address": "2ND FLOOR NUCLEUS HOUSE, 2 LOWER MORTLAKE ROAD, RICHMOND, UNITED KINGDOM, TW9 2JA",
+      "business_address": "2nd Floor, Nucleus House, 2 Lower Mortlake Road, Richmond TW9 2JA",
+      "public_contact": "customersupport@imaginecruising.co.uk",
+      "atol_holder": "Imagine Cruising Limited",
+      "atol_number": "11078",
+      "atol_assessment": "Official supplier states this ATOL for qualifying flight-inclusive arrangements; current CAA register entry not independently confirmed. Check the actual organiser/certificate for each offer.",
+      "issues": [],
+      "sources": [
+        {
+          "url": "https://www.imaginecruising.co.uk/terms-conditions/",
+          "fields": [
+            "legal_name",
+            "company_number",
+            "business_address",
+            "website",
+            "specialism"
+          ],
+          "note": "Official supplier page accessed/search-index extract; facts are supplier-stated, not a current registry certification."
+        },
+        {
+          "url": "https://www.imaginecruising.co.uk/contact-us",
+          "fields": [
+            "public_contact"
+          ],
+          "note": "Official supplier page accessed/search-index extract; facts are supplier-stated, not a current registry certification."
+        },
+        {
+          "url": "https://www.imaginecruising.co.uk/terms-conditions/",
+          "fields": [
+            "atol_holder",
+            "atol_number"
+          ],
+          "note": "Official financial-protection clause retrieved in this research pass."
+        },
+        {
+          "url": "https://data.companieshouse.gov.uk/doc/company/06803008.json",
+          "fields": [
+            "company_number",
+            "registered_address"
+          ],
+          "note": "Actual account-free Companies House profile read; status Active. Registered address stays private and is not substituted for a business/contact address.",
+          "checked_at": "2026-10-24T17:10:49.915Z"
+        }
+      ],
+      "registry_check": {
+        "name": "IMAGINE CRUISING LIMITED",
+        "status": "Active",
+        "checked_at": "2026-10-24T17:10:49.915Z",
+        "url": "https://data.companieshouse.gov.uk/doc/company/06803008.json"
+      }
+    },
+    {
+      "workbook_name": "Inghams",
+      "cell": "A33",
+      "display_name": "Inghams",
+      "website": "https://www.inghams.co.uk",
+      "specialism": "Ski and walking holidays",
+      "legal_name": "Hotelplan Limited",
+      "company_number": "00350786",
+      "registered_address": "NELSON HOUSE, 55-59 VICTORIA ROAD, FARNBOROUGH, ENGLAND, GU14 7PA",
+      "business_address": "Nelson House, 55-59 Victoria Road, Farnborough, Hampshire GU14 7PA",
+      "public_contact": "enquiries@inghams.co.uk",
+      "atol_holder": "Hotelplan Limited",
+      "atol_number": "0025",
+      "atol_assessment": "Official supplier states this ATOL for qualifying flight-inclusive arrangements; current CAA register entry not independently confirmed. Check the actual organiser/certificate for each offer.",
+      "issues": [],
+      "sources": [
+        {
+          "url": "https://www.inghams.co.uk/legal/terms-conditions/booking-conditions",
+          "fields": [
+            "legal_name",
+            "atol_holder",
+            "atol_number",
+            "website",
+            "specialism"
+          ],
+          "note": "Official supplier page accessed/search-index extract; facts are supplier-stated, not a current registry certification."
+        },
+        {
+          "url": "https://www.inghams.co.uk/contact-us",
+          "fields": [
+            "public_contact"
+          ],
+          "note": "Official supplier page accessed/search-index extract; facts are supplier-stated, not a current registry certification."
+        },
+        {
+          "url": "https://www.inghams.co.uk/legal/terms-conditions/booking-conditions",
+          "fields": [
+            "company_number",
+            "business_address"
+          ],
+          "note": "Official supplier page accessed/search-index extract; facts are supplier-stated, not a current registry certification."
+        },
+        {
+          "url": "https://data.companieshouse.gov.uk/doc/company/00350786.json",
+          "fields": [
+            "company_number",
+            "registered_address"
+          ],
+          "note": "Actual account-free Companies House profile read; status Active. Registered address stays private and is not substituted for a business/contact address.",
+          "checked_at": "2026-10-24T17:10:50.067Z"
+        }
+      ],
+      "registry_check": {
+        "name": "HOTELPLAN LIMITED",
+        "status": "Active",
+        "checked_at": "2026-10-24T17:10:50.067Z",
+        "url": "https://data.companieshouse.gov.uk/doc/company/00350786.json"
+      }
+    },
+    {
+      "workbook_name": "Jet2",
+      "cell": "A34",
+      "display_name": "Jet2",
+      "website": "https://www.jet2holidays.com",
+      "specialism": "Airline or package holidays — division unresolved",
+      "legal_name": "",
+      "company_number": "",
+      "registered_address": "",
+      "business_address": "",
+      "public_contact": "",
+      "atol_holder": "",
+      "atol_number": "",
+      "atol_assessment": "Not established; do not advertise ATOL protection from this record.",
+      "issues": [
+        "Workbook says Jet2, not Jet2holidays. Official holidays terms currently state ATOL 9618; do not substitute remembered numbers or apply holidays licence to Jet2.com flights. Confirm intended division before assigning entity/licence."
+      ],
+      "sources": [
+        {
+          "url": "https://www.jet2holidays.com/en/terms-and-conditions",
+          "fields": [
+            "website",
+            "specialism"
+          ],
+          "note": "Candidate Jet2holidays only; workbook division unresolved. Official terms state 9618."
+        }
+      ]
+    },
+    {
+      "workbook_name": "Jetsetflights",
+      "cell": "A35",
+      "display_name": "Jetsetflights",
+      "website": "https://jetsetholidays.co.uk",
+      "specialism": "Trade flights and tailor-made holidays",
+      "legal_name": "",
+      "company_number": "",
+      "registered_address": "",
+      "business_address": "",
+      "public_contact": "",
+      "atol_holder": "",
+      "atol_number": "",
+      "atol_assessment": "Not established; do not advertise ATOL protection from this record.",
+      "issues": [
+        "Official Jetset Flights portal identified. Current terms are not exposed in retrieved page. Third-party hosted 2023 document names Cresta World Travel Limited (02662445), ATOL 3200; current legal/licence pair not imported. Check current account terms via existing New Travel access."
+      ],
+      "sources": [
+        {
+          "url": "https://jetsetholidays.co.uk/",
+          "fields": [
+            "website",
+            "specialism"
+          ],
+          "note": "Official supplier page accessed/search-index extract; facts are supplier-stated, not a current registry certification."
+        }
+      ]
+    },
+    {
+      "workbook_name": "JTA",
+      "cell": "A36",
+      "display_name": "JTA Travel",
+      "website": "https://www.jtaholidays.co.uk",
+      "specialism": "Trade flights and packages",
+      "legal_name": "Alfendo Ltd",
+      "company_number": "",
+      "registered_address": "",
+      "business_address": "2210 The Crescent, Birmingham Business Park, Birmingham B37 7YE",
+      "public_contact": "info@jtatravel.co.uk",
+      "atol_holder": "Alfendo Ltd",
+      "atol_number": "4110",
+      "atol_assessment": "Official supplier states this ATOL for qualifying flight-inclusive arrangements; current CAA register entry not independently confirmed. Check the actual organiser/certificate for each offer.",
+      "issues": [],
+      "sources": [
+        {
+          "url": "https://www.jtaholidays.co.uk/pages/terms",
+          "fields": [
+            "legal_name",
+            "business_address",
+            "public_contact",
+            "atol_holder",
+            "atol_number",
+            "website",
+            "specialism"
+          ],
+          "note": "Official supplier page accessed/search-index extract; facts are supplier-stated, not a current registry certification."
+        }
+      ]
+    },
+    {
+      "workbook_name": "Just Go Holidays",
+      "cell": "A37",
+      "display_name": "Just Go Holidays",
+      "website": "https://www.justgoholidays.com",
+      "specialism": "Coach and escorted holidays",
+      "legal_name": "Just Go Holidays Limited",
+      "company_number": "",
+      "registered_address": "1st Floor, 111 High Street, Cheltenham GL50 1DW",
+      "business_address": "1st Floor, 111 High Street, Cheltenham GL50 1DW",
+      "public_contact": "customerservices@justgoholidays.com",
+      "atol_holder": "Just Go Holidays Limited",
+      "atol_number": "10889",
+      "atol_assessment": "Official supplier states this ATOL for qualifying flight-inclusive arrangements; current CAA register entry not independently confirmed. Check the actual organiser/certificate for each offer.",
+      "issues": [],
+      "sources": [
+        {
+          "url": "https://www.justgoholidays.com/about-us/terms",
+          "fields": [
+            "legal_name",
+            "registered_address",
+            "atol_holder",
+            "atol_number",
+            "website",
+            "specialism"
+          ],
+          "note": "Official supplier page accessed/search-index extract; facts are supplier-stated, not a current registry certification."
+        },
+        {
+          "url": "https://www.justgoholidays.com/about-us/faqs",
+          "fields": [
+            "public_contact"
+          ],
+          "note": "Published reservations/customer-service address; not a private agent contact."
+        },
+        {
+          "url": "https://www.justgoholidays.com/about-us/faqs",
+          "fields": [
+            "business_address"
+          ],
+          "note": "FAQ invites customer letters; postal office identified in official booking terms."
+        }
+      ]
+    },
+    {
+      "workbook_name": "Kuoni",
+      "cell": "A38",
+      "display_name": "Kuoni",
+      "website": "https://www.kuoni.co.uk",
+      "specialism": "Luxury tailor-made holidays",
+      "legal_name": "DERTOUR UK Ltd",
+      "company_number": "00395623",
+      "registered_address": "TOURISTIK HOUSE, ONE DORKING OFFICE PARK, DORKING, SURREY, ENGLAND, RH4 1HJ",
+      "business_address": "",
+      "public_contact": "support@kuoni.co.uk",
+      "atol_holder": "DERTOUR UK Ltd",
+      "atol_number": "0132",
+      "atol_assessment": "Official supplier states this ATOL for qualifying flight-inclusive arrangements; current CAA register entry not independently confirmed. Check the actual organiser/certificate for each offer.",
+      "issues": [
+        "Email is published support for existing holidays, not a confirmed general sales mailbox."
+      ],
+      "sources": [
+        {
+          "url": "https://www.kuoni.co.uk/useful-information/terms-and-conditions/",
+          "fields": [
+            "legal_name",
+            "company_number",
+            "registered_address",
+            "atol_holder",
+            "atol_number",
+            "website",
+            "specialism"
+          ],
+          "note": "Official supplier page accessed/search-index extract; facts are supplier-stated, not a current registry certification."
+        },
+        {
+          "url": "https://www.kuoni.co.uk/useful-information/help-and-support/help-with-an-existing-holiday/",
+          "fields": [
+            "public_contact"
+          ],
+          "note": "Official supplier page accessed/search-index extract; facts are supplier-stated, not a current registry certification."
+        },
+        {
+          "url": "https://data.companieshouse.gov.uk/doc/company/00395623.json",
+          "fields": [
+            "company_number",
+            "registered_address"
+          ],
+          "note": "Actual account-free Companies House profile read; status Active. Registered address stays private and is not substituted for a business/contact address.",
+          "checked_at": "2026-10-24T17:10:49.937Z"
+        }
+      ],
+      "registry_check": {
+        "name": "DERTOUR UK LIMITED",
+        "status": "Active",
+        "checked_at": "2026-10-24T17:10:49.937Z",
+        "url": "https://data.companieshouse.gov.uk/doc/company/00395623.json"
+      }
+    },
+    {
+      "workbook_name": "Lounge Pass",
+      "cell": "A39",
+      "display_name": "Lounge Pass",
+      "website": "https://www.loungepass.com",
+      "specialism": "Airport lounge access",
+      "legal_name": "Priority Pass Ltd",
+      "company_number": "02728518",
+      "registered_address": "3 MORE LONDON RIVERSIDE, 5TH FLOOR, LONDON, UNITED KINGDOM, SE1 2AQ",
+      "business_address": "",
+      "public_contact": "info@loungepass.com",
+      "atol_holder": "",
+      "atol_number": "",
+      "atol_assessment": "Component, distributor or platform: ATOL is not inherent to the standalone service. No own licence established; any flight-inclusive package needs its actual organiser checked.",
+      "issues": [],
+      "sources": [
+        {
+          "url": "https://www.loungepass.com/index.cfm?c=2&fuseaction=information.termsofuse_popup",
+          "fields": [
+            "legal_name",
+            "company_number",
+            "registered_address",
+            "website",
+            "specialism"
+          ],
+          "note": "Official supplier page accessed/search-index extract; facts are supplier-stated, not a current registry certification."
+        },
+        {
+          "url": "https://www.loungepass.com/index.cfm?c=2&fuseaction=information.tandc_popup",
+          "fields": [
+            "public_contact"
+          ],
+          "note": "Official supplier page accessed/search-index extract; facts are supplier-stated, not a current registry certification."
+        },
+        {
+          "url": "https://data.companieshouse.gov.uk/doc/company/02728518.json",
+          "fields": [
+            "company_number",
+            "registered_address"
+          ],
+          "note": "Actual account-free Companies House profile read; status Active. Registered address stays private and is not substituted for a business/contact address.",
+          "checked_at": "2026-10-24T17:10:49.936Z"
+        }
+      ],
+      "registry_check": {
+        "name": "PRIORITY PASS LIMITED",
+        "status": "Active",
+        "checked_at": "2026-10-24T17:10:49.936Z",
+        "url": "https://data.companieshouse.gov.uk/doc/company/02728518.json"
+      }
+    },
+    {
+      "workbook_name": "Mercury Holidays",
+      "cell": "A40",
+      "display_name": "Mercury Holidays",
+      "website": "https://www.mercuryholidays.co.uk",
+      "specialism": "Escorted tours and beach holidays",
+      "legal_name": "Sunspot Tours Ltd",
+      "company_number": "01470134",
+      "registered_address": "ST. JOHN'S HOUSE, SUFFOLK WAY, SEVENOAKS, KENT, UNITED KINGDOM, TN13 1YL",
+      "business_address": "St John's House, Suffolk Way, Sevenoaks, Kent TN13 1YL",
+      "public_contact": "Public contact page: https://www.mercuryholidays.co.uk/info/contact-us",
+      "atol_holder": "Sunspot Tours Ltd",
+      "atol_number": "1631",
+      "atol_assessment": "Official supplier states this ATOL for qualifying flight-inclusive arrangements; current CAA register entry not independently confirmed. Check the actual organiser/certificate for each offer.",
+      "issues": [],
+      "sources": [
+        {
+          "url": "https://www.mercuryholidays.co.uk/info/terms-and-conditions",
+          "fields": [
+            "legal_name",
+            "business_address",
+            "website",
+            "specialism"
+          ],
+          "note": "Official supplier page accessed/search-index extract; facts are supplier-stated, not a current registry certification."
+        },
+        {
+          "url": "https://www.sunspottours.com/info/terms-and-conditions",
+          "fields": [
+            "company_number",
+            "atol_holder",
+            "atol_number"
+          ],
+          "note": "Official supplier page accessed/search-index extract; facts are supplier-stated, not a current registry certification."
+        },
+        {
+          "url": "https://www.mercuryholidays.co.uk/info/contact-us",
+          "fields": [
+            "public_contact"
+          ],
+          "note": "Public contact page; general email not established."
+        },
+        {
+          "url": "https://data.companieshouse.gov.uk/doc/company/01470134.json",
+          "fields": [
+            "company_number",
+            "registered_address"
+          ],
+          "note": "Actual account-free Companies House profile read; status Active. Registered address stays private and is not substituted for a business/contact address.",
+          "checked_at": "2026-10-24T17:10:49.995Z"
+        }
+      ],
+      "registry_check": {
+        "name": "SUNSPOT TOURS LIMITED",
+        "status": "Active",
+        "checked_at": "2026-10-24T17:10:49.995Z",
+        "url": "https://data.companieshouse.gov.uk/doc/company/01470134.json"
+      }
+    },
+    {
+      "workbook_name": "MSC",
+      "cell": "A41",
+      "display_name": "MSC Cruises",
+      "website": "https://www.msccruises.co.uk",
+      "specialism": "Ocean cruises",
+      "legal_name": "MSC Cruises SA",
+      "company_number": "",
+      "registered_address": "Avenue Eugene-Pittard 16, 1206 Geneva, Switzerland",
+      "business_address": "",
+      "public_contact": "customerservice@msccruises.co.uk",
+      "atol_holder": "",
+      "atol_number": "",
+      "atol_assessment": "Not established; do not advertise ATOL protection from this record.",
+      "issues": [
+        "Official UK terms identify Swiss organiser. ATOL protection clause observed but licence number not established; no group-number assumption."
+      ],
+      "sources": [
+        {
+          "url": "https://www.msccruises.co.uk/terms-conditions",
+          "fields": [
+            "legal_name",
+            "registered_address",
+            "public_contact",
+            "website",
+            "specialism"
+          ],
+          "note": "Official supplier page accessed/search-index extract; facts are supplier-stated, not a current registry certification."
+        }
+      ]
+    },
+    {
+      "workbook_name": "National Holidays",
+      "cell": "A42",
+      "display_name": "National Holidays",
+      "website": "https://www.nationalholidays.com",
+      "specialism": "Coach holidays",
+      "legal_name": "Just Go Holidays Limited",
+      "company_number": "",
+      "registered_address": "1st Floor, 111 High Street, Cheltenham GL50 1DW",
+      "business_address": "",
+      "public_contact": "",
+      "atol_holder": "Just Go Holidays Limited",
+      "atol_number": "10889",
+      "atol_assessment": "Official supplier states this ATOL for qualifying flight-inclusive arrangements; current CAA register entry not independently confirmed. Check the actual organiser/certificate for each offer.",
+      "issues": [
+        "Same legal operator as Just Go; retain distinct brand. ATOL only for qualifying flight products, not ordinary coach-only trips."
+      ],
+      "sources": [
+        {
+          "url": "https://www.justgoholidays.com/about-us/terms",
+          "fields": [
+            "legal_name",
+            "registered_address",
+            "atol_holder",
+            "atol_number",
+            "website",
+            "specialism"
+          ],
+          "note": "Official supplier page accessed/search-index extract; facts are supplier-stated, not a current registry certification."
+        }
+      ]
+    },
+    {
+      "workbook_name": "Neilson Active Holidays",
+      "cell": "A43",
+      "display_name": "Neilson Active Holidays",
+      "website": "https://www.neilson.co.uk",
+      "specialism": "Active beach and ski holidays",
+      "legal_name": "Neilson Active Holidays Limited",
+      "company_number": "02987304",
+      "registered_address": "LOCKSVIEW, BRIGHTON MARINA, BRIGHTON, EAST SUSSEX, BN2 5HA",
+      "business_address": "Locksview, Brighton Marina, Brighton, East Sussex BN2 5HA",
+      "public_contact": "sales@neilson.com",
+      "atol_holder": "Neilson Active Holidays Limited",
+      "atol_number": "10794",
+      "atol_assessment": "Official supplier states this ATOL for qualifying flight-inclusive arrangements; current CAA register entry not independently confirmed. Check the actual organiser/certificate for each offer.",
+      "issues": [
+        "Neilson Retail Limited is the website/booking agent; Neilson Active Holidays Limited is the package organiser."
+      ],
+      "sources": [
+        {
+          "url": "https://www.neilson.co.uk/help/booking-conditions",
+          "fields": [
+            "legal_name",
+            "company_number",
+            "registered_address",
+            "business_address",
+            "public_contact",
+            "website",
+            "specialism"
+          ],
+          "note": "Official supplier page accessed/search-index extract; facts are supplier-stated, not a current registry certification."
+        },
+        {
+          "url": "https://www.neilson.co.uk/help/website-conditions",
+          "fields": [
+            "atol_holder",
+            "atol_number"
+          ],
+          "note": "Official supplier page accessed/search-index extract; facts are supplier-stated, not a current registry certification."
+        },
+        {
+          "url": "https://data.companieshouse.gov.uk/doc/company/02987304.json",
+          "fields": [
+            "company_number",
+            "registered_address"
+          ],
+          "note": "Actual account-free Companies House profile read; status Active. Registered address stays private and is not substituted for a business/contact address.",
+          "checked_at": "2026-10-24T17:10:49.999Z"
+        }
+      ],
+      "registry_check": {
+        "name": "NEILSON ACTIVE HOLIDAYS LIMITED",
+        "status": "Active",
+        "checked_at": "2026-10-24T17:10:49.999Z",
+        "url": "https://data.companieshouse.gov.uk/doc/company/02987304.json"
+      }
+    },
+    {
+      "workbook_name": "New Market Holidays",
+      "cell": "A44",
+      "display_name": "Newmarket Holidays",
+      "website": "https://www.newmarketholidays.co.uk",
+      "specialism": "Escorted tours",
+      "legal_name": "Newmarket Holidays Ltd",
+      "company_number": "02238316",
+      "registered_address": "CANTIUM HOUSE, RAILWAY APPROACH, WALLINGTON, SM6 0BP",
+      "business_address": "",
+      "public_contact": "Public contact page: https://www.newmarketholidays.co.uk/contact-us/",
+      "atol_holder": "Newmarket Holidays Ltd",
+      "atol_number": "2325",
+      "atol_assessment": "Official supplier states this ATOL for qualifying flight-inclusive arrangements; current CAA register entry not independently confirmed. Check the actual organiser/certificate for each offer.",
+      "issues": [],
+      "sources": [
+        {
+          "url": "https://www.newmarketholidays.co.uk/terms-and-conditions/tours-with-flights-or-eurostar/",
+          "fields": [
+            "legal_name",
+            "atol_holder",
+            "atol_number",
+            "website",
+            "specialism"
+          ],
+          "note": "Official supplier page accessed/search-index extract; facts are supplier-stated, not a current registry certification."
+        },
+        {
+          "url": "https://find-and-update.company-information.service.gov.uk/company/02238316",
+          "fields": [
+            "company_number"
+          ],
+          "note": "Official Companies House company record; brand association is supported separately in the other listed sources."
+        },
+        {
+          "url": "https://www.newmarketholidays.co.uk/contact-us/",
+          "fields": [
+            "public_contact"
+          ],
+          "note": "Public contact page; general email not established."
+        },
+        {
+          "url": "https://data.companieshouse.gov.uk/doc/company/02238316.json",
+          "fields": [
+            "company_number",
+            "registered_address"
+          ],
+          "note": "Actual account-free Companies House profile read; status Active. Registered address stays private and is not substituted for a business/contact address.",
+          "checked_at": "2026-10-24T17:14:09.455Z"
+        }
+      ],
+      "registry_check": {
+        "name": "NEWMARKET HOLIDAYS LIMITED",
+        "status": "Active",
+        "checked_at": "2026-10-24T17:14:09.455Z",
+        "url": "https://data.companieshouse.gov.uk/doc/company/02238316.json"
+      }
+    },
+    {
+      "workbook_name": "NCL Cruises",
+      "cell": "A45",
+      "display_name": "Norwegian Cruise Line",
+      "website": "https://www.ncl.com/uk/en",
+      "specialism": "Ocean cruises",
+      "legal_name": "NCL (Bahamas) Ltd.",
+      "company_number": "",
+      "registered_address": "",
+      "business_address": "Mountbatten House, Grosvenor Square, Southampton SO15 2JU",
+      "public_contact": "reservations@ncl.com",
+      "atol_holder": "NCL (Bahamas) Ltd.",
+      "atol_number": "2752",
+      "atol_assessment": "Official supplier states this ATOL for qualifying flight-inclusive arrangements; current CAA register entry not independently confirmed. Check the actual organiser/certificate for each offer.",
+      "issues": [],
+      "sources": [
+        {
+          "url": "https://www.ncl.com/uk/en/terms",
+          "fields": [
+            "legal_name",
+            "business_address",
+            "public_contact",
+            "atol_holder",
+            "atol_number",
+            "website",
+            "specialism"
+          ],
+          "note": "Official supplier page accessed/search-index extract; facts are supplier-stated, not a current registry certification."
+        }
+      ]
+    },
+    {
+      "workbook_name": "Oceania Cruise",
+      "cell": "A46",
+      "display_name": "Oceania Cruises",
+      "website": "https://www.oceaniacruises.com",
+      "specialism": "Ocean cruises",
+      "legal_name": "Oceania Cruises S. de R.L.",
+      "company_number": "",
+      "registered_address": "",
+      "business_address": "",
+      "public_contact": "Public contact page: https://oceaniacruises.zendesk.com/hc/en-us/articles/6018274396563-Contact-Us-Phone-Numbers",
+      "atol_holder": "",
+      "atol_number": "",
+      "atol_assessment": "Not established; do not advertise ATOL protection from this record.",
+      "issues": [
+        "Official UK/Europe ticket contract identifies carrier. Licence number and UK contact entity not established; do not inherit NCL parent licence."
+      ],
+      "sources": [
+        {
+          "url": "https://www.oceaniacruises.com/legal/ticket-contract/Documents/Legal/81604553469/eu-uu-ticket-contract.pdf",
+          "fields": [
+            "legal_name",
+            "website",
+            "specialism"
+          ],
+          "note": "Official supplier page accessed/search-index extract; facts are supplier-stated, not a current registry certification."
+        },
+        {
+          "url": "https://oceaniacruises.zendesk.com/hc/en-us/articles/6018274396563-Contact-Us-Phone-Numbers",
+          "fields": [
+            "public_contact"
+          ],
+          "note": "Public contact page available; no general email established. No contact attempt made."
+        }
+      ]
+    },
+    {
+      "workbook_name": "Olympic Holidays",
+      "cell": "A47",
+      "display_name": "Olympic Holidays",
+      "website": "https://www.olympicholidays.com",
+      "specialism": "Greek islands and Mediterranean holidays",
+      "legal_name": "Travelworld Vacations Ltd",
+      "company_number": "",
+      "registered_address": "",
+      "business_address": "c/o Interaction Worldwide Ltd, 1 Torrington Park, London N12 9TB",
+      "public_contact": "enquiries@olympicholidays.com",
+      "atol_holder": "Travelworld Vacations Ltd",
+      "atol_number": "4108",
+      "atol_assessment": "Official supplier states this ATOL for qualifying flight-inclusive arrangements; current CAA register entry not independently confirmed. Check the actual organiser/certificate for each offer.",
+      "issues": [],
+      "sources": [
+        {
+          "url": "https://www.olympicholidays.com/help/booking-terms-and-conditions/",
+          "fields": [
+            "legal_name",
+            "business_address",
+            "public_contact",
+            "atol_holder",
+            "atol_number",
+            "website",
+            "specialism"
+          ],
+          "note": "Official supplier page accessed/search-index extract; facts are supplier-stated, not a current registry certification."
+        }
+      ]
+    },
+    {
+      "workbook_name": "P&O/Cunard",
+      "cell": "A48",
+      "display_name": "P&O / Cunard",
+      "website": "https://www.pocruises.com",
+      "specialism": "Ocean cruises",
+      "legal_name": "Carnival UK Ltd",
+      "company_number": "04039524",
+      "registered_address": "CARNIVAL HOUSE, 100 HARBOUR PARADE, SOUTHAMPTON, HAMPSHIRE, UNITED KINGDOM, SO15 1ST",
+      "business_address": "",
+      "public_contact": "",
+      "atol_holder": "Carnival UK Ltd",
+      "atol_number": "6294",
+      "atol_assessment": "Official supplier states this ATOL for qualifying flight-inclusive arrangements; current CAA register entry not independently confirmed. Check the actual organiser/certificate for each offer.",
+      "issues": [
+        "Combined workbook entry covers P&O Cruises AND Cunard. Keep one staging registry record; select actual brand and carrier for each offer. No implied permission for either logo."
+      ],
+      "sources": [
+        {
+          "url": "https://www.pocruises.com/company-information",
+          "fields": [
+            "legal_name",
+            "company_number",
+            "registered_address",
+            "atol_holder",
+            "atol_number",
+            "website",
+            "specialism"
+          ],
+          "note": "Official supplier page accessed/search-index extract; facts are supplier-stated, not a current registry certification."
+        },
+        {
+          "url": "https://www.cunard.com/en-gb/advice-and-policies/consumer-protection",
+          "fields": [],
+          "note": "Cunard also states ATOL 6294 for applicable flight-inclusive arrangements."
+        },
+        {
+          "url": "https://data.companieshouse.gov.uk/doc/company/04039524.json",
+          "fields": [
+            "company_number",
+            "registered_address"
+          ],
+          "note": "Actual account-free Companies House profile read; status Active. Registered address stays private and is not substituted for a business/contact address.",
+          "checked_at": "2026-10-24T17:10:49.996Z"
+        }
+      ],
+      "registry_check": {
+        "name": "CARNIVAL UK LTD.",
+        "status": "Active",
+        "checked_at": "2026-10-24T17:10:49.996Z",
+        "url": "https://data.companieshouse.gov.uk/doc/company/04039524.json"
+      }
+    },
+    {
+      "workbook_name": "P&O Ferries Irish Routes",
+      "cell": "A49",
+      "display_name": "P&O Ferries — Irish routes",
+      "website": "https://www.poferries.com",
+      "specialism": "Ferries",
+      "legal_name": "",
+      "company_number": "",
+      "registered_address": "",
+      "business_address": "",
+      "public_contact": "customer.services@poferries.com",
+      "atol_holder": "",
+      "atol_number": "",
+      "atol_assessment": "Component, distributor or platform: ATOL is not inherent to the standalone service. No own licence established; any flight-inclusive package needs its actual organiser checked.",
+      "issues": [
+        "Route-specific carrier required. Official terms name P&O European Ferries (Irish Sea) Limited 00318227 and P&O Short Sea Ferries Limited 03291852. Do not equate marketing-company 06038077 with every carrier; confirm applicable route before setting legal name."
+      ],
+      "sources": [
+        {
+          "url": "https://www.poferries.com/en/about-us",
+          "fields": [
+            "website",
+            "public_contact",
+            "specialism"
+          ],
+          "note": "Official supplier page accessed/search-index extract; facts are supplier-stated, not a current registry certification."
+        },
+        {
+          "url": "https://po-ecom-prod-xp-93-113810-cd-cdn.azureedge.net/-/media/poferries/feature/by-webpage/terms-and-conditions/2025/tc_en_30dec24.pdf?hash=C2D7F0113CE6369B49291F4CF769E69A&rev=93d5e9b8035145e686eeba7e67882db2",
+          "fields": [],
+          "note": "Route-specific legal entities; no single default selected."
+        }
+      ]
+    },
+    {
+      "workbook_name": "P&O Ferries Other Routes",
+      "cell": "A50",
+      "display_name": "P&O Ferries — other routes",
+      "website": "https://www.poferries.com",
+      "specialism": "Ferries",
+      "legal_name": "",
+      "company_number": "",
+      "registered_address": "",
+      "business_address": "",
+      "public_contact": "customer.services@poferries.com",
+      "atol_holder": "",
+      "atol_number": "",
+      "atol_assessment": "Component, distributor or platform: ATOL is not inherent to the standalone service. No own licence established; any flight-inclusive package needs its actual organiser checked.",
+      "issues": [
+        "Route-specific carrier required. Official terms name P&O European Ferries (Irish Sea) Limited 00318227 and P&O Short Sea Ferries Limited 03291852. Do not equate marketing-company 06038077 with every carrier; confirm applicable route before setting legal name."
+      ],
+      "sources": [
+        {
+          "url": "https://www.poferries.com/en/about-us",
+          "fields": [
+            "website",
+            "public_contact",
+            "specialism"
+          ],
+          "note": "Official supplier page accessed/search-index extract; facts are supplier-stated, not a current registry certification."
+        },
+        {
+          "url": "https://po-ecom-prod-xp-93-113810-cd-cdn.azureedge.net/-/media/poferries/feature/by-webpage/terms-and-conditions/2025/tc_en_30dec24.pdf?hash=C2D7F0113CE6369B49291F4CF769E69A&rev=93d5e9b8035145e686eeba7e67882db2",
+          "fields": [],
+          "note": "Route-specific legal entities; no single default selected."
+        }
+      ]
+    },
+    {
+      "workbook_name": "Princess",
+      "cell": "A51",
+      "display_name": "Princess Cruises",
+      "website": "https://www.princess.com",
+      "specialism": "Ocean cruises",
+      "legal_name": "Carnival UK Ltd",
+      "company_number": "04039524",
+      "registered_address": "CARNIVAL HOUSE, 100 HARBOUR PARADE, SOUTHAMPTON, HAMPSHIRE, UNITED KINGDOM, SO15 1ST",
+      "business_address": "",
+      "public_contact": "",
+      "atol_holder": "Carnival UK Ltd",
+      "atol_number": "6294",
+      "atol_assessment": "Official supplier states this ATOL for qualifying flight-inclusive arrangements; current CAA register entry not independently confirmed. Check the actual organiser/certificate for each offer.",
+      "issues": [],
+      "sources": [
+        {
+          "url": "https://gb-www.princess.com/en-uk/legal/legal-information",
+          "fields": [
+            "legal_name",
+            "company_number",
+            "registered_address",
+            "website",
+            "specialism"
+          ],
+          "note": "Official supplier page accessed/search-index extract; facts are supplier-stated, not a current registry certification."
+        },
+        {
+          "url": "https://www.princess.com/en-int/legal/consumer-protection",
+          "fields": [
+            "atol_holder",
+            "atol_number"
+          ],
+          "note": "Official supplier page accessed/search-index extract; facts are supplier-stated, not a current registry certification."
+        },
+        {
+          "url": "https://data.companieshouse.gov.uk/doc/company/04039524.json",
+          "fields": [
+            "company_number",
+            "registered_address"
+          ],
+          "note": "Actual account-free Companies House profile read; status Active. Registered address stays private and is not substituted for a business/contact address.",
+          "checked_at": "2026-10-24T17:10:49.996Z"
+        }
+      ],
+      "registry_check": {
+        "name": "CARNIVAL UK LTD.",
+        "status": "Active",
+        "checked_at": "2026-10-24T17:10:49.996Z",
+        "url": "https://data.companieshouse.gov.uk/doc/company/04039524.json"
+      }
+    },
+    {
+      "workbook_name": "Railbookers",
+      "cell": "A52",
+      "display_name": "Railbookers",
+      "website": "https://www.railbookers.co.uk",
+      "specialism": "Rail holidays",
+      "legal_name": "Railbookers UK Trading Ltd",
+      "company_number": "",
+      "registered_address": "",
+      "business_address": "107-111 Fleet Street, London EC4A 2AB",
+      "public_contact": "Public contact page: https://www.railbookers.co.uk/contact-us",
+      "atol_holder": "Railbookers UK Trading Ltd",
+      "atol_number": "7579",
+      "atol_assessment": "Official supplier states this ATOL for qualifying flight-inclusive arrangements; current CAA register entry not independently confirmed. Check the actual organiser/certificate for each offer.",
+      "issues": [
+        "Rail packages can include flights; ATOL applies only to qualifying flight arrangements."
+      ],
+      "sources": [
+        {
+          "url": "https://www.railbookers.co.uk/terms-and-conditions",
+          "fields": [
+            "legal_name",
+            "business_address",
+            "atol_holder",
+            "atol_number",
+            "website",
+            "specialism"
+          ],
+          "note": "Official supplier page accessed/search-index extract; facts are supplier-stated, not a current registry certification."
+        },
+        {
+          "url": "https://www.railbookers.co.uk/contact-us",
+          "fields": [
+            "public_contact"
+          ],
+          "note": "Public contact page available; no general email established. No contact attempt made."
+        }
+      ]
+    },
+    {
+      "workbook_name": "RedSea Holidays",
+      "cell": "A53",
+      "display_name": "Red Sea Holidays",
+      "website": "https://www.redseaholidays.co.uk",
+      "specialism": "Egypt and Red Sea holidays",
+      "legal_name": "Red Sea Holidays UK Ltd",
+      "company_number": "06418075",
+      "registered_address": "5 NEW STREET SQUARE, LONDON, EC4A 3TW",
+      "business_address": "Richmond House, 16-20 Regent Street, Cambridge CB2 1DB",
+      "public_contact": "customersupport@redseaholidays.co.uk",
+      "atol_holder": "Red Sea Holidays UK Ltd",
+      "atol_number": "9749",
+      "atol_assessment": "Official supplier states this ATOL for qualifying flight-inclusive arrangements; current CAA register entry not independently confirmed. Check the actual organiser/certificate for each offer.",
+      "issues": [],
+      "sources": [
+        {
+          "url": "https://www.redseaholidays.co.uk/en/terms-and-conditions/",
+          "fields": [
+            "legal_name",
+            "company_number",
+            "registered_address",
+            "website",
+            "specialism"
+          ],
+          "note": "Official supplier page accessed/search-index extract; facts are supplier-stated, not a current registry certification."
+        },
+        {
+          "url": "https://www.redseaholidays.co.uk/en/contact-us/",
+          "fields": [
+            "business_address",
+            "public_contact"
+          ],
+          "note": "Official supplier page accessed/search-index extract; facts are supplier-stated, not a current registry certification."
+        },
+        {
+          "url": "https://www.redseaholidays.co.uk/en/booking-conditions/",
+          "fields": [
+            "atol_holder",
+            "atol_number"
+          ],
+          "note": "Official supplier page accessed/search-index extract; facts are supplier-stated, not a current registry certification."
+        },
+        {
+          "url": "https://data.companieshouse.gov.uk/doc/company/06418075.json",
+          "fields": [
+            "company_number",
+            "registered_address"
+          ],
+          "note": "Actual account-free Companies House profile read; status Active. Registered address stays private and is not substituted for a business/contact address.",
+          "checked_at": "2026-10-24T17:10:50.067Z"
+        }
+      ],
+      "registry_check": {
+        "name": "RED SEA HOLIDAYS UK LIMITED",
+        "status": "Active",
+        "checked_at": "2026-10-24T17:10:50.067Z",
+        "url": "https://data.companieshouse.gov.uk/doc/company/06418075.json"
+      }
+    },
+    {
+      "workbook_name": "Riu Pro",
+      "cell": "A54",
+      "display_name": "RIU Pro",
+      "website": "https://www.riu.com/en/professionals",
+      "specialism": "Hotel trade portal",
+      "legal_name": "",
+      "company_number": "",
+      "registered_address": "",
+      "business_address": "",
+      "public_contact": "",
+      "atol_holder": "",
+      "atol_number": "",
+      "atol_assessment": "Component, distributor or platform: ATOL is not inherent to the standalone service. No own licence established; any flight-inclusive package needs its actual organiser checked.",
+      "issues": [
+        "Trade portal, not automatically the hotel operator/package organiser. Confirm contracting RIU entity from New Travel agreement or relevant property; do not use unrelated RIU hotel-company records."
+      ],
+      "sources": [
+        {
+          "url": "https://www.riu.com/en/professionals",
+          "fields": [
+            "website",
+            "specialism"
+          ],
+          "note": "Official supplier page accessed/search-index extract; facts are supplier-stated, not a current registry certification."
+        }
+      ]
+    },
+    {
+      "workbook_name": "Riviera Travel",
+      "cell": "A55",
+      "display_name": "Riviera Travel",
+      "website": "https://www.rivieratravel.co.uk",
+      "specialism": "River cruises and escorted tours",
+      "legal_name": "Riviera Tours Limited",
+      "company_number": "01869298",
+      "registered_address": "NEW MANOR, 328 WETMORE ROAD, BURTON ON TRENT, STAFFS, DE14 1SP",
+      "business_address": "New Manor, 328 Wetmore Road, Burton-on-Trent DE14 1SP",
+      "public_contact": "",
+      "atol_holder": "",
+      "atol_number": "",
+      "atol_assessment": "Not established; do not advertise ATOL protection from this record.",
+      "issues": [
+        "UK brand/legal relationship supported by official Irish-market terms. Current UK contact/licence not verified from accessible official UK page; US Riviera Travel LLC is a different entity. Older brochures cite 3430 but no current pair imported."
+      ],
+      "sources": [
+        {
+          "url": "https://mon.rivieratravel.ie/company-policies/booking-conditions",
+          "fields": [
+            "legal_name",
+            "website",
+            "specialism"
+          ],
+          "note": "Official supplier page accessed/search-index extract; facts are supplier-stated, not a current registry certification."
+        },
+        {
+          "url": "https://mon.rivieratravel.ie/contact",
+          "fields": [
+            "company_number",
+            "business_address"
+          ],
+          "note": "Official supplier page accessed/search-index extract; facts are supplier-stated, not a current registry certification."
+        },
+        {
+          "url": "https://data.companieshouse.gov.uk/doc/company/01869298.json",
+          "fields": [
+            "company_number",
+            "registered_address"
+          ],
+          "note": "Actual account-free Companies House profile read; status Active. Registered address stays private and is not substituted for a business/contact address.",
+          "checked_at": "2026-10-24T17:14:09.566Z"
+        }
+      ],
+      "registry_check": {
+        "name": "RIVIERA TOURS LIMITED",
+        "status": "Active",
+        "checked_at": "2026-10-24T17:14:09.566Z",
+        "url": "https://data.companieshouse.gov.uk/doc/company/01869298.json"
+      }
+    },
+    {
+      "workbook_name": "Sandals",
+      "cell": "A56",
+      "display_name": "Sandals",
+      "website": "https://www.sandals.co.uk",
+      "specialism": "Caribbean resort holidays",
+      "legal_name": "Unique Caribbean Holidays Limited",
+      "company_number": "04122639",
+      "registered_address": "2ND FLOOR NUCLEUS HOUSE, 2 LOWER MORTLAKE ROAD, RICHMOND, ENGLAND, TW9 2JA",
+      "business_address": "",
+      "public_contact": "sales@sandals.co.uk",
+      "atol_holder": "Unique Caribbean Holidays Limited",
+      "atol_number": "11174",
+      "atol_assessment": "Official supplier states this ATOL for qualifying flight-inclusive arrangements; current CAA register entry not independently confirmed. Check the actual organiser/certificate for each offer.",
+      "issues": [
+        "UK contracting company differs from worldwide representative Unique Travel Corp."
+      ],
+      "sources": [
+        {
+          "url": "https://www.sandals.co.uk/terms-conditions/",
+          "fields": [
+            "legal_name",
+            "company_number",
+            "registered_address",
+            "public_contact",
+            "atol_holder",
+            "atol_number",
+            "website",
+            "specialism"
+          ],
+          "note": "Official supplier page accessed/search-index extract; facts are supplier-stated, not a current registry certification."
+        },
+        {
+          "url": "https://data.companieshouse.gov.uk/doc/company/04122639.json",
+          "fields": [
+            "company_number",
+            "registered_address"
+          ],
+          "note": "Actual account-free Companies House profile read; status Active. Registered address stays private and is not substituted for a business/contact address.",
+          "checked_at": "2026-10-24T17:10:50.032Z"
+        }
+      ],
+      "registry_check": {
+        "name": "UNIQUE CARIBBEAN HOLIDAYS LIMITED",
+        "status": "Active",
+        "checked_at": "2026-10-24T17:10:50.032Z",
+        "url": "https://data.companieshouse.gov.uk/doc/company/04122639.json"
+      }
+    },
+    {
+      "workbook_name": "Santas Lapland",
+      "cell": "A57",
+      "display_name": "Santa's Lapland",
+      "website": "https://www.santaslapland.com",
+      "specialism": "Lapland family holidays",
+      "legal_name": "Hotelplan Ltd",
+      "company_number": "00350786",
+      "registered_address": "NELSON HOUSE, 55-59 VICTORIA ROAD, FARNBOROUGH, ENGLAND, GU14 7PA",
+      "business_address": "Nelson House, 55-59 Victoria Road, Farnborough, Hampshire GU14 7PA",
+      "public_contact": "beforeyoutravel@santaslapland.com",
+      "atol_holder": "Hotelplan Ltd",
+      "atol_number": "0025",
+      "atol_assessment": "Official supplier states this ATOL for qualifying flight-inclusive arrangements; current CAA register entry not independently confirmed. Check the actual organiser/certificate for each offer.",
+      "issues": [],
+      "sources": [
+        {
+          "url": "https://www.santaslapland.com/terms-conditions/booking-conditions/",
+          "fields": [
+            "legal_name",
+            "company_number",
+            "business_address",
+            "website",
+            "specialism"
+          ],
+          "note": "Official supplier page accessed/search-index extract; facts are supplier-stated, not a current registry certification."
+        },
+        {
+          "url": "https://www.santaslapland.com/contact-us/",
+          "fields": [
+            "public_contact"
+          ],
+          "note": "Published reservations/customer-service address; not a private agent contact."
+        },
+        {
+          "url": "https://www.santaslapland.com/terms-conditions/booking-conditions/",
+          "fields": [
+            "atol_holder",
+            "atol_number"
+          ],
+          "note": "Official financial-protection clause retrieved in this research pass."
+        },
+        {
+          "url": "https://data.companieshouse.gov.uk/doc/company/00350786.json",
+          "fields": [
+            "company_number",
+            "registered_address"
+          ],
+          "note": "Actual account-free Companies House profile read; status Active. Registered address stays private and is not substituted for a business/contact address.",
+          "checked_at": "2026-10-24T17:10:50.067Z"
+        }
+      ],
+      "registry_check": {
+        "name": "HOTELPLAN LIMITED",
+        "status": "Active",
+        "checked_at": "2026-10-24T17:10:50.067Z",
+        "url": "https://data.companieshouse.gov.uk/doc/company/00350786.json"
+      }
+    },
+    {
+      "workbook_name": "Silversea",
+      "cell": "A58",
+      "display_name": "Silversea",
+      "website": "https://www.silversea.com",
+      "specialism": "Luxury ocean and expedition cruises",
+      "legal_name": "Silversea Cruises (UK) Ltd.",
+      "company_number": "",
+      "registered_address": "",
+      "business_address": "7 The Heights, Brooklands, Weybridge, Surrey KT13 0NY",
+      "public_contact": "guestexperience@silversea.com",
+      "atol_holder": "Silversea Cruises (UK) Ltd.",
+      "atol_number": "4681",
+      "atol_assessment": "Official supplier states this ATOL for qualifying flight-inclusive arrangements; current CAA register entry not independently confirmed. Check the actual organiser/certificate for each offer.",
+      "issues": [
+        "UK company is general sales/representative agent; Silversea Cruises Ltd is cruise principal. Guest-experience email is customer support."
+      ],
+      "sources": [
+        {
+          "url": "https://www.silversea.com/guest-terms/united-kingdom/united-kingdom-booking-conditions-en/",
+          "fields": [
+            "legal_name",
+            "business_address",
+            "public_contact",
+            "website",
+            "specialism"
+          ],
+          "note": "Official supplier page accessed/search-index extract; facts are supplier-stated, not a current registry certification."
+        },
+        {
+          "url": "https://www.silversea.com/guest-terms/united-kingdom/united-kingdom-booking-conditions-en/",
+          "fields": [
+            "atol_holder",
+            "atol_number"
+          ],
+          "note": "Official financial-protection clause retrieved in this research pass."
+        }
+      ]
+    },
+    {
+      "workbook_name": "Sixt",
+      "cell": "A59",
+      "display_name": "SIXT",
+      "website": "https://www.sixt.co.uk",
+      "specialism": "Car hire",
+      "legal_name": "Sixt rent a car Ltd.",
+      "company_number": "",
+      "registered_address": "",
+      "business_address": "Keypoint, 17-23 High Street, Slough SL1 1DY",
+      "public_contact": "",
+      "atol_holder": "",
+      "atol_number": "",
+      "atol_assessment": "Component, distributor or platform: ATOL is not inherent to the standalone service. No own licence established; any flight-inclusive package needs its actual organiser checked.",
+      "issues": [
+        "Imprint lists register entry 440897 without jurisdiction; not treated as a UK company number."
+      ],
+      "sources": [
+        {
+          "url": "https://www.sixt.co.uk/shared/data-protection/DSGVO_sixt_one_en.pdf",
+          "fields": [
+            "legal_name"
+          ],
+          "note": "Official supplier page accessed/search-index extract; facts are supplier-stated, not a current registry certification."
+        },
+        {
+          "url": "https://www.sixt.co.uk/pages/imprint/?noredirect=en_GB",
+          "fields": [
+            "business_address",
+            "website",
+            "specialism"
+          ],
+          "note": "Official supplier page accessed/search-index extract; facts are supplier-stated, not a current registry certification."
+        }
+      ]
+    },
+    {
+      "workbook_name": "Solmar Villas",
+      "cell": "A60",
+      "display_name": "Solmar Villas",
+      "website": "https://www.solmarvillas.com",
+      "specialism": "Villa holidays",
+      "legal_name": "Solmar Villas Limited",
+      "company_number": "07174709",
+      "registered_address": "2/3 FIRST AVENUE, CENTRUM 100, BURTON-ON-TRENT, STAFFORDSHIRE, ENGLAND, DE14 2WE",
+      "business_address": "Units 2 and 3, First Avenue, Centrum 100, Burton upon Trent, Staffordshire DE14 2WE",
+      "public_contact": "Public contact page: https://www.solmarvillas.com/contact-us",
+      "atol_holder": "Solmar Villas Limited",
+      "atol_number": "10334",
+      "atol_assessment": "Official supplier states this ATOL for qualifying flight-inclusive arrangements; current CAA register entry not independently confirmed. Check the actual organiser/certificate for each offer.",
+      "issues": [
+        "Company association supported by matching official Solmar postal address and Companies House registered address, not solely a company-name match. Villa-only and flight-inclusive arrangements require separate protection assessments."
+      ],
+      "sources": [
+        {
+          "url": "https://www.solmarvillas.com/information/booking-terms-and-conditions",
+          "fields": [
+            "website",
+            "specialism"
+          ],
+          "note": "Official supplier page accessed/search-index extract; facts are supplier-stated, not a current registry certification."
+        },
+        {
+          "url": "https://find-and-update.company-information.service.gov.uk/company/07174709",
+          "fields": [
+            "legal_name",
+            "company_number"
+          ],
+          "note": "Official Companies House company record; brand association is supported separately in the other listed sources."
+        },
+        {
+          "url": "https://www.solmarvillas.com/contact-us",
+          "fields": [
+            "business_address"
+          ],
+          "note": "Official supplier page accessed/search-index extract; facts are supplier-stated, not a current registry certification."
+        },
+        {
+          "url": "https://www.solmarvillas.com/information/your-financial-protection",
+          "fields": [
+            "atol_holder",
+            "atol_number"
+          ],
+          "note": "Official supplier page accessed/search-index extract; facts are supplier-stated, not a current registry certification."
+        },
+        {
+          "url": "https://www.solmarvillas.com/contact-us",
+          "fields": [
+            "public_contact"
+          ],
+          "note": "Public contact page available; no general email established. No contact attempt made."
+        },
+        {
+          "url": "https://data.companieshouse.gov.uk/doc/company/07174709.json",
+          "fields": [
+            "company_number",
+            "registered_address"
+          ],
+          "note": "Actual account-free Companies House profile read; status Active. Registered address stays private and is not substituted for a business/contact address.",
+          "checked_at": "2026-10-24T17:14:09.508Z"
+        }
+      ],
+      "registry_check": {
+        "name": "SOLMAR VILLAS LIMITED",
+        "status": "Active",
+        "checked_at": "2026-10-24T17:14:09.508Z",
+        "url": "https://data.companieshouse.gov.uk/doc/company/07174709.json"
+      }
+    },
+    {
+      "workbook_name": "Stena Line",
+      "cell": "A61",
+      "display_name": "Stena Line",
+      "website": "https://www.stenaline.co.uk",
+      "specialism": "Ferries",
+      "legal_name": "",
+      "company_number": "",
+      "registered_address": "",
+      "business_address": "",
+      "public_contact": "",
+      "atol_holder": "",
+      "atol_number": "",
+      "atol_assessment": "Component, distributor or platform: ATOL is not inherent to the standalone service. No own licence established; any flight-inclusive package needs its actual organiser checked.",
+      "issues": [
+        "Multiple UK companies exist (Stena Line Limited 01402237; Stena Line (UK) Limited 02454575). Confirm passenger-route contracting company; no legal company selected from name match alone."
+      ],
+      "sources": [
+        {
+          "url": "https://find-and-update.company-information.service.gov.uk/company/02454575",
+          "fields": [],
+          "note": "Registry confirms candidate exists, not workbook brand/route association."
+        },
+        {
+          "url": "https://www.stenaline.co.uk/",
+          "fields": [
+            "website",
+            "specialism"
+          ],
+          "note": "Official indexed passenger site; terms URL not accessible to research tool."
+        }
+      ]
+    },
+    {
+      "workbook_name": "Stuba",
+      "cell": "A62",
+      "display_name": "Stuba",
+      "website": "https://stuba.com",
+      "specialism": "Trade accommodation and transfers",
+      "legal_name": "",
+      "company_number": "",
+      "registered_address": "",
+      "business_address": "",
+      "public_contact": "help@stuba.com",
+      "atol_holder": "",
+      "atol_number": "",
+      "atol_assessment": "Component, distributor or platform: ATOL is not inherent to the standalone service. No own licence established; any flight-inclusive package needs its actual organiser checked.",
+      "issues": [
+        "Official terms describe Stuba service but retrieved text does not identify a single contracting legal entity; obtain New Travel contract entity."
+      ],
+      "sources": [
+        {
+          "url": "https://stuba.com/contact-us/",
+          "fields": [
+            "public_contact",
+            "website",
+            "specialism"
+          ],
+          "note": "Official supplier page accessed/search-index extract; facts are supplier-stated, not a current registry certification."
+        },
+        {
+          "url": "https://stuba.com/terms-conditions/",
+          "fields": [],
+          "note": "Trade hotel/transfer terms; legal entity not established."
+        }
+      ]
+    },
+    {
+      "workbook_name": "Sun Hotels",
+      "cell": "A63",
+      "display_name": "Sunhotels",
+      "website": "https://www.sunhotels.com",
+      "specialism": "Trade accommodation and travel components",
+      "legal_name": "WebBeds FZ-LLC",
+      "company_number": "91277",
+      "registered_address": "Suite 3212-3216, Al Shatha Tower, PO Box 502115, Dubai Media City, Dubai, UAE",
+      "business_address": "",
+      "public_contact": "sales@sunhotels.com",
+      "atol_holder": "",
+      "atol_number": "",
+      "atol_assessment": "Component, distributor or platform: ATOL is not inherent to the standalone service. No own licence established; any flight-inclusive package needs its actual organiser checked.",
+      "issues": [
+        "Dubai registration, not a UK Companies House number. Do not apply this entity to every WebBeds group product."
+      ],
+      "sources": [
+        {
+          "url": "https://www.sunhotels.com/en/contact/privacy-policy",
+          "fields": [
+            "legal_name",
+            "company_number",
+            "registered_address",
+            "website",
+            "specialism"
+          ],
+          "note": "Official supplier page accessed/search-index extract; facts are supplier-stated, not a current registry certification."
+        },
+        {
+          "url": "https://www.sunhotels.com/en/contact/terms-and-conditions/",
+          "fields": [
+            "legal_name"
+          ],
+          "note": "Official supplier page accessed/search-index extract; facts are supplier-stated, not a current registry certification."
+        },
+        {
+          "url": "https://www.sunhotels.com/en/contact/",
+          "fields": [
+            "public_contact"
+          ],
+          "note": "Official supplier page accessed/search-index extract; facts are supplier-stated, not a current registry certification."
+        }
+      ]
+    },
+    {
+      "workbook_name": "SunTransfers",
+      "cell": "A64",
+      "display_name": "Suntransfers",
+      "website": "https://www.suntransfers.com",
+      "specialism": "Airport transfers",
+      "legal_name": "ST Services Iberia S.L.",
+      "company_number": "ES-B64767627",
+      "registered_address": "Ctra de l'Estartit 143-145, 17257 Torroella de Montgri, Girona, Spain",
+      "business_address": "Ctra de l'Estartit 143-145, 17257 Torroella de Montgri, Girona, Spain",
+      "public_contact": "info@suntransfers.com",
+      "atol_holder": "",
+      "atol_number": "",
+      "atol_assessment": "Component, distributor or platform: ATOL is not inherent to the standalone service. No own licence established; any flight-inclusive package needs its actual organiser checked.",
+      "issues": [],
+      "sources": [
+        {
+          "url": "https://www.suntransfers.com/terms-and-conditions",
+          "fields": [
+            "legal_name",
+            "company_number",
+            "registered_address",
+            "public_contact",
+            "website",
+            "specialism"
+          ],
+          "note": "Official supplier page accessed/search-index extract; facts are supplier-stated, not a current registry certification."
+        },
+        {
+          "url": "https://www.suntransfers.com/contact-us",
+          "fields": [
+            "business_address"
+          ],
+          "note": "Official supplier page accessed/search-index extract; facts are supplier-stated, not a current registry certification."
+        }
+      ]
+    },
+    {
+      "workbook_name": "Sunvil",
+      "cell": "A65",
+      "display_name": "Sunvil",
+      "website": "https://www.sunvil.co.uk",
+      "specialism": "Tailor-made and specialist holidays",
+      "legal_name": "Sunvil International Sales Limited",
+      "company_number": "00984970",
+      "registered_address": "SUNVIL 16A CROWN ROAD, CROWN YARD, ST MARGARETS, TWICKENHAM, UNITED KINGDOM, TW1 3EE",
+      "business_address": "Crown Yard, 16A Crown Road, St Margaret's, Twickenham, London TW1 3EE",
+      "public_contact": "holidays@sunvil.co.uk",
+      "atol_holder": "Sunvil International Sales Limited",
+      "atol_number": "0808",
+      "atol_assessment": "Official supplier states this ATOL for qualifying flight-inclusive arrangements; current CAA register entry not independently confirmed. Check the actual organiser/certificate for each offer.",
+      "issues": [
+        "Contact page heading uses holidays@ but prose also uses holiday@; imported heading address. Verify deliverability if using it; no email sent."
+      ],
+      "sources": [
+        {
+          "url": "https://www.sunvil.co.uk/terms",
+          "fields": [
+            "legal_name",
+            "company_number",
+            "business_address",
+            "atol_holder",
+            "atol_number",
+            "website",
+            "specialism"
+          ],
+          "note": "Official supplier page accessed/search-index extract; facts are supplier-stated, not a current registry certification."
+        },
+        {
+          "url": "https://www.sunvil.co.uk/contact-us",
+          "fields": [
+            "public_contact"
+          ],
+          "note": "Official supplier page accessed/search-index extract; facts are supplier-stated, not a current registry certification."
+        },
+        {
+          "url": "https://data.companieshouse.gov.uk/doc/company/00984970.json",
+          "fields": [
+            "company_number",
+            "registered_address"
+          ],
+          "note": "Actual account-free Companies House profile read; status Active. Registered address stays private and is not substituted for a business/contact address.",
+          "checked_at": "2026-10-24T17:10:50.116Z"
+        }
+      ],
+      "registry_check": {
+        "name": "SUNVIL INTERNATIONAL SALES LIMITED",
+        "status": "Active",
+        "checked_at": "2026-10-24T17:10:50.116Z",
+        "url": "https://data.companieshouse.gov.uk/doc/company/00984970.json"
+      }
+    },
+    {
+      "workbook_name": "Teldar Travel",
+      "cell": "A66",
+      "display_name": "Teldar Travel",
+      "website": "https://teldartravel.com",
+      "specialism": "Trade accommodation",
+      "legal_name": "",
+      "company_number": "",
+      "registered_address": "",
+      "business_address": "",
+      "public_contact": "",
+      "atol_holder": "",
+      "atol_number": "",
+      "atol_assessment": "Component, distributor or platform: ATOL is not inherent to the standalone service. No own licence established; any flight-inclusive package needs its actual organiser checked.",
+      "issues": [
+        "Gekko confirms Teldar Travel brand. UK company 11866581 exists but brand/contract relationship not established; obtain contracting entity from New Travel agreement."
+      ],
+      "sources": [
+        {
+          "url": "https://gekko-group.com/en/our-brands-2/teldar-travel/",
+          "fields": [
+            "website",
+            "specialism"
+          ],
+          "note": "Official supplier page accessed/search-index extract; facts are supplier-stated, not a current registry certification."
+        }
+      ]
+    },
+    {
+      "workbook_name": "Teldar Corporate",
+      "cell": "A67",
+      "display_name": "Teldar Corporate",
+      "website": "",
+      "specialism": "Corporate hotel distribution — division unresolved",
+      "legal_name": "",
+      "company_number": "",
+      "registered_address": "",
+      "business_address": "",
+      "public_contact": "",
+      "atol_holder": "",
+      "atol_number": "",
+      "atol_assessment": "Component, distributor or platform: ATOL is not inherent to the standalone service. No own licence established; any flight-inclusive package needs its actual organiser checked.",
+      "issues": [
+        "No reliable public page establishing this exact division found. Confirm portal and contracting company via New Travel; do not use unrelated teldar.ch or Teldan records."
+      ],
+      "sources": []
+    },
+    {
+      "workbook_name": "Titan Travel",
+      "cell": "A68",
+      "display_name": "Titan Travel",
+      "website": "https://www.titantravel.co.uk",
+      "specialism": "Escorted tours",
+      "legal_name": "Saga Travel Group (UK) Limited",
+      "company_number": "",
+      "registered_address": "",
+      "business_address": "",
+      "public_contact": "Public contact page: https://www.titantravel.co.uk/contact-us",
+      "atol_holder": "",
+      "atol_number": "",
+      "atol_assessment": "Not established; do not advertise ATOL protection from this record.",
+      "issues": [
+        "Official hosted booking terms identify Saga Travel Group (UK) Limited; do not substitute historical Titan entity or a remembered ATOL. Current licence and business address remain unestablished."
+      ],
+      "sources": [
+        {
+          "url": "https://a.storyblok.com/f/108167/x/c72b0d71d5/titan-booking-conditions.pdf",
+          "fields": [
+            "legal_name",
+            "website",
+            "specialism"
+          ],
+          "note": "Official supplier page accessed/search-index extract; facts are supplier-stated, not a current registry certification."
+        },
+        {
+          "url": "https://www.titantravel.co.uk/contact-us",
+          "fields": [
+            "public_contact"
+          ],
+          "note": "Public contact page available; no general email established. No contact attempt made."
+        }
+      ]
+    },
+    {
+      "workbook_name": "Travelpack",
+      "cell": "A69",
+      "display_name": "Travelpack",
+      "website": "https://www.travelpack.com",
+      "specialism": "Trade flights and tailor-made holidays",
+      "legal_name": "Travelpack Limited",
+      "company_number": "09712043",
+      "registered_address": "523 HIGH ROAD, WEMBLEY, MIDDLESEX, ENGLAND, HA0 2DH",
+      "business_address": "",
+      "public_contact": "flights@travelpack.com",
+      "atol_holder": "Travelpack Marketing & Leisure Services Ltd",
+      "atol_number": "2866",
+      "atol_assessment": "Official supplier states this ATOL for qualifying flight-inclusive arrangements; current CAA register entry not independently confirmed. Check the actual organiser/certificate for each offer.",
+      "issues": [
+        "PDF filename says Travelpack Limited, but operative contract names Travelpack Marketing & Leisure Services Ltd. Public email is the flights department.",
+        "Companies House now names 09712043 TRAVELPACK LIMITED; official terms still use Travelpack Marketing & Leisure Services Ltd. Current legal name imported; confirm current ATOL holder wording before advertising."
+      ],
+      "sources": [
+        {
+          "url": "https://www.travelpack.com/public/imagedb/defaults/Travelpack-Limited-Booking-Conditions.pdf",
+          "fields": [
+            "legal_name",
+            "company_number",
+            "registered_address",
+            "website",
+            "specialism"
+          ],
+          "note": "Official supplier page accessed/search-index extract; facts are supplier-stated, not a current registry certification."
+        },
+        {
+          "url": "https://www.travelpack.com/general/contactus",
+          "fields": [
+            "public_contact"
+          ],
+          "note": "Official supplier page accessed/search-index extract; facts are supplier-stated, not a current registry certification."
+        },
+        {
+          "url": "https://www.travelpack.com/public/imagedb/defaults/Travelpack-Limited-Booking-Conditions.pdf",
+          "fields": [
+            "atol_holder",
+            "atol_number"
+          ],
+          "note": "Official financial-protection clause retrieved in this research pass."
+        },
+        {
+          "url": "https://data.companieshouse.gov.uk/doc/company/09712043.json",
+          "fields": [
+            "company_number",
+            "registered_address"
+          ],
+          "note": "Actual account-free Companies House profile read; status Active. Registered address stays private and is not substituted for a business/contact address.",
+          "checked_at": "2026-10-24T17:10:50.097Z"
+        },
+        {
+          "url": "https://data.companieshouse.gov.uk/doc/company/09712043.json",
+          "fields": [
+            "legal_name"
+          ],
+          "note": "Current Companies House name is TRAVELPACK LIMITED. Official booking PDF uses older name at the same company number; supplier-stated ATOL holder wording retained, current licence-name check outstanding."
+        }
+      ],
+      "registry_check": {
+        "name": "TRAVELPACK LIMITED",
+        "status": "Active",
+        "checked_at": "2026-10-24T17:10:50.097Z",
+        "url": "https://data.companieshouse.gov.uk/doc/company/09712043.json"
+      }
+    },
+    {
+      "workbook_name": "Tui",
+      "cell": "A70",
+      "display_name": "TUI",
+      "website": "https://www.tui.co.uk",
+      "specialism": "Package holidays",
+      "legal_name": "TUI UK Limited",
+      "company_number": "02830117",
+      "registered_address": "WIGMORE HOUSE, WIGMORE LANE, LUTON, BEDFORDSHIRE, UNITED KINGDOM, LU2 9TN",
+      "business_address": "",
+      "public_contact": "",
+      "atol_holder": "TUI UK Limited",
+      "atol_number": "2524",
+      "atol_assessment": "Official supplier states this ATOL for qualifying flight-inclusive arrangements; current CAA register entry not independently confirmed. Check the actual organiser/certificate for each offer.",
+      "issues": [],
+      "sources": [
+        {
+          "url": "https://www.tui.co.uk/destinations/info/website-terms-and-conditions",
+          "fields": [
+            "legal_name",
+            "company_number",
+            "registered_address",
+            "atol_holder",
+            "atol_number",
+            "website",
+            "specialism"
+          ],
+          "note": "Official supplier page accessed/search-index extract; facts are supplier-stated, not a current registry certification."
+        },
+        {
+          "url": "https://data.companieshouse.gov.uk/doc/company/02830117.json",
+          "fields": [
+            "company_number",
+            "registered_address"
+          ],
+          "note": "Actual account-free Companies House profile read; status Active. Registered address stays private and is not substituted for a business/contact address.",
+          "checked_at": "2026-10-24T17:10:50.116Z"
+        }
+      ],
+      "registry_check": {
+        "name": "TUI UK LIMITED",
+        "status": "Active",
+        "checked_at": "2026-10-24T17:10:50.116Z",
+        "url": "https://data.companieshouse.gov.uk/doc/company/02830117.json"
+      }
+    },
+    {
+      "workbook_name": "Us Airtours",
+      "cell": "A71",
+      "display_name": "USAirtours",
+      "website": "https://usairtours.co.uk",
+      "specialism": "North America and cruise holidays",
+      "legal_name": "",
+      "company_number": "",
+      "registered_address": "",
+      "business_address": "Saxon House, 27 Duke Street, Chelmsford, Essex CM1 1HT",
+      "public_contact": "",
+      "atol_holder": "",
+      "atol_number": "",
+      "atol_assessment": "Not established; do not advertise ATOL protection from this record.",
+      "issues": [
+        "Current official terms heading says USAirtours Worldwide Limited, but operative text misspells USAIRTOUS WORLD WIDE LTD and quotes ATOL 12850. Different UK company 09640358 is not a safe substitute. Confirm exact holder/company before importing legal or licence pair."
+      ],
+      "sources": [
+        {
+          "url": "https://usairtours.co.uk/booking-conditions/?swcfpc=1",
+          "fields": [
+            "website",
+            "specialism"
+          ],
+          "note": "Official supplier page accessed/search-index extract; facts are supplier-stated, not a current registry certification."
+        },
+        {
+          "url": "https://usairtours.co.uk/contact-us/",
+          "fields": [
+            "business_address"
+          ],
+          "note": "Official supplier page accessed/search-index extract; facts are supplier-stated, not a current registry certification."
+        }
+      ]
+    },
+    {
+      "workbook_name": "UTC Travel",
+      "cell": "A72",
+      "display_name": "UTC Travel",
+      "website": "https://utc.travel",
+      "specialism": "Travel membership and booking platform",
+      "legal_name": "",
+      "company_number": "",
+      "registered_address": "",
+      "business_address": "",
+      "public_contact": "Public contact page: https://utctravel.outseta.com/support/kb/articles/rm0w41WX/how-can-i-contact-you",
+      "atol_holder": "",
+      "atol_number": "",
+      "atol_assessment": "Component, distributor or platform: ATOL is not inherent to the standalone service. No own licence established; any flight-inclusive package needs its actual organiser checked.",
+      "issues": [
+        "Official support page supplies phone 01133 404 444 but email is obfuscated in retrieved text. Contracting company and any organiser licence unresolved; request account terms from New Travel."
+      ],
+      "sources": [
+        {
+          "url": "https://utctravel.outseta.com/support/kb/articles/rm0w41WX/how-can-i-contact-you",
+          "fields": [
+            "website",
+            "specialism"
+          ],
+          "note": "Official supplier page accessed/search-index extract; facts are supplier-stated, not a current registry certification."
+        },
+        {
+          "url": "https://utctravel.outseta.com/support/kb/articles/rm0w41WX/how-can-i-contact-you",
+          "fields": [
+            "public_contact"
+          ],
+          "note": "Public contact page available; no general email established. No contact attempt made."
+        }
+      ]
+    },
+    {
+      "workbook_name": "Virgin Voyages",
+      "cell": "A73",
+      "display_name": "Virgin Voyages",
+      "website": "https://www.virginvoyages.com",
+      "specialism": "Adult ocean cruises",
+      "legal_name": "Virgin Cruises Intermediate Limited",
+      "company_number": "",
+      "registered_address": "",
+      "business_address": "1000 S. Pine Island Road, Suite 600, Plantation, Florida 33324, USA",
+      "public_contact": "",
+      "atol_holder": "",
+      "atol_number": "",
+      "atol_assessment": "Not established; do not advertise ATOL protection from this record.",
+      "issues": [
+        "UK ticket contract names Bermuda company with Florida booking office. Do not infer ATOL coverage for an agent-created fly-cruise from cruise brand alone."
+      ],
+      "sources": [
+        {
+          "url": "https://www.virginvoyages.com/uk-ticket-contract",
+          "fields": [
+            "legal_name",
+            "business_address",
+            "website",
+            "specialism"
+          ],
+          "note": "Official supplier page accessed/search-index extract; facts are supplier-stated, not a current registry certification."
+        }
+      ]
+    },
+    {
+      "workbook_name": "WDTC - Walt Disney World",
+      "cell": "A74",
+      "display_name": "Walt Disney Travel Company — Walt Disney World",
+      "website": "https://www.disneyholidays.co.uk/walt-disney-world",
+      "specialism": "Disney holiday packages",
+      "legal_name": "The Walt Disney Company Limited",
+      "company_number": "00530051",
+      "registered_address": "3 QUEEN CAROLINE STREET, HAMMERSMITH, LONDON, W6 9PE",
+      "business_address": "",
+      "public_contact": "disneytraveluk@disneyonline.com",
+      "atol_holder": "The Walt Disney Company Limited",
+      "atol_number": "10401",
+      "atol_assessment": "Official supplier states this ATOL for qualifying flight-inclusive arrangements; current CAA register entry not independently confirmed. Check the actual organiser/certificate for each offer.",
+      "issues": [
+        "WDTC is a division of the UK company. This is the WDTC booking channel, not automatically the entity selling directly on disneylandparis.com."
+      ],
+      "sources": [
+        {
+          "url": "https://www.disneyholidays.co.uk/walt-disney-world/help/terms-conditions/",
+          "fields": [
+            "legal_name",
+            "company_number",
+            "registered_address",
+            "public_contact",
+            "atol_holder",
+            "atol_number",
+            "website",
+            "specialism"
+          ],
+          "note": "Official supplier page accessed/search-index extract; facts are supplier-stated, not a current registry certification."
+        },
+        {
+          "url": "https://data.companieshouse.gov.uk/doc/company/00530051.json",
+          "fields": [
+            "company_number",
+            "registered_address"
+          ],
+          "note": "Actual account-free Companies House profile read; status Active. Registered address stays private and is not substituted for a business/contact address.",
+          "checked_at": "2026-10-24T17:10:50.170Z"
+        }
+      ],
+      "registry_check": {
+        "name": "THE WALT DISNEY COMPANY LIMITED",
+        "status": "Active",
+        "checked_at": "2026-10-24T17:10:50.170Z",
+        "url": "https://data.companieshouse.gov.uk/doc/company/00530051.json"
+      }
+    },
+    {
+      "workbook_name": "WDTC - Disneyland Paris",
+      "cell": "A75",
+      "display_name": "Walt Disney Travel Company — Disneyland Paris",
+      "website": "https://www.disneyholidays.co.uk/disneyland-paris",
+      "specialism": "Disney holiday packages",
+      "legal_name": "The Walt Disney Company Limited",
+      "company_number": "00530051",
+      "registered_address": "3 QUEEN CAROLINE STREET, HAMMERSMITH, LONDON, W6 9PE",
+      "business_address": "",
+      "public_contact": "disneytraveluk@disneyonline.com",
+      "atol_holder": "The Walt Disney Company Limited",
+      "atol_number": "10401",
+      "atol_assessment": "Official supplier states this ATOL for qualifying flight-inclusive arrangements; current CAA register entry not independently confirmed. Check the actual organiser/certificate for each offer.",
+      "issues": [
+        "WDTC is a division of the UK company. This is the WDTC booking channel, not automatically the entity selling directly on disneylandparis.com."
+      ],
+      "sources": [
+        {
+          "url": "https://www.disneyholidays.co.uk/disneyland-paris/help/terms-conditions/",
+          "fields": [
+            "legal_name",
+            "company_number",
+            "registered_address",
+            "public_contact",
+            "atol_holder",
+            "atol_number",
+            "website",
+            "specialism"
+          ],
+          "note": "Official supplier page accessed/search-index extract; facts are supplier-stated, not a current registry certification."
+        },
+        {
+          "url": "https://data.companieshouse.gov.uk/doc/company/00530051.json",
+          "fields": [
+            "company_number",
+            "registered_address"
+          ],
+          "note": "Actual account-free Companies House profile read; status Active. Registered address stays private and is not substituted for a business/contact address.",
+          "checked_at": "2026-10-24T17:10:50.170Z"
+        }
+      ],
+      "registry_check": {
+        "name": "THE WALT DISNEY COMPANY LIMITED",
+        "status": "Active",
+        "checked_at": "2026-10-24T17:10:50.170Z",
+        "url": "https://data.companieshouse.gov.uk/doc/company/00530051.json"
+      }
+    },
+    {
+      "workbook_name": "Webbeds",
+      "cell": "A76",
+      "display_name": "WebBeds",
+      "website": "https://www.webbeds.com",
+      "specialism": "Trade accommodation distribution",
+      "legal_name": "",
+      "company_number": "",
+      "registered_address": "",
+      "business_address": "",
+      "public_contact": "",
+      "atol_holder": "",
+      "atol_number": "",
+      "atol_assessment": "Component, distributor or platform: ATOL is not inherent to the standalone service. No own licence established; any flight-inclusive package needs its actual organiser checked.",
+      "issues": [
+        "Official group website established. Group includes WebBeds Limited 07761565, WebBeds UK Services Limited 04714729 and WebBeds FZ-LLC. Confirm contracting entity from New Travel agreement; do not merge with Sunhotels solely by ownership."
+      ],
+      "sources": [
+        {
+          "url": "https://find-and-update.company-information.service.gov.uk/company/07761565",
+          "fields": [],
+          "note": "Registry confirms candidate, not contract relationship."
+        },
+        {
+          "url": "https://find-and-update.company-information.service.gov.uk/company/04714729",
+          "fields": [],
+          "note": "Separate UK services company; not a default organiser."
+        },
+        {
+          "url": "https://www.webbeds.com/",
+          "fields": [
+            "website",
+            "specialism"
+          ],
+          "note": "Official supplier page accessed/search-index extract; facts are supplier-stated, not a current registry certification."
+        }
+      ]
+    },
+    {
+      "workbook_name": "WendyWu",
+      "cell": "A77",
+      "display_name": "Wendy Wu Tours",
+      "website": "https://www.wendywutours.co.uk",
+      "specialism": "Asia and specialist escorted tours",
+      "legal_name": "Wendy Wu Tours Ltd",
+      "company_number": "05107061",
+      "registered_address": "151F TOWER BRIDGE ROAD, LONDON, ENGLAND, SE1 3JE",
+      "business_address": "Newhams Yard, 151-153 Tower Bridge Road, London SE1 3JE",
+      "public_contact": "operations@wendywutours.co.uk",
+      "atol_holder": "Wendy Wu Tours Ltd",
+      "atol_number": "6639",
+      "atol_assessment": "Official supplier states this ATOL for qualifying flight-inclusive arrangements; current CAA register entry not independently confirmed. Check the actual organiser/certificate for each offer.",
+      "issues": [
+        "Published email is operations for booking changes. Legal facts retrieved on official blog/webservices subdomains; review against current agreement, not older third-party office addresses."
+      ],
+      "sources": [
+        {
+          "url": "https://blog.wendywutours.co.uk/help-and-advice/booking-conditions/",
+          "fields": [
+            "legal_name",
+            "company_number",
+            "business_address",
+            "public_contact",
+            "website",
+            "specialism"
+          ],
+          "note": "Official supplier page accessed/search-index extract; facts are supplier-stated, not a current registry certification."
+        },
+        {
+          "url": "https://webservices.wendywutours.co.uk/help-and-advice/booking-conditions/",
+          "fields": [
+            "atol_holder",
+            "atol_number"
+          ],
+          "note": "Official supplier page accessed/search-index extract; facts are supplier-stated, not a current registry certification."
+        },
+        {
+          "url": "https://data.companieshouse.gov.uk/doc/company/05107061.json",
+          "fields": [
+            "company_number",
+            "registered_address"
+          ],
+          "note": "Actual account-free Companies House profile read; status Active. Registered address stays private and is not substituted for a business/contact address.",
+          "checked_at": "2026-10-24T17:10:50.184Z"
+        }
+      ],
+      "registry_check": {
+        "name": "WENDY WU TOURS LIMITED",
+        "status": "Active",
+        "checked_at": "2026-10-24T17:10:50.184Z",
+        "url": "https://data.companieshouse.gov.uk/doc/company/05107061.json"
+      }
+    },
+    {
+      "workbook_name": "Cruisingpower",
+      "cell": "A78",
+      "display_name": "CruisingPower",
+      "website": "https://secure.cruisingpower.com/home",
+      "specialism": "Cruise trade booking portal",
+      "legal_name": "",
+      "company_number": "",
+      "registered_address": "",
+      "business_address": "",
+      "public_contact": "",
+      "atol_holder": "",
+      "atol_number": "",
+      "atol_assessment": "Component, distributor or platform: ATOL is not inherent to the standalone service. No own licence established; any flight-inclusive package needs its actual organiser checked.",
+      "issues": [
+        "Official trade portal identified; not a single organiser. Select actual Royal Caribbean group cruise brand/carrier and flight-package holder per offer. No authenticated portal access attempted."
+      ],
+      "sources": [
+        {
+          "url": "https://www.royalcaribbean.com/guest-terms/gb/united-kingdom-english/",
+          "fields": [],
+          "note": "Carrier/agent vary; no single CruisingPower legal/ATOL entity assigned."
+        },
+        {
+          "url": "https://secure.cruisingpower.com/home",
+          "fields": [
+            "website",
+            "specialism"
+          ],
+          "note": "Official supplier page accessed/search-index extract; facts are supplier-stated, not a current registry certification."
+        }
+      ]
+    }
+  ]
+}

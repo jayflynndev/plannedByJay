@@ -1,4 +1,6 @@
 import {z} from 'zod';
+import {slugify} from '@/lib/cms/schema';
+import {durationBetween,todayUK} from './editor';
 export const offerStatuses=['draft','published','paused','expired','archived'] as const;
 export const travelTypes=['package','cruise-only','fly-cruise','hotel-only','tour','rail'] as const;
 export const offerReference=z.string().regex(/^PBJO-[A-F0-9]{8}$/);
@@ -7,8 +9,10 @@ const date=z.union([z.literal(''),z.iso.date()]);
 const timestamp=z.union([z.literal(''),z.iso.datetime({offset:true})]);
 const url=z.union([z.literal(''),z.url({protocol:/^https$/})]);
 // Public facts only: private permission evidence remains in cms_private.
-export const supplierDisclosures=z.object({legal_name:text(200).default(''),business_address:text(1000).default(''),service_address:text(1000).default(''),public_contact:text(500).default(''),official_website:url.default(''),atol_holder:text(200).default(''),atol_number:z.string().regex(/^(?:T?\d{4,5})?$/).default(''),protection_information:text(3000).default(''),atol_artwork:z.string().max(300).regex(/^(?:\/images\/[a-zA-Z0-9/_.-]+)?$/).default('')}).strict();
-export const supplierInput=z.object({id:z.uuid().nullable().default(null),revision:z.number().int().nonnegative().default(0),name:text(80).min(1),display_name:text(80).min(1),logo_id:z.uuid().nullable().default(null),logo_alt:text(200).default(''),website:url.default(''),agent_url:url.default(''),contact:text(1000).default(''),specialism:text(120).default(''),notes:text(10000).default(''),active:z.boolean().default(true),permission:z.enum(['pending','approved','declined']).default('pending'),permission_date:date.default(''),usage_notes:text(5000).default(''),disclosures:supplierDisclosures.default(()=>supplierDisclosures.parse({})),network_confirmed:z.boolean().default(false),permission_basis:z.enum(['pending','new-travel-network']).default('pending'),disclosures_verified_at:date.default(''),disclosure_evidence:text(5000).default(''),account_reference:text(200).default('')}).strict().superRefine((s,c)=>{if(s.permission==='approved'&&(!s.permission_date||!s.usage_notes))c.addIssue({code:'custom',message:'Record the confirmation date and permitted usage before approving marketing.'});if(s.logo_id&&!s.logo_alt)c.addIssue({code:'custom',message:'Describe the approved supplier logo.'});});
+export const supplierDisclosures=z.object({legal_name:text(200).default(''),business_address:text(1000).default(''),service_address:text(1000).default(''),public_contact:text(500).default(''),official_website:url.default(''),booking_conditions_url:url.default(''),atol_holder:text(200).default(''),atol_number:z.string().regex(/^(?:T?\d{4,5})?$/).default(''),protection_information:text(3000).default(''),atol_artwork:z.string().max(300).regex(/^(?:\/images\/[a-zA-Z0-9/_.-]+)?$/).default('')}).strict();
+// Retired permission dates, lookup state and evidence remain in the private database,
+// not in the ordinary form or its validation. A known restriction is still honoured.
+export const supplierInput=z.object({id:z.uuid().nullable().default(null),revision:z.number().int().nonnegative().default(0),name:text(80).min(1),display_name:text(80).default(''),website:url.default(''),specialism:text(120).default(''),disclosures:supplierDisclosures.default(()=>supplierDisclosures.parse({})),archived:z.boolean().default(false),restricted:z.boolean().default(false),atol_verified:z.boolean().default(false),private_reference:text(15000).default(''),notes:text(10000).default('')}).strict().superRefine((s,c)=>{if(s.atol_verified&&(!s.disclosures.atol_holder||!s.disclosures.atol_number))c.addIssue({code:'custom',message:'Enter the checked ATOL holder and number, or leave ATOL unchecked.'});});
 export type SupplierInput=z.input<typeof supplierInput>;
 export type Supplier=z.output<typeof supplierInput>&{id:string;revision:number};
 export const offerDetails=z.object({flight_inclusive:z.enum(['pending','yes','no']).default('pending'),atol_status:z.enum(['pending','applicable','not-applicable']).default('pending'),classification_reason:text(1000).default(''),nonflight_protection:text(3000).default(''),adults:z.string().regex(/^(?:[1-9][0-9]?)?$/).default(''),children:z.string().regex(/^(?:[0-9]|[1-9][0-9])?$/).default(''),full_price_confirmed:z.enum(['pending','confirmed']).default('pending'),uncalculable_charges:text(2000).default(''),promotion_conditions:text(3000).default(''),booking_conditions:text(3000).default(''),country:text(100).default(''),region:text(120).default(''),accommodation:text(180).default(''),summary:text(500).default(''),description:text(15000).default(''),departure_point:text(150).default(''),departure_date:date.default(''),return_date:date.default(''),nights:z.number().int().min(0).max(365).nullable().default(null),travel_type:z.enum(travelTypes).default('package'),board_basis:text(150).default(''),room_type:text(200).default(''),occupancy:text(500).default(''),inclusions:text(3000).default(''),exclusions:text(3000).default(''),accessibility:text(2000).default(''),unavoidable_charges:text(1500).default(''),optional_extras:text(1500).default(''),price_checked_at:timestamp.default(''),last_verified_at:timestamp.default(''),promotion_expires_at:timestamp.default('')}).strict();
@@ -18,37 +22,36 @@ export type OfferInput=z.output<typeof offerInput>;
 export type AdminOffer=OfferInput&{id:string;reference:string;created_at:string;updated_at:string};
 export function emptyOffer(){return offerInput.parse({});}
 export function adminOffer(raw:Record<string,unknown>):AdminOffer{const keys=Object.keys(emptyOffer());const selected=Object.fromEntries(keys.map(key=>[key,raw[key]]));return {...offerInput.parse({...selected,slug:raw.slug||'',expires_at:raw.expires_at||''}),reference:String(raw.reference),id:String(raw.id),created_at:String(raw.created_at),updated_at:String(raw.updated_at)};}
-export function duplicateOffer(original:OfferInput):OfferInput{const fields=Object.fromEntries(Object.keys(emptyOffer()).map(key=>[key,original[key as keyof OfferInput]]));return offerInput.parse({...fields,id:null,revision:0,status:'draft',slug:'',featured:false,publication_approved:false,expires_at:'',details:{...original.details,price_checked_at:'',last_verified_at:'',promotion_expires_at:''}});}
+export function duplicateOffer(original:OfferInput):OfferInput{const fields=Object.fromEntries(Object.keys(emptyOffer()).map(key=>[key,original[key as keyof OfferInput]]));return offerInput.parse({...fields,id:null,revision:0,status:'draft',slug:'',featured:false,publication_approved:false,expires_at:'',details:{...original.details,price_checked_at:'',last_verified_at:''}});}
+export function prepareOffer(value:OfferInput,status:OfferInput['status']):OfferInput{const fields=Object.fromEntries(Object.keys(emptyOffer()).map(k=>[k,value[k as keyof OfferInput]])) as OfferInput;return {...fields,status,slug:value.slug||slugify(value.title),publication_approved:status==='published',price_people:value.details.adults&&value.details.children!==''?Number(value.details.adults)+Number(value.details.children):value.price_people,details:{...value.details,summary:value.details.summary||value.details.description.slice(0,500),occupancy:value.details.occupancy||(value.details.adults&&value.details.children!==''?`${value.details.adults} adults, ${value.details.children} children`:''),atol_status:value.details.flight_inclusive==='yes'?'applicable':value.details.flight_inclusive==='no'?'not-applicable':'pending'}};}
 export function publicationIssues(offer:OfferInput,now=Date.now()):string[]{
   if(offer.status!=='published')return [];
   const d=offer.details,issues:string[]=[...disclosureIssues(offer)];
-  for(const [name,value] of Object.entries({title:offer.title,slug:offer.slug,supplier:offer.supplier_id,destination:d.country,summary:d.summary,description:d.description,departure:d.departure_date,arrangements:d.board_basis,occupancy:d.occupancy,inclusions:d.inclusions,exclusions:d.exclusions,charges:d.unavoidable_charges}))if(!value)issues.push(`Complete ${name} before publishing.`);
-  if(!offer.holiday_types.length||!offer.price_minor||!offer.price_people||d.nights===null||!offer.featured_media_id||!offer.featured_alt||!offer.publication_approved)issues.push('Choose holiday types, full price/people, duration, a described photograph and the offer review approval.');
-  if(d.travel_type!=='hotel-only'&&!d.departure_point)issues.push('Enter the departure airport, port or station.');
-  if(d.return_date&&d.departure_date&&d.return_date<d.departure_date)issues.push('Return date cannot precede departure.');
-  if(d.departure_date&&d.departure_date<new Date(now).toISOString().slice(0,10))issues.push('Departure must not be in the past.');
-  for(const field of ['price_checked_at','last_verified_at'] as const){const t=Date.parse(d[field]);if(!Number.isFinite(t)||t>now||t<now-7*86400000)issues.push('Check price and availability within the last seven days.');}
-  const expires=Date.parse(offer.expires_at);if(!Number.isFinite(expires)||expires<=now||expires>Date.parse(d.price_checked_at)+7*86400000)issues.push('Expiry must be in the future and within seven days of the price check.');
-  if(d.promotion_expires_at&&Date.parse(d.promotion_expires_at)<=now)issues.push('The supplier promotion has expired.');
+  for(const [name,value] of Object.entries({title:offer.title,slug:offer.slug,supplier:offer.supplier_id,destination:d.country,description:d.description,inclusions:d.inclusions,occupancy:d.occupancy}))if(!value)issues.push(`Complete ${name} before publishing.`);
+  for(const [name,missing] of Object.entries({'holiday categories':!offer.holiday_types.length,'advertised full price':!offer.price_minor,'priced party':!offer.price_people,'number of nights':d.nights===null,'featured photograph':!offer.featured_media_id,'photograph description':!offer.featured_alt}))if(missing)issues.push(`Complete ${name} before publishing.`);
+  if(!d.departure_date)issues.push('Enter the travel date.');
+  if(d.travel_type!=='hotel-only'&&!d.departure_point)issues.push('Enter the departure airport, port or location.');
+  if(d.departure_date&&d.departure_date<todayUK(new Date(now)))issues.push('The travel date is in the past.');
+  if(d.return_date&&(durationBetween(d.departure_date,d.return_date)===null||durationBetween(d.departure_date,d.return_date)!==d.nights))issues.push('Check the return date and number of nights.');
+  const checked=Date.parse(d.price_checked_at);
+  if(!Number.isFinite(checked)||d.price_checked_at.slice(0,10)>todayUK(new Date(now)))issues.push('Enter the date the price was checked (not a future date).');
+  if(d.promotion_expires_at&&Date.parse(d.promotion_expires_at)<=now)issues.push('The supplier booking deadline has passed.');
   return issues;
 }
 export function priceLabel(offer:{price_minor:number|null;currency:string;price_basis:string;price_people:number|null}){return `${new Intl.NumberFormat('en-GB',{style:'currency',currency:offer.currency}).format((offer.price_minor||0)/100)} ${offer.price_basis==='per-person'?'per person':'total party'} · based on ${offer.price_people} ${offer.price_people===1?'person':'people'}`;}
-export function isCurrentOffer(offer:{status:string;expires_at:string;details:z.output<typeof offerDetails>},now=Date.now()){const d=offer.details;return offer.status==='published'&&Date.parse(offer.expires_at)>now&&Date.parse(d.price_checked_at)<=now&&Date.parse(d.price_checked_at)>=now-7*86400000&&Date.parse(d.last_verified_at)<=now&&Date.parse(d.last_verified_at)>=now-7*86400000&&d.departure_date>=new Date(now).toISOString().slice(0,10)&&(!d.promotion_expires_at||Date.parse(d.promotion_expires_at)>now);}
-
-/** These are publication safeguards, not a substitute for checking the actual arrangements. */
+// A booking deadline is not a claim of present availability. Historical expiry and
+// seven-day check timestamps no longer control public eligibility.
+export function isCurrentOffer(offer:{status:string;expires_at?:string|null;details:z.output<typeof offerDetails>},now=Date.now()){const d=offer.details;return offer.status==='published'&&d.departure_date>=todayUK(new Date(now))&&!!d.price_checked_at&&Number.isFinite(Date.parse(d.price_checked_at))&&d.price_checked_at.slice(0,10)<=todayUK(new Date(now))&&(!d.promotion_expires_at||Date.parse(d.promotion_expires_at)>now);}
 export function disclosureIssues(offer:OfferInput,supplier?:Supplier):string[]{
   const d=offer.details,issues:string[]=[];
-  if(d.flight_inclusive==='pending'||d.atol_status==='pending'||!d.classification_reason)issues.push('Verify flight inclusion, ATOL classification and its supporting reason.');
-  if(d.travel_type==='fly-cruise'&&d.flight_inclusive!=='yes')issues.push('Fly-cruise includes flights.');
-  if(['cruise-only','hotel-only','rail'].includes(d.travel_type)&&d.flight_inclusive!=='no')issues.push('Confirm non-flight arrangements; choose the correct travel type if flights are included.');
-  if((d.flight_inclusive==='yes'&&d.atol_status!=='applicable')||(d.flight_inclusive==='no'&&d.atol_status!=='not-applicable'))issues.push('ATOL classification must match the flight arrangements. Refer exceptional arrangements for review rather than bypassing checks.');
-  if(d.full_price_confirmed!=='confirmed')issues.push('Confirm the full price includes all reasonably calculable mandatory charges, not just a deposit.');
-  if(!d.adults||d.children===''||Number(d.adults)+Number(d.children)!==offer.price_people)issues.push('Adult and child numbers must match the priced party; record child ages in occupancy.');
-  if(!d.promotion_conditions||!d.booking_conditions)issues.push('Record promotion conditions and applicable booking/cancellation information (or a verified explanation).');
+  if(d.flight_inclusive==='pending')issues.push('Choose whether flights are included.');
+  if(d.travel_type==='fly-cruise'&&d.flight_inclusive!=='yes')issues.push('Fly-cruise must include flights.');
+  if(['cruise-only','hotel-only','rail'].includes(d.travel_type)&&d.flight_inclusive!=='no')issues.push('Use a flight-inclusive travel type if flights are included.');
+  if(!d.adults||d.children===''||Number(d.adults)+Number(d.children)!==offer.price_people)issues.push('Check adults, children and priced occupancy.');
   if(supplier){const s=supplier.disclosures;
-    if(!supplier.active||supplier.permission!=='approved'||!supplier.network_confirmed||supplier.permission_basis!=='new-travel-network')issues.push('Confirm this supplier belongs to New Travel’s network and record its marketing approval/restrictions.');
-    if(!s.legal_name||!s.business_address||!s.public_contact||!supplier.disclosures_verified_at||!supplier.disclosure_evidence)issues.push('Complete and verify the supplier legal name, public business address and contact details.');
-    if(d.atol_status==='applicable'&&(!s.atol_holder||!s.atol_number||!s.protection_information||!s.atol_artwork))issues.push('Verify the ATOL holder/number, approved protection wording and authorised ATOL artwork.');
+    if(supplier.archived||supplier.restricted)issues.push('This supplier is archived or restricted. Select another supplier or edit its directory record.');
+    if(!s.legal_name||!s.business_address||!s.public_contact)issues.push('Complete the supplier company name, public address and contact details once in Suppliers.');
+    if(d.flight_inclusive==='yes'&&(!supplier.atol_verified||!s.atol_holder||!s.atol_number||!s.protection_information))issues.push('Complete the checked ATOL holder/number and applicable protection wording once in Suppliers for this flight-inclusive offer.');
   }
   return issues;
 }

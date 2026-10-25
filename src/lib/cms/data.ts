@@ -15,9 +15,15 @@ export async function categories(client: SupabaseClient) {
   const result = await client.from('content_categories').select('*').order('name');
   databaseError(result.error); return result.data as Category[];
 }
-export async function mediaList(client: SupabaseClient) {
+export async function mediaList(client: SupabaseClient): Promise<Media[]> {
   const result = await client.from('content_media').select('*').order('created_at', {ascending: false}).limit(200);
-  databaseError(result.error); return result.data as Media[];
+  databaseError(result.error);
+  const media=result.data as Media[];
+  if(!media.length)return media;
+  // Reuse an existing article description as a suggestion only; rights are not inferred.
+  const descriptions=await client.from('content_articles').select('featured_media_id,featured_alt').in('featured_media_id',media.map(m=>m.id)).order('updated_at',{ascending:false}).limit(200);
+  if(descriptions.error)return media; // Optional descriptions must not prevent choosing existing images.
+  return media.map(m=>({...m,description:descriptions.data?.find(a=>a.featured_media_id===m.id&&a.featured_alt)?.featured_alt||''}));
 }
 export async function getArticle(client: SupabaseClient, id: string) {
   const result = await client.from('content_articles').select('*').eq('id',id).maybeSingle();
