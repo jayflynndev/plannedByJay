@@ -1,0 +1,106 @@
+{
+  "projectRef": "watlnbiurgavvlalqwqz",
+  "projectHost": "watlnbiurgavvlalqwqz.supabase.co",
+  "projectName": "Planned by Jay (owner-provided; verify dashboard name/ref before reset)",
+  "tables": {
+    "cms_private.administrators": {
+      "complete": false,
+      "status": 406,
+      "code": "PGRST106"
+    },
+    "cms_private.offer_information": {
+      "complete": false,
+      "status": 406,
+      "code": "PGRST106"
+    },
+    "cms_private.offer_launch": {
+      "complete": false,
+      "status": 406,
+      "code": "PGRST106"
+    },
+    "cms_private.offer_slugs": {
+      "complete": false,
+      "status": 406,
+      "code": "PGRST106"
+    },
+    "cms_private.offer_supplier_information": {
+      "complete": false,
+      "status": 406,
+      "code": "PGRST106"
+    },
+    "public.content_article_tags": {
+      "complete": true,
+      "rows": 4
+    },
+    "public.content_articles": {
+      "complete": true,
+      "rows": 2
+    },
+    "public.content_categories": {
+      "complete": true,
+      "rows": 3
+    },
+    "public.content_editorial": {
+      "complete": true,
+      "rows": 2
+    },
+    "public.content_media": {
+      "complete": true,
+      "rows": 3
+    },
+    "public.content_media_usage": {
+      "complete": true,
+      "rows": 2
+    },
+    "public.content_slugs": {
+      "complete": true,
+      "rows": 2
+    },
+    "public.content_tags": {
+      "complete": true,
+      "rows": 4
+    },
+    "public.content_types": {
+      "complete": true,
+      "rows": 7
+    },
+    "public.holiday_enquiries": {
+      "complete": true,
+      "rows": 0
+    },
+    "public.holiday_enquiry_limits": {
+      "complete": true,
+      "rows": 0
+    },
+    "public.holiday_enquiry_reference_reservations": {
+      "complete": true,
+      "rows": 2
+    },
+    "public.holiday_notification_erasure_blockers": {
+      "complete": true,
+      "rows": 0
+    },
+    "public.holiday_offer_media": {
+      "complete": true,
+      "rows": 1
+    },
+    "public.holiday_offer_suppliers": {
+      "complete": true,
+      "rows": 76
+    },
+    "public.holiday_offer_tags": {
+      "complete": true,
+      "rows": 0
+    },
+    "public.holiday_offers": {
+      "complete": true,
+      "rows": 1
+    }
+  },
+  "media": {
+    "complete": true,
+    "downloaded": 3,
+    "untraversedFolders": 0
+  },
+  "complete": false
+}
