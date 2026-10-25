@@ -85,6 +85,8 @@ export const holidayTypes:HolidayType[]=[
 ];
 export function holidayType(slug:string){return holidayTypes.find(item=>item.slug===slug);}
 export const holidayDiscovery={
+  catalogue:{label:'View All Holiday Offers',href:'/holiday-offers'} satisfies Action,
+  catalogueBody:'Browse all current holiday offers, or explore the holiday styles below for inspiration.',
   title:'Explore Holidays',headline:'Not sure where to go? Start with how you’d like to travel.',
   description:'Finding the right holiday often starts with what you want from your time away. Explore these styles, compare the practical details and read a little more before deciding what suits you.',
   serviceTitle:'A starting point, without a finished itinerary.',serviceBody:'I can help research and compare the options around your priorities. Browse at your own pace; when you are ready, the Holiday Brief gives me a useful starting point.',

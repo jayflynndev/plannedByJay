@@ -30,7 +30,7 @@ export function publicationIssues(offer:OfferInput,now=Date.now()):string[]{
   if(offer.status!=='published')return [];
   const d=offer.details,issues:string[]=[...disclosureIssues(offer)];
   for(const [name,value] of Object.entries({title:offer.title,slug:offer.slug,supplier:offer.supplier_id,destination:d.country,description:d.description,inclusions:d.inclusions,occupancy:d.occupancy}))if(!value)issues.push(`Complete ${name} before publishing.`);
-  for(const [name,missing] of Object.entries({'holiday categories':!offer.holiday_types.length,'advertised full price':!offer.price_minor,'priced party':!offer.price_people,'number of nights':d.nights===null,'featured photograph':!offer.featured_media_id,'photograph description':!offer.featured_alt}))if(missing)issues.push(`Complete ${name} before publishing.`);
+  for(const [name,missing] of Object.entries({'advertised full price':!offer.price_minor,'priced party':!offer.price_people,'number of nights':d.nights===null,'featured photograph':!offer.featured_media_id,'photograph description':!offer.featured_alt}))if(missing)issues.push(`Complete ${name} before publishing.`);
   if(!d.departure_date)issues.push('Enter the travel date.');
   if(d.travel_type!=='hotel-only'&&!d.departure_point)issues.push('Enter the departure airport, port or location.');
   if(d.departure_date&&d.departure_date<todayUK(new Date(now)))issues.push('The travel date is in the past.');

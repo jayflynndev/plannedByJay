@@ -13,7 +13,7 @@ test('holiday landing, six shared pages and homepage cards render meaningful rou
   const {holidayTypes}=await import('../src/content/holiday-types');
   try {
     const landing=render(<HolidayLanding/>);assert.equal(landing.getAllByRole('heading',{level:1}).length,1);
-    for(const item of holidayTypes)assert.ok(landing.container.querySelector(`a[href="/holidays/${item.slug}"]`));cleanup();
+    assert.equal(landing.getByRole('link',{name:'View All Holiday Offers'}).getAttribute('href'),'/holiday-offers');for(const item of holidayTypes)assert.ok(landing.container.querySelector(`a[href="/holidays/${item.slug}"]`));cleanup();
     const home=render(<HolidayExperiences/>);assert.equal(home.container.querySelectorAll('a[href^="/holidays/"]').length,6);assert.equal(home.container.querySelector('a[href="/plan-my-holiday"]'),null);cleanup();
     for(const item of holidayTypes){
       const page=render(<HolidayTypePage holiday={item}/>);

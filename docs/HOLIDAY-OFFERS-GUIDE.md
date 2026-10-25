@@ -15,7 +15,7 @@ Existing research, private account/agent information, original evidence, logos a
 2. Choose travel type. Enter dates or start date/nights; nights calculate from both dates. Only relevant transport fields appear. Package/tour entries ask whether flights are included; cruise-only, fly-cruise, accommodation and rail imply the appropriate transport choice.
 3. Enter the full price including mandatory calculable charges, currency, per-person/party basis, adults/children and relevant occupancy or child ages. Enter the date the price was checked. Give any genuine supplier booking deadline in local time. Disclose unavoidable local charges and material exclusions/conditions where they apply; otherwise leave optional fields blank.
 4. **Choose featured photograph** uses the shared CMS library. Select an existing photo or upload, check the suggested description and **Use described photograph**. Gallery images are optional. Check rights: a library record is not a licence.
-5. Select holiday categories once and tick **Featured on homepage** if wanted.
+5. Optionally select matching holiday categories and tick **Featured on homepage** if wanted.
 6. **Save Draft**, then **Preview saved offer**. **Publish** when the factual information is complete. **Unpublish** or **Archive** stops public display. **Duplicate offer** retains useful content with a new identity/URL and requires a new price-check date while retaining the known supplier deadline and conditions.
 
 Failures retain unsaved entries; leaving unsaved work raises the browser warning. Save drafts regularly: there is no background autosave or new browser storage. Private source/reference notes remain optional. The form no longer includes extraction, backups, repeat approval screens or manual UTC entry.
@@ -25,7 +25,7 @@ Publication automatically drives the existing individual route, listing, selecte
 ## The few checks that remain
 
 - Admin authentication, Origin checks, RLS, media/slug ownership, bounded input and revision conflicts protect the system and other editors.
-- Public trader name/address/contact, an identifiable holiday, travel date/duration, main inclusions, full numeric price/basis, priced party and described photograph make the advertisement usable and accurate. Categories are a listing requirement, not a separate legal approval.
+- Public trader name/address/contact, an identifiable holiday, travel date/duration, main inclusions, full numeric price/basis, priced party and described photograph make the advertisement usable and accurate. Categories are optional browsing classifications; uncategorised packages belong in All Holiday Offers.
 - Flights require the actual checked protecting ATOL holder/number and applicable wording once on the supplier. Non-flight arrangements do not. Never mark imported suggested numbers checked without checking them. Different brands, agents and organisers are not automatically the same entity.
 - Known supplier restrictions and archive choices apply. The pre-existing global site launch setting remains unchanged; a closed setting still prevents publication until separately authorised. No new supplier approvals are required.
 - A supplier deadline or past travel date stops the offer being advertised. **No seven-day age/expiry rule remains.** Older prices show their checking date and clear reconfirmation wording; the dashboard offers non-blocking review reminders. Review prices against the supplier rather than assuming an unexpired deadline means availability.
@@ -34,7 +34,7 @@ Supplier information is reused near the bottom of the individual page in a keybo
 
 ## One manual migration before releasing this version
 
-Use **only `supabase/migrations/20261030_simple_supplier_offer_workflow.sql`**, after the already-applied migrations through 20261028. It works whether 20261029 was applied or not; do not apply 20261029 now or rerun previous migrations/imports.
+The earlier simplification uses `supabase/migrations/20261030_simple_supplier_offer_workflow.sql` after migrations through 20261028. This is prerequisite history: do not rerun it if already applied. The subsequent first-test correction uses 20261031, and the discovery correction below uses 20261101 after 20261031. It works whether 20261029 was applied or not; do not apply 20261029 now or rerun previous migrations/imports.
 
 1. Confirm the intended Supabase project and its current backup. Review the entire new file.
 2. In **SQL Editor**, paste and run the whole new file once, including `begin` and `commit`, as database owner. If it fails, roll back and investigate rather than resetting anything.
@@ -75,3 +75,14 @@ No hosted supplier record was inspected or changed, so its current missing field
 After 20261030, review and run the whole `supabase/migrations/20261031_offer_test_refinements.sql` once in Supabase SQL Editor as database owner before using **Other**. It replaces two existing functions to accept Other with a non-empty description while retaining all flight/ATOL, pricing, date, authorisation and publication checks. It creates no tables, changes no saved records, grants or launch gates, and has not been applied automatically. The other four corrections need no schema change.
 
 Verification: all 68 tests, lint, TypeScript and production build passed after these corrections. Tests cover hidden edit-mode search, retained directory search, the board-derived filter query, readable labels, Other validation in both application and database, precise ATOL errors, preview/public enquiry links, unchanged saved records and the three-stage enquiry. No hosted records were edited, offers published, gates enabled or deployment performed.
+
+
+## Discovery and public visibility
+
+**Explore Holidays > View All Holiday Offers** opens `/holiday-offers`. **Holiday Offers** is also in the main/footer navigation. The six inspirational guides remain unchanged. Every valid anonymous-visible offer appears once in the catalogue, including packages with no holiday category. Matching categories provide extra placements, and Featured controls homepage placement. All-inclusive still derives from board basis. Publication, listing, detail, category, homepage and enquiry use the same saved record/reference.
+
+A published status is not proof of current visibility. The dashboard shows whether the existing global public-offers gate is disabled. Opening a saved offer and saving publication checks that gate, substantive eligibility, the database public guard and the anonymous public reader. Unavailable checks show an explicit warning rather than claiming publication succeeded publicly. A successful save is retained even if the subsequent visibility check fails. Drafts and unavailable offers remain private; no gate is switched by these checks.
+
+**Manual migration:** after 20261031, review and run the whole `supabase/migrations/20261101_optional_offer_categories.sql` once in Supabase SQL Editor as database owner. It removes only the non-empty-category requirement from two existing functions. No table, saved offer/category, supplier, price, status, grant, enquiry gate or public-offers gate is changed. Existing non-empty category values remain validated. Do not rerun earlier migrations. The matching app release also requires an owner-authorised deployment; no deployment was performed.
+
+Production investigation and its limits are recorded in [HOLIDAY-DISCOVERY-CHECK.md](HOLIDAY-DISCOVERY-CHECK.md). A deliberately closed public-offers gate requires a separate owner decision using the existing launch procedure; code deployment alone does not open it.
