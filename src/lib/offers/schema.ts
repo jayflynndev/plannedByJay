@@ -2,7 +2,9 @@ import {z} from 'zod';
 import {slugify} from '@/lib/cms/schema';
 import {durationBetween,todayUK} from './editor';
 export const offerStatuses=['draft','published','paused','expired','archived'] as const;
-export const travelTypes=['package','cruise-only','fly-cruise','hotel-only','tour','rail'] as const;
+export const travelTypes=['package','cruise-only','fly-cruise','hotel-only','tour','rail','other'] as const;
+export const travelTypeLabels:Record<(typeof travelTypes)[number],string>={'package':'Package holiday','cruise-only':'Cruise only','fly-cruise':'Fly-cruise','hotel-only':'Accommodation only','tour':'Tour','rail':'Rail holiday','other':'Other'};
+export function travelArrangement(details:{travel_type:(typeof travelTypes)[number];classification_reason:string}){return details.travel_type==='other'?`Other: ${details.classification_reason}`:travelTypeLabels[details.travel_type];}
 export const offerReference=z.string().regex(/^PBJO-[A-F0-9]{8}$/);
 const text=(n=500)=>z.string().trim().max(n);
 const date=z.union([z.literal(''),z.iso.date()]);
@@ -44,6 +46,7 @@ export function priceLabel(offer:{price_minor:number|null;currency:string;price_
 export function isCurrentOffer(offer:{status:string;expires_at?:string|null;details:z.output<typeof offerDetails>},now=Date.now()){const d=offer.details;return offer.status==='published'&&d.departure_date>=todayUK(new Date(now))&&!!d.price_checked_at&&Number.isFinite(Date.parse(d.price_checked_at))&&d.price_checked_at.slice(0,10)<=todayUK(new Date(now))&&(!d.promotion_expires_at||Date.parse(d.promotion_expires_at)>now);}
 export function disclosureIssues(offer:OfferInput,supplier?:Supplier):string[]{
   const d=offer.details,issues:string[]=[];
+  if(d.travel_type==='other'&&!d.classification_reason.trim())issues.push('Describe the other travel arrangement; use Package holiday for a package.');
   if(d.flight_inclusive==='pending')issues.push('Choose whether flights are included.');
   if(d.travel_type==='fly-cruise'&&d.flight_inclusive!=='yes')issues.push('Fly-cruise must include flights.');
   if(['cruise-only','hotel-only','rail'].includes(d.travel_type)&&d.flight_inclusive!=='no')issues.push('Use a flight-inclusive travel type if flights are included.');
@@ -51,7 +54,7 @@ export function disclosureIssues(offer:OfferInput,supplier?:Supplier):string[]{
   if(supplier){const s=supplier.disclosures;
     if(supplier.archived||supplier.restricted)issues.push('This supplier is archived or restricted. Select another supplier or edit its directory record.');
     if(!s.legal_name||!s.business_address||!s.public_contact)issues.push('Complete the supplier company name, public address and contact details once in Suppliers.');
-    if(d.flight_inclusive==='yes'&&(!supplier.atol_verified||!s.atol_holder||!s.atol_number||!s.protection_information))issues.push('Complete the checked ATOL holder/number and applicable protection wording once in Suppliers for this flight-inclusive offer.');
+    if(d.flight_inclusive==='yes'){if(!supplier.atol_verified)issues.push('Supplier ATOL details have not been marked checked. Verify the actual protecting holder once in Suppliers.');if(!s.atol_holder||!s.atol_number)issues.push('Enter the protecting ATOL holder and number once in Suppliers.');if(!s.protection_information)issues.push('Add applicable ATOL protection wording under Suppliers > Advanced for this flight-inclusive arrangement.');}
   }
   return issues;
 }

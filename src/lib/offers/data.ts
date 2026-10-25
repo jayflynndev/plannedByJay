@@ -21,7 +21,9 @@ export async function loadOffers(query:OffersQuery=offersQuery.parse({}),options
   if(options.reference)request=request.eq('reference',options.reference);
   if(query.q)request=request.ilike('title',`%${literal(query.q)}%`);
   if(query.destination)request=request.ilike('details->>country',`%${literal(query.destination)}%`);
-  if(query.type)request=request.contains('holiday_types',[query.type]);
+  // Derived classification: includes existing offers without rewriting saved categories.
+  if(query.type==='all-inclusive')request=request.or('details->>board_basis.ilike.all inclusive,details->>board_basis.ilike.all-inclusive');
+  else if(query.type)request=request.contains('holiday_types',[query.type]);
   if(query.supplier)request=request.eq('supplier_id',query.supplier);
   if(query.departure)request=request.ilike('details->>departure_point',`%${literal(query.departure)}%`);
   if(query.board)request=request.ilike('details->>board_basis',`%${literal(query.board)}%`);

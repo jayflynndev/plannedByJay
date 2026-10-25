@@ -230,3 +230,5 @@ See [LAUNCH-HANDOVER.md](LAUNCH-HANDOVER.md) for the current completed/approval/
 ### Booking Information approval recorded
 
 Booking Information is now explicitly approved in `src/content/policies.ts`, with `approved: true` and `reviewRequired: []`. The existing footer/sitemap automatically include `/booking-information` and its route renders on the next owner-authorised deployment. Privacy and Cookies remain unapproved; enquiry/indexing flags are separate and unchanged. Follow [PRIVACY-FINAL-ACTIONS.md](PRIVACY-FINAL-ACTIONS.md) for the short remaining controller, basis, retention and provider-account decisions rather than reopening confirmed New Travel details. No deployment is performed automatically.
+
+Supplier/offer first-test corrections: see [HOLIDAY-OFFERS-GUIDE.md](HOLIDAY-OFFERS-GUIDE.md#first-holiday-test-corrections) for automatic All-inclusive discovery from board basis, readable arrangements, the price-area enquiry button, precise ATOL errors and the one-time TUI check. Other requires manual migration 20261031 after 20261030; no saved records or launch gates are changed.

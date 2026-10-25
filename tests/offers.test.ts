@@ -4,7 +4,7 @@ import {readFile} from 'node:fs/promises';
 import {randomUUID} from 'node:crypto';
 import {PGlite} from '@electric-sql/pglite';
 import {createClient} from '@supabase/supabase-js';
-import {emptyOffer,prepareOffer,supplierInput,publicationIssues,disclosureIssues,isCurrentOffer,partyTotal,duplicateOffer,type OfferInput} from '../src/lib/offers/schema';
+import {emptyOffer,prepareOffer,supplierInput,publicationIssues,disclosureIssues,isCurrentOffer,partyTotal,duplicateOffer,travelArrangement,type OfferInput} from '../src/lib/offers/schema';
 import {loadOffers} from '../src/lib/offers/data';
 import {offersQuery} from '../src/lib/offers/query';
 import {durationBetween,localInstant,localDateTime} from '../src/lib/offers/editor';
@@ -17,6 +17,8 @@ test('simple validation uses factual details and actual deadlines, not approval 
  const checked={...s,atol_verified:true,disclosures:{...s.disclosures,atol_holder:'Synthetic holder',atol_number:'1234',protection_information:'Synthetic approved wording'}};assert.deepEqual(disclosureIssues(flight,checked),[]);assert.ok(disclosureIssues(flight,{...checked,atol_verified:false}).length);
  assert.equal(isCurrentOffer({...o,details:{...o.details,promotion_expires_at:'2000-01-01T00:00:00Z'}}),false);assert.ok(publicationIssues({...o,details:{...o.details,promotion_expires_at:'2000-01-01T00:00:00Z'}}).length);
  assert.equal(supplierInput.safeParse({name:'Hotel supplier'}).success,true);assert.equal(supplierInput.safeParse({name:'Bad',disclosures:{booking_conditions_url:'javascript:alert(1)'}}).success,false);
+ assert.equal(travelArrangement(flight.details),'Package holiday');const other={...o,details:{...o.details,travel_type:'other' as const,departure_point:'London',classification_reason:''}};assert.ok(publicationIssues(other).some(m=>m.includes('Describe')));assert.deepEqual(publicationIssues({...other,details:{...other.details,classification_reason:'Non-package attraction and transfer'}}),[]);
+ assert.ok(disclosureIssues(flight,{...checked,disclosures:{...checked.disclosures,protection_information:''}}).some(m=>m.includes('wording')));assert.ok(!disclosureIssues(flight,checked).length);
  const copied=duplicateOffer({...o,id:randomUUID(),revision:4,details:{...o.details,promotion_expires_at:'2030-01-01T12:00:00Z'}});assert.equal(copied.id,null);assert.equal(copied.details.promotion_expires_at,'2030-01-01T12:00:00Z');assert.equal(durationBetween('2030-03-30','2030-04-02'),3);assert.equal(localDateTime(localInstant('2030-07-10T14:45')),'2030-07-10T14:45');
 });
 
@@ -48,6 +50,7 @@ for(const prior29 of [false,true])test(`consolidated migration after ${prior29?'
  const offersBefore=(await db.query('select * from public.holiday_offers order by id')).rows;
  if(prior29)await db.exec(await readFile('supabase/migrations/20261029_simpler_offer_publication.sql','utf8'));
  await db.exec(await readFile('supabase/migrations/20261030_simple_supplier_offer_workflow.sql','utf8'));
+ await db.exec(await readFile('supabase/migrations/20261031_offer_test_refinements.sql','utf8'));
  assert.deepEqual((await db.query('select * from public.holiday_offer_suppliers order by id')).rows,suppliersBefore);
  assert.deepEqual((await db.query('select supplier_id,name,lookup_record,usage_notes,account_reference from cms_private.offer_supplier_information order by supplier_id')).rows,privateBefore);
  assert.deepEqual((await db.query('select * from public.holiday_offers order by id')).rows,offersBefore);
@@ -70,6 +73,7 @@ for(const prior29 of [false,true])test(`consolidated migration after ${prior29?'
  await assert.rejects(as('authenticated',ordinary,'select public.cms_save_holiday_offer($1,$2)',[offer,{}]),/Administrator/);
  await assert.rejects(as('anon','','select * from cms_private.offer_information'),/permission denied/);
  await assert.rejects(as('authenticated',ordinary,'update public.holiday_offers set price_minor=1'),/permission denied/);
+ await assert.rejects(save({...offer,id:null,revision:0,slug:'other-missing-description',details:{...offer.details,travel_type:'other',departure_point:'London',classification_reason:''}}),/Complete/);const otherSaved=await save({...offer,id:null,revision:0,slug:'other-described',details:{...offer.details,travel_type:'other',departure_point:'London',classification_reason:'Non-package attraction and transfer'}});assert.ok(otherSaved.id);
  const freshId=randomUUID();const receipt=(await as<{r:{outcome:string;reference:string}}>('service_role','','select public.receive_holiday_offer_enquiry($1,$2,now(),$3,$4,$5,$6,$7,$8,$9) r',[freshId,'PBJ-654322',{name:'Synthetic fresh enquiry'},{text:'New immutable message',html:'<body>New immutable message</body>'},'fresh-fp','fresh-session','fresh-email',published.reference,published.updated_at])).rows[0].r;
  assert.equal(receipt.outcome,'received');
  const freshSnapshot=(await db.query<{offer_context:{supplier_disclosures:{booking_conditions_url:string}}}>('select offer_context from public.holiday_enquiries where id=$1',[freshId])).rows[0];assert.equal(freshSnapshot.offer_context.supplier_disclosures.booking_conditions_url,'https://example.com/terms');
@@ -89,4 +93,5 @@ for(const prior29 of [false,true])test(`consolidated migration after ${prior29?'
 test('public placements use the existing featured/category query and never filter by legacy seven-day expiry or select private data',async()=>{
  const urls:URL[]=[];const client=createClient('https://fixture.supabase.co','sb_publishable_fixture',{auth:{persistSession:false},global:{fetch:async input=>{urls.push(new URL(String(input)));return Response.json([],{headers:{'Content-Range':'0-0/0'}});}}});
  await loadOffers(offersQuery.parse({type:'family'}),{featured:true},client);assert.equal(urls[0].searchParams.get('featured'),'eq.true');assert.equal(urls[0].searchParams.get('holiday_types'),'cs.{family}');assert.equal(urls[0].searchParams.has('expires_at'),false);assert.doesNotMatch(urls[0].searchParams.get('select')||'',/notes|agent|private/);
+ await loadOffers(offersQuery.parse({type:'all-inclusive'}),{},client);assert.equal(urls[1].searchParams.has('holiday_types'),false);assert.match(urls[1].searchParams.get('or')||'',/board_basis.ilike.all inclusive/);assert.match(urls[1].searchParams.get('or')||'',/board_basis.ilike.all-inclusive/);
 });
