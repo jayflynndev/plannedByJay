@@ -1,2 +1,15 @@
-'use client';
-export default function AdminError({reset}:{reset:()=>void}) {return <main id="main-content" className="cms cms-login"><h1>The portal could not be loaded</h1><p>Your account may not be authorised, or the connection may be unavailable. Check the Admin Portal Guide.</p><button className="button" onClick={reset}>Try again</button><p><a href="/admin/login">Return to sign in</a></p></main>;}
+"use client";
+export default function AdminError({ reset }: { reset: () => void }) {
+  return (
+    <main id="main-content" className="article-admin">
+      <h1>Articles are unavailable</h1>
+      <p>
+        Check the Articles setup, or try again. No unsaved article has been
+        published.
+      </p>
+      <button className="button" onClick={reset}>
+        Try again
+      </button>
+    </main>
+  );
+}

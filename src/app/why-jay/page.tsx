@@ -3,7 +3,7 @@ import { whyJay } from '@/content/why-jay';
 import { Container } from '@/components/ui/Container';
 import { Button } from '@/components/ui/Button';
 import { SiteImage } from '@/components/ui/SiteImage';
-import { publicOrigin } from '@/lib/cms/config';
+import { publicOrigin } from '@/lib/presentation';
 export function generateMetadata():Metadata {return {title:`${whyJay.title} | Planned by Jay`,description:whyJay.description,alternates:{canonical:`${publicOrigin()}/why-jay`},openGraph:{title:whyJay.title,description:whyJay.description,url:`${publicOrigin()}/why-jay`,type:'website'}};}
 export default function WhyJayPage() {
   return <main id="main-content" tabIndex={-1} className="why-page"><section className="section why-page-intro"><Container className="why-page-intro-grid"><div><p className="eyebrow">{whyJay.eyebrow}</p><h1>{whyJay.title}</h1><div className="intro">{whyJay.introduction.map(paragraph=><p key={paragraph}>{paragraph}</p>)}</div></div><div className="why-page-portrait"><SiteImage src={whyJay.portrait.src} alt={whyJay.portrait.alt} fill sizes="(max-width: 767px) calc(100vw - 44px), 380px" style={{objectPosition: whyJay.portrait.objectPosition}} /></div></Container></section>

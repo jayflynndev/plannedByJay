@@ -1,104 +1,61 @@
 'use client';
-// @refresh reset
-// A changed form/schema must get a fresh draft during Fast Refresh. Preserving an
-// obsolete useState initializer can mix the old field shape with current validation.
 import Link from 'next/link';
-import { useCallback, useEffect, useRef, useState } from 'react';
-import {
-  enquiryContent as content,
-  enquiryOptions as options,
-} from '@/content/enquiry';
-import {
-  enquirySchema,
-  fieldErrors,
-  initialDraft,
-  stepSchemas,
-  type EnquiryDraft,
-  type FieldErrors,
-} from '@/lib/enquiries/schema';
-import { optionLabel } from '@/lib/enquiries/email';
-import { Field, ChoiceGroup, descriptionIds } from './Fields';
-import { Turnstile } from './Turnstile';
-
-/** All question copy: src/content/enquiry.ts. State stays in memory, never localStorage. */
-export function EnquiryForm({
-  enabled,
-  turnstileSiteKey,
-  privacyHref = null,
-  offerContext = null,
-}: {
-  enabled: boolean;
-  turnstileSiteKey?: string;
-  privacyHref?: string | null;
-  offerContext?:{reference:string;title:string;price:string;updatedAt:string}|null;
-}) {
-  const [draft, setDraft] = useState<EnquiryDraft>(initialDraft);
-  const [includeOffer,setIncludeOffer]=useState(true);
-  const [step, setStep] = useState(0);
-  const [errors, setErrors] = useState<FieldErrors>({});
-  const [sending, setSending] = useState(false);
-  const [message, setMessage] = useState('');
-  const [reference, setReference] = useState('');
-  const [copyStatus, setCopyStatus] = useState('');
-  const [website, setWebsite] = useState('');
-  const [token, setToken] = useState('');
-  const [resetChallenge, setResetChallenge] = useState(0);
-  const sendingLock = useRef(false);
-  const submissionId = useRef<string | null>(null);
-  const titleRef = useRef<HTMLHeadingElement>(null);
-  const errorsRef = useRef<HTMLDivElement>(null);
-  const successRef = useRef<HTMLDivElement>(null);
-  const started = useRef(false);
-  const attemptedSteps = useRef(new Set<number>());
-  const focusErrorSummary = useRef(false);
-  const onToken = useCallback((value: string) => setToken(value), []);
-  useEffect(() => {
-    if (started.current) {
-      titleRef.current?.focus({ preventScroll: true });
-      titleRef.current?.scrollIntoView?.({ block: 'start' });
-    } else started.current = true;
-  }, [step]);
-  useEffect(() => {
-    if (focusErrorSummary.current && (Object.keys(errors).length || message)) {
-      errorsRef.current?.focus({ preventScroll: true });
-      errorsRef.current?.scrollIntoView?.({ block: 'start' });
-      focusErrorSummary.current = false;
-    }
-  }, [errors, message]);
-  useEffect(() => {
-    if (reference) successRef.current?.focus();
-  }, [reference]);
-  // Revalidate only after Continue/Submit was attempted, without stealing input focus.
-  const updateDraft = (next: EnquiryDraft) => {
-    setDraft(next);
-    if (attemptedSteps.current.has(step)) {
-      const result = stepSchemas[step].safeParse(next);
-      setErrors(result.success ? {} : fieldErrors(result.error));
-    }
-  };
-  const set = <K extends keyof EnquiryDraft>(
-    key: K,
-    value: EnquiryDraft[K],
-  ) => {
-    updateDraft({ ...draft, [key]: value });
-  };
-  const changeStep = (value: number) => {
-    setErrors({});
-    setMessage('');
-    attemptedSteps.current.delete(value);
-    setStep(value);
-  };
-  function validateStage() {
-    attemptedSteps.current.add(step);
-    const parsed = stepSchemas[step].safeParse(draft);
-    if (!parsed.success) {
-      focusErrorSummary.current = true;
-      setErrors(fieldErrors(parsed.error));
-      return false;
-    }
-    setErrors({});
-    return true;
-  }
+import {useRef,useState,useEffect} from 'react';
+import {enquiryContent as content,enquiryOptions as options} from '@/content/enquiry';
+import {optionLabel} from '@/lib/presentation';
+import {Field,ChoiceGroup,descriptionIds} from './Fields';
+type EnquiryDraft = {
+  destinationChoice: string;
+  destinationIdeas: string;
+  holidayType: string;
+  adults: string;
+  children: string;
+  childrenAges: string[];
+  dateChoice: string;
+  startDate: string;
+  endDate: string;
+  travelPeriod: string;
+  flexibleNotes: string;
+  duration: string;
+  departurePreferences: string;
+  budget: string;
+  preferences: string;
+  requirementsDiscussion: boolean;
+  name: string;
+  email: string;
+  phone: string;
+  contactMethod: string;
+  intention: string;
+};
+const draft: EnquiryDraft = {
+  destinationChoice: '',
+  destinationIdeas: '',
+  holidayType: '',
+  adults: '1',
+  children: '0',
+  childrenAges: [],
+  dateChoice: '',
+  startDate: '',
+  endDate: '',
+  travelPeriod: '',
+  flexibleNotes: '',
+  duration: '',
+  departurePreferences: '',
+  budget: '',
+  preferences: '',
+  requirementsDiscussion: false,
+  name: '',
+  email: '',
+  phone: '',
+  contactMethod: 'email',
+  intention: '',
+};
+export function EnquiryForm({privacyHref=null}:{privacyHref?:string|null}){
+ const [step,setStep]=useState(0);const titleRef=useRef<HTMLHeadingElement>(null);
+ const errors:Record<string,string>={};
+ useEffect(()=>{titleRef.current?.focus({preventScroll:true});},[step]);
+ function changeStep(next:number){setStep(next);}
+ function nextPreviewStage(event:React.FormEvent){event.preventDefault();if(step<2)setStep(step+1);}
   const input = (
     key: keyof EnquiryDraft,
     label: string,
@@ -114,12 +71,12 @@ export function EnquiryForm({
     const id = String(key);
     return (
       <Field id={id} label={label} hint={settings.hint} errors={errors}>
-        <input
+        <input disabled
           id={id}
           name={id}
           type={settings.type || 'text'}
           value={String(draft[key])}
-          onChange={(event) => set(key, event.target.value as never)}
+
           min={key === 'adults' ? 1 : undefined}
           max={key === 'adults' ? 50 : undefined}
           step={settings.type === 'number' ? 1 : undefined}
@@ -140,11 +97,11 @@ export function EnquiryForm({
     hint?: string,
   ) => (
     <Field id={String(key)} label={label} hint={hint} errors={errors}>
-      <select
+      <select disabled
         id={String(key)}
         name={String(key)}
         value={String(draft[key])}
-        onChange={(event) => set(key, event.target.value as never)}
+
         required
         aria-invalid={!!errors[key]}
         aria-describedby={descriptionIds(String(key), hint, errors)}
@@ -169,7 +126,7 @@ export function EnquiryForm({
       label={label}
       options={list}
       value={String(draft[key])}
-      onChange={(value) => set(key, value as never)}
+
       hint={hint}
       errors={errors}
     />
@@ -182,11 +139,11 @@ export function EnquiryForm({
     maxLength = 2000,
   ) => (
     <Field id={key} label={label} hint={hint} errors={errors}>
-      <textarea
+      <textarea disabled
         id={key}
         name={key}
         value={draft[key]}
-        onChange={(event) => set(key, event.target.value)}
+
         rows={4}
         maxLength={maxLength}
         placeholder={placeholder}
@@ -195,155 +152,8 @@ export function EnquiryForm({
       />
     </Field>
   );
-  async function send(event: React.FormEvent) {
-    event.preventDefault();
-    if (sendingLock.current) return;
-    if (!validateStage()) return;
-    if (step < 2) {
-      changeStep(step + 1);
-      return;
-    }
-    const parsed = enquirySchema.safeParse(draft);
-    if (!parsed.success) {
-      const nextErrors = fieldErrors(parsed.error);
-      const failingStep = stepSchemas.findIndex(
-        (schema) => !schema.safeParse(draft).success,
-      );
-      setStep(Math.max(0, failingStep));
-      focusErrorSummary.current = true;
-      setErrors(nextErrors);
-      return;
-    }
-    focusErrorSummary.current = true;
-    if (!enabled) {
-      setMessage(content.messages.unavailable);
-      return;
-    }
-    if (turnstileSiteKey && !token) {
-      setMessage(content.messages.challenge);
-      return;
-    }
-    sendingLock.current = true;
-    focusErrorSummary.current = true;
-    setSending(true);
-    setMessage('');
-    submissionId.current ??= crypto.randomUUID();
-    try {
-      const session = await fetch('/api/enquiries/session', {
-        credentials: 'same-origin',
-        cache: 'no-store',
-        signal: AbortSignal.timeout(15000),
-      });
-      if (!session.ok) {
-        setMessage(content.messages.session);
-        return;
-      }
-      const response = await fetch('/api/enquiries', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'same-origin',
-        body: JSON.stringify({
-          submissionId: submissionId.current,
-          brief: draft,
-          website,
-          turnstileToken: token,
-          ...(offerContext&&includeOffer?{offerReference:offerContext.reference,offerVersion:offerContext.updatedAt}:{}),
-        }),
-        signal: AbortSignal.timeout(45000),
-      });
-      const result = await response.json();
-      if (response.ok && typeof result.reference === 'string') {
-        setReference(result.reference);
-        return;
-      }
-      if (
-        result.code === 'validation' &&
-        result.errors &&
-        typeof result.errors === 'object'
-      ) {
-        setErrors(result.errors);
-        const failingStep = stepSchemas.findIndex(
-          (schema) => !schema.safeParse(draft).success,
-        );
-        if (failingStep >= 0) setStep(failingStep);
-      } else {
-        const safeMessages: Record<string, string> = {
-          offerUnavailable: 'This offer is no longer current. You can untick the offer reference and send a general Holiday Brief instead. No enquiry has been saved for this attempt.',
-          unavailable: content.messages.unavailable,
-          conflict: content.messages.conflict,
-          rateLimit: content.messages.rateLimit,
-          session: content.messages.session,
-          spam: content.messages.spam,
-        };
-        setMessage(safeMessages[result.code] || content.messages.failure);
-      }
-    } catch {
-      setMessage(content.messages.failure);
-    } finally {
-      sendingLock.current = false;
-      setSending(false);
-      setResetChallenge((value) => value + 1);
-    }
-  }
-  function focusField(id: string) {
-    const element = document.getElementById(id);
-    const focusable = element?.matches('fieldset')
-      ? element.querySelector<HTMLElement>('input,select,textarea')
-      : element;
-    focusable?.focus({ preventScroll: true });
-    focusable?.scrollIntoView?.({ block: 'start' });
-  }
-  function keepFocusBelowHeader(event: React.FocusEvent<HTMLFormElement>) {
-    const header = document
-      .querySelector('.site-header')
-      ?.getBoundingClientRect();
-    if (!header?.height) return;
-    const top = event.target.getBoundingClientRect().top;
-    if (top < header.bottom + 16)
-      window.scrollBy({ top: top - header.bottom - 16, behavior: 'auto' });
-  }
-  const fieldLabel = (key: string) =>
-    key.startsWith('childrenAges.')
-      ? `${content.fields.agePrefix} ${Number(key.split('.')[1]) + 1} ${content.fields.ageSuffix}`
-      : content.fields[key as keyof typeof content.fields] || key;
-  async function copyReference() {
-    try {
-      await navigator.clipboard.writeText(reference);
-      setCopyStatus(content.messages.referenceCopied);
-    } catch {
-      setCopyStatus(content.messages.referenceCopyFailed);
-    }
-  }
-  if (reference)
-    return (
-      <div className="enquiry-success" ref={successRef} tabIndex={-1}>
-        <span className="success-mark" aria-hidden="true">
-          ✓
-        </span>
-        <h2>{content.messages.successTitle}</h2>
-        <p className="intro">{content.messages.success}</p>
-        <p className="eyebrow">{content.controls.reference}</p>
-        <p className="enquiry-reference">{reference}</p>
-        <p className="reference-note">{content.messages.referenceNote}</p>
-        <button
-          className="button button-secondary"
-          type="button"
-          onClick={copyReference}
-        >
-          {content.messages.copyReference}
-        </button>
-        <p className="reference-copy-status" role="status">
-          {copyStatus}
-        </p>
-        <Link className="button" href="/">
-          {content.messages.successLink}
-          <span aria-hidden="true">↗</span>
-        </Link>
-      </div>
-    );
   return (
     <div className="enquiry-form-wrap">
-      {offerContext&&<section className="offer-enquiry-context"><h2>Holiday you were exploring</h2><p>{offerContext.title} · {offerContext.reference}</p><p>{offerContext.price}. Price and availability will be reconfirmed.</p><label><input type="checkbox" checked={includeOffer} disabled={sending} onChange={e=>{setIncludeOffer(e.target.checked);submissionId.current=null;}}/>Include this offer reference with my enquiry</label></section>}
       <ol className="form-progress" aria-label={content.controls.progress}>
         {content.steps.map((item, index) => (
           <li
@@ -356,16 +166,16 @@ export function EnquiryForm({
           </li>
         ))}
       </ol>
-      {!enabled && (
+      {(
         <p className="form-notice" role="status">
           {content.messages.unavailable}
         </p>
       )}
       <form
-        onSubmit={send}
-        onFocusCapture={keepFocusBelowHeader}
+        onSubmit={nextPreviewStage}
+
         noValidate
-        aria-busy={sending}
+        aria-label="Read-only Holiday Brief preview"
       >
         <div className="stage-heading">
           <p className="eyebrow">
@@ -377,32 +187,7 @@ export function EnquiryForm({
           <p>{content.steps[step].description}</p>
           <small>{content.controls.required}</small>
         </div>
-        {(Object.keys(errors).length > 0 || message) && (
-          <div
-            className="error-summary"
-            role="alert"
-            tabIndex={-1}
-            ref={errorsRef}
-          >
-            <h3>
-              {Object.keys(errors).length
-                ? content.messages.errorsTitle
-                : message}
-            </h3>
-            {Object.keys(errors).length > 0 && (
-              <ul>
-                {Object.entries(errors).map(([key, error]) => (
-                  <li key={key}>
-                    <button type="button" onClick={() => focusField(key)}>
-                      {fieldLabel(key)}: {error}
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
-        )}
-        <fieldset className="stage-fields" disabled={sending}>
+        <fieldset className="stage-fields" disabled>
           {step === 0 && (
             <>
               {radios(
@@ -432,7 +217,7 @@ export function EnquiryForm({
                     label={content.fields.children}
                     errors={errors}
                   >
-                    <input
+                    <input disabled
                       id="children"
                       type="number"
                       min={0}
@@ -446,22 +231,7 @@ export function EnquiryForm({
                         undefined,
                         errors,
                       )}
-                      onChange={(event) => {
-                        const value = event.target.value;
-                        updateDraft({
-                          ...draft,
-                          children: value,
-                          childrenAges: Array.from(
-                            {
-                              length: Math.max(
-                                0,
-                                Math.min(20, Number(value) || 0),
-                              ),
-                            },
-                            (_, index) => draft.childrenAges[index] ?? '',
-                          ),
-                        });
-                      }}
+
                     />
                   </Field>
                 </div>
@@ -482,7 +252,7 @@ export function EnquiryForm({
                           label={`${content.fields.agePrefix} ${index + 1} ${content.fields.ageSuffix}`}
                           errors={errors}
                         >
-                          <input
+                          <input disabled
                             id={id}
                             type="number"
                             min={0}
@@ -492,14 +262,7 @@ export function EnquiryForm({
                             value={age}
                             aria-invalid={!!errors[id]}
                             aria-describedby={`childrenAges-hint ${errors[id] ? `${id}-error` : ''}`}
-                            onChange={(event) =>
-                              set(
-                                'childrenAges',
-                                draft.childrenAges.map((item, i) =>
-                                  i === index ? event.target.value : item,
-                                ),
-                              )
-                            }
+
                           />
                         </Field>
                       );
@@ -566,12 +329,10 @@ export function EnquiryForm({
               )}
               <div className="requirements-box">
                 <label className="check-option">
-                  <input
+                  <input disabled
                     type="checkbox"
                     checked={draft.requirementsDiscussion}
-                    onChange={(event) =>
-                      set('requirementsDiscussion', event.target.checked)
-                    }
+
                     aria-describedby="requirements-hint"
                   />
                   <span>{content.fields.requirementsDiscussion}</span>
@@ -670,34 +431,15 @@ export function EnquiryForm({
                   </p>
                 )}
               </div>
-              {enabled && turnstileSiteKey && (
-                <Turnstile
-                  siteKey={turnstileSiteKey}
-                  resetKey={resetChallenge}
-                  onToken={onToken}
-                />
-              )}
             </>
           )}
         </fieldset>
-        <div className="honeypot" aria-hidden="true">
-          <label htmlFor="website">{content.controls.honeypot}</label>
-          <input
-            id="website"
-            name="website"
-            value={website}
-            onChange={(event) => setWebsite(event.target.value)}
-            tabIndex={-1}
-            autoComplete="off"
-            maxLength={200}
-          />
-        </div>
         <div className="form-actions">
           {step > 0 && (
             <button
               type="button"
               className="button button-secondary"
-              disabled={sending}
+              disabled
               onClick={() => changeStep(step - 1)}
             >
               {content.controls.back}
@@ -706,13 +448,9 @@ export function EnquiryForm({
           <button
             type="submit"
             className="button"
-            disabled={sending || (step === 2 && !enabled)}
+            disabled={step === 2}
           >
-            {sending
-              ? content.controls.submitting
-              : step === 2
-                ? content.controls.submit
-                : content.controls.next}
+            {step===2?'Enquiries unavailable':'View next stage'}
             <span aria-hidden="true">↗</span>
           </button>
         </div>

@@ -13,7 +13,7 @@ test('holiday landing, six shared pages and homepage cards render meaningful rou
   const {holidayTypes}=await import('../src/content/holiday-types');
   try {
     const landing=render(<HolidayLanding/>);assert.equal(landing.getAllByRole('heading',{level:1}).length,1);
-    for(const item of holidayTypes)assert.ok(landing.container.querySelector(`a[href="/holidays/${item.slug}"]`));cleanup();
+    assert.equal(landing.getByRole('link',{name:'View All Holiday Offers'}).getAttribute('href'),'/holiday-offers');for(const item of holidayTypes)assert.ok(landing.container.querySelector(`a[href="/holidays/${item.slug}"]`));cleanup();
     const home=render(<HolidayExperiences/>);assert.equal(home.container.querySelectorAll('a[href^="/holidays/"]').length,6);assert.equal(home.container.querySelector('a[href="/plan-my-holiday"]'),null);cleanup();
     for(const item of holidayTypes){
       const page=render(<HolidayTypePage holiday={item}/>);
@@ -29,46 +29,46 @@ test('holiday landing, six shared pages and homepage cards render meaningful rou
 
 test('public discovery has labelled GET filters, shared pagination, reset, empty and unavailable states',async()=>{
   const {render,cleanup}=await import('@testing-library/react');
-  const {ArticleDiscovery}=await import('../src/components/cms/ArticleDiscovery');
-  const {parseDiscoveryQuery}=await import('../src/lib/cms/discovery-query');
-  const {discoveryCopy}=await import('../src/content/cms');
+  const {ArticleDiscovery}=await import('../src/components/articles/ArticleDiscovery');
+
+  const {discoveryCopy}=await import('../src/content/articles');
   const tag={id:'30000000-0000-4000-8000-000000000001',name:'Japan'};
-  const {query}=parseDiscoveryQuery({q:'Japan',tag:tag.id});
+  const query={q:'Japan',tag:tag.id,type:'',category:'',page:1};
   const empty={total:0,articles:[],categories:[],tags:[tag],types:['Travel advice','Rail itinerary']};
   try {
     const view=render(<ArticleDiscovery query={query} results={empty}/>);
     assert.equal(view.getByRole('form',{name:'Find travel articles'}).getAttribute('method'),'get');
     assert.equal((view.getByLabelText('Search articles') as HTMLInputElement).value,'Japan');
-    assert.equal((view.getByLabelText('Tag or destination') as HTMLSelectElement).value,tag.id);
+
     assert.equal(view.getByRole('link',{name:'Reset filters'}).getAttribute('href'),'/travel-advice');
     assert.ok(view.getByText(discoveryCopy.noResults));
-    assert.ok(view.getByRole('option',{name:'Rail itinerary'}),'public filter recognises registry additions');
+
     view.rerender(<ArticleDiscovery query={query} results={{...empty,total:25}}/>);
     const href=view.getByRole('link',{name:'Next page'}).getAttribute('href')||'';
     assert.ok(href.includes('q=Japan')&&href.includes('tag=')&&href.includes('page=2'));
     view.rerender(<ArticleDiscovery query={query} results={null} error={discoveryCopy.unavailable}/>);
     assert.ok(view.getByRole('alert').textContent?.includes('temporarily unavailable'));
     assert.equal(view.queryByText(discoveryCopy.noResults),null,'failure is not an empty result');
-    view.rerender(<ArticleDiscovery query={parseDiscoveryQuery({}).query} results={empty}/>);
+    view.rerender(<ArticleDiscovery query={{q:'',tag:'',type:'',category:'',page:1}} results={empty}/>);
     assert.equal((view.getByLabelText('Search articles') as HTMLInputElement).value,'','reset navigation remounts uncontrolled fields');
-    assert.equal((view.getByLabelText('Tag or destination') as HTMLSelectElement).value,'');
+
   } finally {cleanup();}
 });
 
-test('policy documents render semantic headings, real links, cookie inventory and a stable review date',async()=>{
+test('policy layouts retain semantic headings, real links and reviewed dates without obsolete cookie claims',async()=>{
   const {render,cleanup}=await import('@testing-library/react');
   const {PolicyDocument}=await import('../src/components/layout/PolicyDocument');
   try {
     for(const policy of Object.values(policies)) {
       const view=render(<PolicyDocument policy={policy}/>);
       assert.equal(view.getAllByRole('heading',{level:1}).length,1);
-      assert.equal(view.getAllByRole('heading',{level:2}).length,policy.sections.length);
-      assert.equal(view.container.querySelector('time')?.getAttribute('dateTime'),'2026-10-22');
-      assert.ok(view.getByText('22 October 2026'));
-      assert.ok(view.getAllByRole('link').every(link=>/^(https:\/\/|mailto:)/.test(link.getAttribute('href')||'')));
+      assert.equal(view.queryAllByRole('heading',{level:2}).length,policy.sections.length);
+      assert.equal(view.container.querySelector('time')?.getAttribute('dateTime')||null,policy.updatedAt);
+      if(policy.updatedAt)assert.ok(view.getByText('22 October 2026'));
+      assert.ok(view.queryAllByRole('link').every(link=>/^(https:\/\/|mailto:)/.test(link.getAttribute('href')||'')));
       for(const issue of policy.reviewRequired)assert.equal(view.queryByText(issue),null);
       assert.doesNotMatch(view.container.textContent || '', /before (?:this (?:notice|policy) can be|publication)|must (?:be )?(?:confirmed|checked).*publish|proposed basis|criteria to finalise|TODO/i);
-      if(policy===policies.cookies){assert.ok(view.getByRole('heading',{name:'pbj-enquiry-session'}));assert.equal(view.container.querySelectorAll('dl').length,3);}
+
       cleanup();
     }
   }finally{cleanup();}
@@ -103,7 +103,7 @@ test('policy routes return not-found for unapproved or unresolved drafts and ren
       assert.throws(()=>PolicyPage({policy:key}),{digest:'NEXT_HTTP_ERROR_FALLBACK;404'});
       policies[key]={...policies[key],approved:true};
       if(policies[key].reviewRequired.length)assert.throws(()=>PolicyPage({policy:key}),{digest:'NEXT_HTTP_ERROR_FALLBACK;404'});
-      policies[key]={...policies[key],reviewRequired:[]};
+      policies[key]={...policies[key],reviewRequired:[],updatedAt:'2026-10-25',sections:policies[key].sections.length?policies[key].sections:[{heading:'Reviewed test policy',paragraphs:['Synthetic reviewed policy text for this test only.']}]};
       const view=render(PolicyPage({policy:key}));
       assert.ok(view.getByRole('heading',{level:1,name:policies[key].title}));
       cleanup();

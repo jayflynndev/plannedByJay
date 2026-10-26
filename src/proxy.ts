@@ -1,25 +1,28 @@
-import { createServerClient } from '@supabase/ssr';
-import { NextRequest, NextResponse } from 'next/server';
-import { cmsConfig } from '@/lib/cms/config';
+import { NextResponse, type NextRequest } from "next/server";
+import { createServerClient } from "@supabase/ssr";
+import { articleConfig, cookieOptions } from "@/lib/articles/client";
 export async function proxy(request: NextRequest) {
-  let response = NextResponse.next({request});
-  const config = cmsConfig();
-  if (config) {
-    const client = createServerClient(config.url, config.key, {
-      cookieOptions: {httpOnly: true, secure: config.origin.startsWith('https:'), sameSite: 'lax', path: '/'},
-      cookies: {
-        getAll: () => request.cookies.getAll(),
-        setAll: entries => {
-          entries.forEach(({name, value}) => request.cookies.set(name, value));
-          response = NextResponse.next({request});
-          entries.forEach(({name, value, options}) => response.cookies.set(name, value, options));
-        },
+  const c = articleConfig();
+  let response = NextResponse.next({ request });
+  response.headers.set("Cache-Control", "private, no-store");
+  if (!c) return response;
+  const client = createServerClient(c.url, c.key, {
+    global: {
+      fetch: (input, init) => fetch(input, { ...init, cache: "no-store" }),
+    },
+    cookieOptions,
+    cookies: {
+      getAll: () => request.cookies.getAll(),
+      setAll: (entries) => {
+        for (const e of entries) request.cookies.set(e.name, e.value);
+        response = NextResponse.next({ request });
+        for (const e of entries)
+          response.cookies.set(e.name, e.value, e.options);
+        response.headers.set("Cache-Control", "private, no-store");
       },
-    });
-    await client.auth.getClaims();
-  }
-  response.headers.set('Cache-Control', 'private, no-store');
-  response.headers.set('X-Robots-Tag', 'noindex, nofollow');
+    },
+  });
+  await client.auth.getUser();
   return response;
 }
-export const config = { matcher: ['/admin/:path*', '/api/cms/:path*'] };
+export const config = { matcher: ["/admin/:path*"] };

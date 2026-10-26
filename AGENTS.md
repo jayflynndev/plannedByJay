@@ -1,6 +1,6 @@
 # Planned by Jay project rules
 
-Build one page at a time; the homepage and Phase 2 holiday enquiry page are authorised. Keep editable content in src/content, reuse established components, preserve working functionality and avoid unnecessary dependencies. Document significant features and update docs/WEBSITE-GUIDE.md when editing instructions change. Use British English. Never invent business credentials, prices, reviews, personal travel experience, protection claims or legal wording. Do not deploy, connect external services or enable public enquiry submissions without explicit approval. Run tests, lint, typecheck and production build after substantial enquiry changes. Keep customer enquiry records and provider credentials server-side. Provider acceptance must never be labelled as confirmed inbox delivery. Preserve durable enquiry records when notifications fail.
+Preserve the established public design, assets and editable content in src/content. The authorised backend scope is Supabase administrator authentication and Articles only: drafts, publishing, categories, tags and public photographs. Keep enquiries disabled; do not introduce supplier, offer, booking or social-posting systems. Use British English and avoid unnecessary dependencies. Never invent business credentials, prices, reviews, travel experience or legal/protection claims. Do not deploy, push, apply hosted migrations or change secrets without explicit approval. Update docs/WEBSITE-GUIDE.md when editing instructions change.
 
 <!-- BEGIN:nextjs-agent-rules -->
 

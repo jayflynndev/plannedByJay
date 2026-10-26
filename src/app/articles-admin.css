@@ -1,0 +1,212 @@
+.article-admin {
+  max-width: 1100px;
+  margin: auto;
+  padding: 40px 28px 80px;
+  min-width: 0;
+}
+.article-admin > nav,
+.article-admin-actions,
+.article-admin-heading {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-bottom: 24px;
+}
+.article-admin > nav a,
+.article-admin-actions a {
+  text-decoration: underline;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+}
+.article-admin h1 {
+  font-size: clamp(2rem, 5vw, 3.4rem);
+  margin: 20px 0;
+}
+.article-admin h2 {
+  font-size: 1.7rem;
+  margin: 16px 0;
+}
+.article-admin p {
+  margin: 12px 0;
+}
+.article-admin-form {
+  display: grid;
+  gap: 20px;
+  border: 0;
+  padding: 0;
+  min-width: 0;
+}
+.article-admin label {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+}
+.article-admin :is(input, select) {
+  font: inherit;
+  width: 100%;
+  min-height: 46px;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  background: var(--white);
+  color: var(--ink);
+  max-width: 100%;
+  box-sizing: border-box;
+}
+.article-admin button {
+  min-height: 44px;
+  max-width: 100%;
+  white-space: normal;
+}
+.article-admin button:not(.button) {
+  border: 1px solid var(--line);
+  background: var(--white);
+  border-radius: 3px;
+  padding: 8px 12px;
+  color: var(--ink);
+}
+.article-admin button[aria-pressed="true"] {
+  background: var(--sage);
+  border-color: var(--ink);
+}
+.article-admin :is(button, input, select, [contenteditable]) {
+  scroll-margin-top: 130px;
+}
+.article-admin summary {
+  cursor: pointer;
+  min-height: 44px;
+  padding: 10px 0;
+}
+.article-admin details,
+.article-inline-category,
+.article-image-selector {
+  border: 1px solid var(--line);
+  padding: 16px;
+  border-radius: 4px;
+}
+.article-admin-error {
+  border-left: 4px solid var(--accent);
+  padding: 14px;
+  background: var(--accent-light);
+  overflow-wrap: anywhere;
+}
+.article-admin-notice {
+  padding: 14px;
+  background: var(--sage);
+}
+.article-admin-list {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: 20px;
+}
+.article-admin-list > li {
+  border: 1px solid var(--line);
+  padding: 22px;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.article-word-editor {
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: var(--white);
+  min-width: 0;
+}
+.article-word-editor [role="toolbar"] {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  padding: 10px;
+  border-bottom: 1px solid var(--line);
+  position: sticky;
+  top: 96px;
+  z-index: 5;
+  background: var(--paper);
+}
+.article-word-editor .tiptap {
+  padding: 22px;
+  min-height: 350px;
+  outline: none;
+  overflow-wrap: anywhere;
+  font-size: 18px;
+  line-height: 1.7;
+}
+.article-word-editor :is(ul, ol) {
+  padding-left: 28px;
+}
+.article-word-editor .tiptap :is(p, h2, h3, blockquote) {
+  margin-bottom: 18px;
+}
+.article-word-editor blockquote {
+  border-left: 3px solid var(--accent);
+  padding-left: 18px;
+}
+.article-word-editor a {
+  text-decoration: underline;
+}
+.article-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+.article-image-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+.article-image-grid button {
+  display: grid;
+  gap: 8px;
+  overflow-wrap: anywhere;
+  min-width: 0;
+}
+.article-admin img {
+  max-width: 100%;
+  height: auto;
+}
+.article-private-preview {
+  margin-top: 35px;
+  border: 1px solid var(--line);
+  padding: 25px;
+  background: var(--white);
+}
+.article-private-preview .article-view {
+  max-width: 900px;
+  margin: auto;
+}
+.article-editor-loading {
+  padding: 24px;
+  min-height: 350px;
+}
+@media (max-width: 767px) {
+  .article-admin {
+    padding: 28px 22px 60px;
+  }
+  .article-word-editor [role="toolbar"] {
+    top: 80px;
+  }
+  .article-word-editor .tiptap {
+    padding: 16px;
+  }
+  .article-admin-actions {
+    align-items: stretch;
+  }
+  .article-admin-actions > .button {
+    width: 100%;
+  }
+  .article-image-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .article-private-preview {
+    padding: 16px;
+  }
+  .article-admin-heading {
+    align-items: flex-start;
+  }
+}
+
+.article-admin { overflow-wrap: anywhere; }
+.article-tags button { overflow-wrap: anywhere; }

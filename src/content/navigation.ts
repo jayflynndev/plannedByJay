@@ -5,6 +5,7 @@ import 'server-only';
 export const navigation = [
   { label: 'Home', href: '/' },
   { label: 'Explore Holidays', href: '/holidays' },
+  { label: 'Holiday Offers', href: '/holiday-offers' },
   { label: 'Travel Advice', href: '/travel-advice' },
   { label: 'Why Book With Jay?', href: '/why-jay' },
 ];

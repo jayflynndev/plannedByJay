@@ -1,5 +1,5 @@
 'use client';
-import type { FieldErrors } from '@/lib/enquiries/schema';
+type FieldErrors=Record<string,string>;
 type Option = { value: string; label: string };
 export function Field({
   id,
@@ -47,7 +47,6 @@ export function ChoiceGroup({
   label,
   options,
   value,
-  onChange,
   hint,
   errors,
 }: {
@@ -55,7 +54,6 @@ export function ChoiceGroup({
   label: string;
   options: readonly Option[];
   value: string;
-  onChange: (value: string) => void;
   hint?: string;
   errors: FieldErrors;
 }) {
@@ -78,13 +76,13 @@ export function ChoiceGroup({
             key={option.value}
             className={`choice-option ${value === option.value ? 'selected' : ''}`}
           >
-            <input
+            <input disabled
               type="radio"
               name={id}
               value={option.value}
               required
               checked={value === option.value}
-              onChange={() => onChange(option.value)}
+
             />
             <span>{option.label}</span>
           </label>

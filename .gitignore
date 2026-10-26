@@ -5,3 +5,6 @@ out/
 .env*
 !.env.example
 *.log
+
+# Private recovery archives, never served or committed.
+backups/

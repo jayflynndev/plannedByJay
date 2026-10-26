@@ -1,4 +1,0 @@
-import {supplierInput} from '@/lib/offers/schema';
-import {writeClient,readJson,failure} from '@/lib/cms/http';
-import {databaseError,CmsError} from '@/lib/cms/security';
-export async function POST(request:Request){try{const client=await writeClient(request);const parsed=supplierInput.safeParse(await readJson(request,60000));if(!parsed.success)return Response.json({error:parsed.error.issues.map(i=>i.message).join(' ')},{status:400});const result=await client.rpc('cms_save_offer_supplier',{p_data:parsed.data});if(result.error?.code==='23505')throw new CmsError('A supplier with this name already exists. Select the existing supplier instead.',409);if(result.error?.code==='40001')throw new CmsError('This supplier changed elsewhere. Copy your changes, then reload.',409);databaseError(result.error);return Response.json({supplier:supplierInput.parse(result.data)},{headers:{'Cache-Control':'private, no-store'}});}catch(error){return failure(error);}}
