@@ -443,3 +443,103 @@ test("Holiday Type list protects original deletion and confirms versioned deleti
     assert.equal(refreshed, 1); assert.equal(calls, 1);
   } finally {cleanup(); globalThis.fetch = original; window.confirm = confirm;}
 });
+
+test("supplier form reviews ambiguous suggestions, protects manual entries, saves approval explicitly and retains failed edits", async () => {
+  const {render, fireEvent, cleanup, waitFor} = await import("@testing-library/react");
+  const {SupplierEditor} = await import("../src/components/suppliers/SupplierEditor");
+  const {supplierInput} = await import("../src/lib/suppliers/schema");
+  const original = globalThis.fetch, confirm = window.confirm;
+  let fail = true, version = 0, attempts = 0;
+  const writes: Record<string, unknown>[] = [];
+  globalThis.fetch = async (input, init) => {
+    const body = JSON.parse(String(init?.body));
+    if (String(input).endsWith("/lookup")) return Response.json(body.name === "Jet2" ? {message: "Choose the correct business.", matches: [
+      {name: "Jet2holidays", suggestions: [{field: "website", value: "https://www.jet2holidays.com", url: "https://www.jet2holidays.com", kind: "suggested"}]},
+      {name: "Jet2.com", suggestions: [{field: "website", value: "https://www.jet2.com", url: "https://www.jet2.com", kind: "suggested"}]},
+    ]} : {message: "Partial official details; no current CAA check.", matches: [{name: "Jet2holidays", suggestions: [
+      {field: "website", value: "https://www.jet2holidays.com", url: "https://www.jet2holidays.com", kind: "official"},
+      {field: "legal_name", value: "Jet2holidays Limited", url: "https://www.jet2holidays.com/terms-and-conditions", kind: "official"},
+      {field: "contact_url", value: "https://www.jet2holidays.com/contact-us", url: "https://www.jet2holidays.com/contact-us", kind: "official"},
+    ]}]});
+    attempts++;
+    if (fail) return Response.json({error: "A supplier with that name already exists. Search the directory."}, {status: 409});
+    const parsed = supplierInput.parse(body); writes.push(parsed);
+    return Response.json({supplier: {...parsed, id: "50000000-0000-4000-8000-000000000001", version: ++version, archived: false, created_at: "2026-10-26T12:00:00Z", updated_at: "2026-10-26T12:00:00Z"}});
+  };
+  window.confirm = () => false;
+  const view = render(<SupplierEditor/>);
+  try {
+    fireEvent.change(view.getByLabelText("Supplier name"), {target: {value: "Jet2"}});
+    fireEvent.click(view.getByRole("button", {name: "Find Supplier Details"}));
+    await waitFor(() => assert.ok(view.getByRole("radio", {name: "Jet2holidays"})));
+    assert.equal(view.queryByRole("button", {name: "Fill empty fields with suggestions"}), null);
+    fireEvent.click(view.getByRole("radio", {name: "Jet2holidays"}));
+    assert.equal((view.getByLabelText("Official website") as HTMLInputElement).value, "");
+    fireEvent.click(view.getByRole("button", {name: "Fill empty fields with suggestions"}));
+    assert.equal((view.getByLabelText("Official website") as HTMLInputElement).value, "https://www.jet2holidays.com");
+    assert.equal((view.getByLabelText("Status") as HTMLSelectElement).value, "draft");
+    fireEvent.change(view.getByLabelText("Supplier name"), {target: {value: "Jet2holidays"}});
+    fireEvent.change(view.getByLabelText("Legal company / trading name"), {target: {value: "My manual correction"}});
+    fireEvent.click(view.getByRole("button", {name: "Find Supplier Details"}));
+    await waitFor(() => assert.ok(view.getByText("Partial official details; no current CAA check.")));
+    fireEvent.click(view.getByRole("button", {name: "Use suggested legal company / trading name"}));
+    assert.equal((view.getByLabelText("Legal company / trading name") as HTMLInputElement).value, "My manual correction");
+    fireEvent.click(view.getByRole("button", {name: "Fill empty fields with suggestions"}));
+    assert.equal((view.getByLabelText("Legal company / trading name") as HTMLInputElement).value, "My manual correction");
+    assert.equal((view.getByLabelText("Public contact email") as HTMLInputElement).value, "");
+    assert.equal((view.getByLabelText("Public business address") as HTMLTextAreaElement).value, "");
+    assert.equal(writes.length, 0); assert.equal(attempts, 0);
+    window.confirm = () => true;
+    fireEvent.click(view.getByRole("button", {name: "Use suggested legal company / trading name"}));
+    assert.ok(view.getByRole("link", {name: "Source for legal company / trading name"}));
+    fireEvent.change(view.getByLabelText("Status"), {target: {value: "approved"}});
+    fireEvent.click(view.getByRole("button", {name: "Save Supplier"}));
+    assert.ok(view.getByText("Saving supplier..."));
+    fireEvent.click(view.getByRole("button", {name: "Save Supplier"}));
+    await waitFor(() => assert.match(view.getByRole("alert").textContent || "", /already exists/));
+    assert.equal(attempts, 1);
+    assert.equal((view.getByLabelText("Legal company / trading name") as HTMLInputElement).value, "Jet2holidays Limited");
+    fail = false;
+    fireEvent.click(view.getByRole("button", {name: "Save Supplier"}));
+    await waitFor(() => assert.ok(view.getByText("Supplier saved successfully. Status: Approved.")));
+    assert.equal(writes[0].status, "approved");
+    fireEvent.change(view.getByLabelText("Legal company / trading name"), {target: {value: "Owner's correction"}});
+    assert.equal(view.queryByRole("link", {name: "Source for legal company / trading name"}), null);
+    fireEvent.click(view.getByRole("button", {name: "Save Changes"}));
+    await waitFor(() => assert.equal(writes.length, 2));
+    assert.equal(writes[1].legal_name, "Owner's correction");
+    fireEvent.click(view.getByRole("button", {name: "Save Draft"}));
+    await waitFor(() => assert.ok(view.getByText("Supplier draft saved successfully.")));
+    assert.equal(writes[2].status, "draft");
+  } finally {cleanup(); globalThis.fetch = original; window.confirm = confirm;}
+});
+
+test("supplier directory searches locally, distinguishes lookup, confirms archive and restores the same ID", async () => {
+  const {render, fireEvent, cleanup, waitFor} = await import("@testing-library/react");
+  const {SupplierDirectory} = await import("../src/components/suppliers/SupplierDirectory");
+  const {supplierInput} = await import("../src/lib/suppliers/schema");
+  const supplier = {...supplierInput.parse({name: "Jet2holidays", website: "https://www.jet2holidays.com", status: "approved"}), id: "50000000-0000-4000-8000-000000000001", archived: false, version: 1, created_at: "2026-10-26", updated_at: "2026-10-26"};
+  const original = globalThis.fetch, confirm = window.confirm; let calls = 0;
+  globalThis.fetch = async (_input, init) => {calls++; const body = JSON.parse(String(init?.body)); assert.equal(body.id, supplier.id); return Response.json({supplier: {...supplier, archived: body.archived, version: body.version + 1}});};
+  try {
+    const view = render(<SupplierDirectory initial={[]}/>);
+    assert.ok(view.getByText("No suppliers added yet."));
+    assert.ok(view.getByRole("link", {name: "Add Supplier"}));
+    cleanup();
+    const directory = render(<SupplierDirectory initial={[supplier]}/>);
+    fireEvent.change(directory.getByLabelText("Search suppliers"), {target: {value: "jet2"}});
+    assert.ok(directory.getByRole("heading", {name: "Jet2holidays"})); assert.equal(calls, 0);
+    assert.equal(directory.queryByRole("button", {name: "Find Supplier Details"}), null);
+    window.confirm = () => false;
+    fireEvent.click(directory.getByRole("button", {name: "Archive"})); assert.equal(calls, 0);
+    window.confirm = () => true;
+    fireEvent.click(directory.getByRole("button", {name: "Archive"}));
+    await waitFor(() => assert.ok(directory.getByText("Supplier archived. Its information has been retained.")));
+    assert.equal(directory.queryByRole("heading", {name: "Jet2holidays"}), null);
+    fireEvent.click(directory.getByLabelText("Include archived suppliers"));
+    fireEvent.click(directory.getByRole("button", {name: "Restore"}));
+    await waitFor(() => assert.ok(directory.getByText("Supplier restored successfully.")));
+    assert.equal(calls, 2);
+    assert.equal(directory.getByRole("link", {name: "Edit"}).getAttribute("href"), `/admin/suppliers/${supplier.id}/edit`);
+  } finally {cleanup(); globalThis.fetch = original; window.confirm = confirm;}
+});

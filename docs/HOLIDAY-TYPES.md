@@ -24,7 +24,7 @@ Progress and persistent results appear beside the action buttons and are announc
 
 Published records automatically supply `/holidays`, `/holidays/[slug]`, homepage holiday cards, descriptions, canonical/social metadata and sitemap entries. The original six stay in order; new types follow by creation date. Drafts and unpublished types return 404 publicly and are omitted from public cards and the sitemap. No manual SEO entry is needed. The existing site-wide noindex setting remains unchanged.
 
-The Holiday Brief remains disabled and does not collect personal information. The template has no FAQ section or empty offers section. Future offers can reference stable Holiday Type IDs; no offer, supplier or relationship tables or queries have been added.
+The Holiday Brief remains disabled and does not collect personal information. The template has no FAQ section or empty offers section. Future offers can reference stable Holiday Type IDs; no offer or relationship tables or queries have been added. The separately authorised private supplier directory is documented in SUPPLIERS.md.
 
 ## Validation and remaining owner checks
 
