@@ -525,3 +525,117 @@ test("supplier directory searches locally, confirms archive and restores the sam
     assert.equal(directory.getByRole("link", {name: "Edit"}).getAttribute("href"), `/admin/suppliers/${supplier.id}/edit`);
   } finally {cleanup(); globalThis.fetch = original; window.confirm = confirm;}
 });
+
+test("offer editor reuses paste/media, multiple Holiday Types, party pricing and private preview with reliable save feedback",async()=>{
+  const {render,fireEvent,cleanup,waitFor}=await import("@testing-library/react");
+  const {OfferEditor}=await import("../src/components/offers/OfferEditor");
+  const {prepareOffer}=await import("../src/lib/offers/validation");
+  const {ukToday}=await import("../src/lib/offers/schema");
+  const original=globalThis.fetch,confirm=window.confirm;
+  const supplier={id:"50000000-0000-4000-8000-000000000001",name:"Jet2holidays",legal_name:"Synthetic fixture company",business_address:"Fixture address",contact_email:"",contact_url:"https://example.org/contact",booking_conditions_url:"https://example.org/terms",website:"https://example.org",atol_holder:"",atol_number:"",status:"approved",archived:false};
+  const types=[{id:"b0000000-0000-4000-8000-000000000001",name:"Family Holidays"},{id:"b0000000-0000-4000-8000-000000000003",name:"Couples Escapes"}];
+  const writes:ReturnType<typeof prepareOffer>[]=[];let fail=true,version=0,firstPublished:string|null=null;
+  globalThis.fetch=async(input,init)=>{
+    if(String(input).includes("/media"))return Response.json({images:[{path:"30000000-0000-4000-8000-000000000001-coast.webp",url:"/images/home/hero.jpg",alt:"Coast"}]});
+    const offer=prepareOffer(JSON.parse(String(init?.body)));
+    const metadata={id:"60000000-0000-4000-8000-000000000001",reference:"PBJ-FIXTURE",archived:false,created_at:"2026-10-26T12:00:00Z",updated_at:"2026-10-26T12:00:00Z"};
+    if(String(input).endsWith("/preview"))return Response.json({offer:{...offer,...metadata,published_at:null,supplier,image:"/images/home/hero.jpg",galleryImages:[]}});
+    if(fail)return Response.json({error:"Temporary offer save failure"},{status:503});
+    writes.push(offer);if(offer.status==="published")firstPublished ||= "2026-10-26T12:00:00Z";
+    return Response.json({offer:{...offer,...metadata,version:++version,published_at:firstPublished}});
+  };
+  window.confirm=()=>true;
+  const view=render(<OfferEditor suppliers={[supplier]} holidayTypes={types} publicBaseUrl="https://plannedbyjay.com"/>);
+  try{
+    assert.deepEqual([...view.container.querySelectorAll("h2")].map(h=>h.textContent),["A. Holiday","B. Travel details","C. Price","D. Presentation","E. Publishing"]);
+    fireEvent.change(view.getByLabelText("Holiday title"),{target:{value:"Synthetic sunshine break"}});
+    fireEvent.change(view.getByLabelText("Supplier"),{target:{value:supplier.id}});
+    fireEvent.change(view.getByLabelText("Destination country"),{target:{value:"Spain"}});
+    fireEvent.change(view.getByLabelText("Short description"),{target:{value:"Controlled fixture, not a real available holiday."}});
+    fireEvent.change(view.getByLabelText("Departure date"),{target:{value:"2099-01-01"}});
+    fireEvent.change(view.getByLabelText("Return date (optional)"),{target:{value:"2099-01-08"}});
+    assert.equal((view.getByLabelText("Number of nights") as HTMLInputElement).value,"7");
+    fireEvent.change(view.getByLabelText("Total advertised price for the stated party"),{target:{value:"2400.50"}});
+    fireEvent.click(view.getByRole("button",{name:"Confirm price checked today"}));
+    assert.equal((view.getByLabelText("Price-check date") as HTMLInputElement).value,ukToday());
+    fireEvent.change(view.getByLabelText("What's included"),{target:{value:"Fixture accommodation"}});
+    fireEvent.click(view.getByLabelText("Family Holidays"));fireEvent.click(view.getByLabelText("Couples Escapes"));
+    fireEvent.change(view.getByLabelText("Promotional sash"),{target:{value:"jays-pick"}});fireEvent.click(view.getByLabelText("Featured on Homepage"));
+    await waitFor(()=>assert.ok(view.getByRole("textbox",{name:"Holiday description"})));
+    const body=view.getByRole("textbox",{name:"Holiday description"});
+    fireEvent.focus(body);fireEvent.paste(body,{clipboardData:{types:["text/html","text/plain"],getData:(type:string)=>type==="text/html"?"<h2>Highlights</h2><p><strong>Useful advice</strong></p><ul><li>Fixture point</li></ul>":"Highlights"}});
+    await waitFor(()=>assert.ok(body.querySelector("strong")));
+    fireEvent.click(view.getByRole("button",{name:"Choose or upload featured photograph"}));
+    await waitFor(()=>assert.ok(view.getByRole("button",{name:"Choose Coast"})));fireEvent.click(view.getByRole("button",{name:"Choose Coast"}));
+    fireEvent.click(view.getByRole("button",{name:"Save Draft"}));
+    await waitFor(()=>assert.match(view.getByRole("alert").textContent||"",/save failure/));assert.ok(body.querySelector("strong"));
+    fail=false;fireEvent.click(view.getByRole("button",{name:"Save Draft"}));
+    await waitFor(()=>assert.ok(view.getByText("Offer draft saved successfully.")));
+    assert.equal(writes[0].total_price_minor,240050);assert.deepEqual(writes[0].holiday_type_ids,types.map(t=>t.id));
+    assert.equal(writes[0].featured,true);assert.ok(writes[0].featured_image);
+    fireEvent.click(view.getByRole("button",{name:"Preview"}));
+    await waitFor(()=>assert.ok(view.getByRole("region",{name:"Private holiday offer preview"})));assert.equal(writes.length,1);
+    fireEvent.click(view.getByRole("button",{name:"Close preview"}));fireEvent.click(view.getByRole("button",{name:"Publish"}));
+    await waitFor(()=>assert.ok(view.getByText("Offer published successfully.")));
+    assert.equal(view.getByRole("link",{name:"View Holiday"}).getAttribute("href"),"https://plannedbyjay.com/holiday-offers/synthetic-sunshine-break");
+    assert.equal((view.getByLabelText("URL slug") as HTMLInputElement).readOnly,true);
+    fireEvent.change(view.getByLabelText("Holiday title"),{target:{value:"Edited title"}});
+    fireEvent.click(view.getByRole("button",{name:"Save Changes"}));await waitFor(()=>assert.ok(view.getByText("Offer changes saved successfully.")));
+    assert.equal(writes[2].status,"published");assert.equal(writes[2].slug,"synthetic-sunshine-break");
+    window.confirm=()=>false;fireEvent.click(view.getByRole("button",{name:"Unpublish"}));assert.equal(writes.length,3);
+    window.confirm=()=>true;fireEvent.click(view.getByRole("button",{name:"Unpublish"}));await waitFor(()=>assert.ok(view.getByText("Offer unpublished and returned to drafts.")));
+  }finally{cleanup();globalThis.fetch=original;window.confirm=confirm;}
+});
+
+test("offer enquiry form and endpoint do not collect details while delivery is unavailable",async()=>{
+  const {render,fireEvent,cleanup}=await import("@testing-library/react");
+  const {OfferEnquiryForm}=await import("../src/components/offers/OfferEnquiryForm");
+  const {POST}=await import("../src/app/api/offer-enquiries/route");
+  const original=globalThis.fetch;let calls=0;globalThis.fetch=async()=>{calls++;throw new Error("No delivery configured");};
+  try{
+    const view=render(<OfferEnquiryForm offerId="60000000-0000-4000-8000-000000000001"/>);
+    assert.ok(view.getByText(/No details are collected/));
+    for(const field of view.container.querySelectorAll("input,textarea"))assert.ok(field.matches(":disabled"));
+    fireEvent.submit(view.getByRole("form",{name:"Offer-specific enquiry"}));assert.equal(calls,0);
+    const request=new Request("https://plannedbyjay.com/api/offer-enquiries",{method:"POST",headers:{Origin:"https://plannedbyjay.com"}});
+    request.text=async()=>{throw new Error("Disabled route must not read personal data");};
+    assert.equal((await POST(request)).status,503);
+  }finally{cleanup();globalThis.fetch=original;}
+});
+
+test("offer list confirms mutations and opens duplicate offers as new drafts",async()=>{
+  const {render,fireEvent,cleanup,waitFor}=await import("@testing-library/react");
+  const {OfferActions}=await import("../src/components/offers/OfferActions");
+  const {AppRouterContext}=await import("next/dist/shared/lib/app-router-context.shared-runtime");
+  const original=globalThis.fetch,confirm=window.confirm;
+  const offer={id:"60000000-0000-4000-8000-000000000001",title:"Fixture offer",version:2,status:"published",archived:false};
+  let calls=0,destination="",action="";
+  const router={bfcacheId:"fixture",back(){},forward(){},push:(url:string)=>{destination=url;},replace(){},refresh(){},prefetch:async()=>{}};
+  globalThis.fetch=async(input,init)=>{calls++;assert.equal(String(input),"/api/offers");assert.equal(init?.method,"PATCH");const body=JSON.parse(String(init?.body));assert.equal(body.id,offer.id);assert.equal(body.version,2);action=body.action;return Response.json(body.action==="duplicate"?{offer:{id:"60000000-0000-4000-8000-000000000002"}}:{ok:true});};
+  try{
+    const view=render(<AppRouterContext.Provider value={router}><OfferActions offer={offer}/></AppRouterContext.Provider>);
+    window.confirm=()=>false;fireEvent.click(view.getByRole("button",{name:"Archive"}));assert.equal(calls,0);
+    window.confirm=()=>true;fireEvent.click(view.getByRole("button",{name:"Duplicate offer"}));
+    await waitFor(()=>assert.equal(destination,"/admin/holiday-offers/60000000-0000-4000-8000-000000000002/edit"));assert.equal(action,"duplicate");
+    fireEvent.click(view.getByRole("button",{name:"Unpublish"}));await waitFor(()=>assert.ok(view.getByText("Offer unpublished and returned to drafts.")));assert.equal(action,"unpublish");
+    fireEvent.click(view.getByRole("button",{name:"Archive"}));await waitFor(()=>assert.ok(view.getByText("Offer archived.")));assert.equal(action,"archive");
+  }finally{cleanup();globalThis.fetch=original;window.confirm=confirm;}
+});
+
+test("offer enquiry acknowledgement waits for a server reference and prevents repeated successful submission",async()=>{
+  const {render,fireEvent,cleanup,waitFor}=await import("@testing-library/react");
+  const {OfferEnquiryForm}=await import("../src/components/offers/OfferEnquiryForm");
+  const original=globalThis.fetch;let receipt=false,calls=0;const tokens:string[]=[];
+  globalThis.fetch=async(_input,init)=>{calls++;const body=JSON.parse(String(init?.body));assert.equal(body.offer_id,"60000000-0000-4000-8000-000000000001");assert.equal("total_price_minor" in body,false);tokens.push(body.request_id);return Response.json(receipt?{reference:"70000000-0000-4000-8000-000000000001"}:{});};
+  try{
+    const view=render(<OfferEnquiryForm offerId="60000000-0000-4000-8000-000000000001" enabled privacyHref="/privacy"/>);
+    fireEvent.change(view.getByLabelText("Your name"),{target:{value:"Fixture customer"}});fireEvent.change(view.getByLabelText("Email address"),{target:{value:"customer@example.org"}});
+    fireEvent.submit(view.getByRole("form",{name:"Offer-specific enquiry"}));
+    await waitFor(()=>assert.ok(view.getByRole("alert")));assert.equal(view.queryByText(/Your enquiry has been received/),null);
+    receipt=true;fireEvent.submit(view.getByRole("form",{name:"Offer-specific enquiry"}));
+    await waitFor(()=>assert.ok(view.getByText(/Your enquiry has been received/)));
+    assert.equal(tokens[0],tokens[1]);assert.equal(calls,2);
+    fireEvent.submit(view.getByRole("form",{name:"Offer-specific enquiry"}));assert.equal(calls,2);
+    assert.ok(view.getByRole("button",{name:"Enquiry received"}).matches(":disabled"));
+  }finally{cleanup();globalThis.fetch=original;}
+});

@@ -5,6 +5,9 @@ import { SiteImage } from "@/components/ui/SiteImage";
 import { holidayDiscovery as copy } from "@/content/holiday-types";
 import type { HolidayInput } from "@/lib/holiday-types/schema";
 import type { ArticlePreview } from "@/types/public-content";
+import type { PublicOffer } from "@/lib/offers/schema";
+import { OfferSection } from "@/components/offers/OfferViews";
+import { offersCopy } from "@/content/offers";
 
 export type HolidayDisplay = HolidayInput & {photoUrl: string | null};
 export function HolidayGrid({holidays}: {holidays: HolidayDisplay[]}) {
@@ -50,13 +53,13 @@ function HolidayBody({body}: {body: string}) {
     })}
   </>;
 }
-export function HolidayTypePage({holiday, others = [], articles = [], preview = false}: {holiday: HolidayDisplay; others?: HolidayDisplay[]; articles?: ArticlePreview[]; preview?: boolean}) {
+export function HolidayTypePage({holiday, others = [], articles = [], offers = [], preview = false}: {holiday: HolidayDisplay; others?: HolidayDisplay[]; articles?: ArticlePreview[]; offers?: PublicOffer[]; preview?: boolean}) {
   const content = <>
     <section className="section holiday-hero"><Container><Link className="holiday-back" href="/holidays">← {copy.backLabel}</Link><div className="holiday-hero-grid"><header><p className="eyebrow">{holiday.name}</p><h1>{holiday.heading || holiday.name}</h1><p className="intro">{holiday.introduction}</p><div className="button-row"><Button {...copy.action}/></div></header><div className="holiday-hero-photo"><SiteImage src={holiday.photoUrl} alt={holiday.image_alt} fill sizes="(max-width:767px) calc(100vw - 44px),45vw" style={{objectPosition: holiday.image_position}} fallback={<span className="article-photo-fallback">{copy.imageFallback}</span>}/></div></div></Container></section>
     <HolidayBody body={holiday.body}/>
     <RelatedHolidayReading articles={articles}/>
     <section className="section holiday-further"><Container><Link className="holiday-library-link" href="/travel-advice">{copy.readingLink} <span aria-hidden="true">↗</span></Link>{others.length > 0 && <nav aria-label={copy.alsoTitle}><h2>{copy.alsoTitle}</h2><div className="button-row">{others.map(item => <Button key={item.slug} label={item.name} href={`/holidays/${item.slug}`} secondary/>)}</div></nav>}</Container></section>
-    {/* Future published offers can be inserted here. No offer system or empty section exists. */}
+    <OfferSection offers={offers} title={offersCopy.relatedTitle} type={holiday.id || undefined}/>
     <section className="section cta"><Container><h2>{holiday.closing_heading}</h2><p className="intro">{holiday.closing_body}</p><Button {...copy.action}/></Container></section>
   </>;
   return preview ? <div className="holiday-page">{content}</div> : <main id="main-content" tabIndex={-1} className="holiday-page">{content}</main>;

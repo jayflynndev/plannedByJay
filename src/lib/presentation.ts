@@ -1,9 +1,5 @@
-import type {DiscoveryQuery,OffersQuery} from '@/types/public-content';
+import type {DiscoveryQuery} from '@/types/public-content';
 export function publicOrigin(){try{return new URL(process.env.SITE_URL||'https://plannedbyjay.com').origin;}catch{return 'https://plannedbyjay.com';}}
 export function discoveryHref(query:DiscoveryQuery,page=query.page){const p=new URLSearchParams();for(const k of ['q','type','category','tag'] as const)if(query[k])p.set(k,query[k]);if(page>1)p.set('page',String(page));return '/travel-advice'+(p.size?'?'+p:'');}
-export function offerHref(query:OffersQuery,page=query.page){const p=new URLSearchParams();for(const [k,v] of Object.entries({...query,page}))if(v!==''&&!(k==='page'&&v===1))p.set(k,String(v));return '/holiday-offers'+(p.size?'?'+p:'');}
 export function optionLabel(options:readonly {value:string;label:string}[],value:string){return options.find(o=>o.value===value)?.label??value;}
 export function safeImageUrl(value:string){return /^\/images\/[a-zA-Z0-9/_.-]+$/.test(value)&&!value.includes('..');}
-export function priceLabel(o:{price_minor:number|null;currency:string;price_basis:string;price_people:number|null}){return `${new Intl.NumberFormat('en-GB',{style:'currency',currency:o.currency}).format((o.price_minor||0)/100)} ${o.price_basis==='per-person'?'per person':'total party'} - based on ${o.price_people} people`;}
-export function partyTotal(o:{price_minor:number|null;currency:string;price_basis:string;price_people:number|null}){return new Intl.NumberFormat('en-GB',{style:'currency',currency:o.currency}).format((o.price_minor||0)*(o.price_basis==='per-person'?(o.price_people||0):1)/100);}
-export function travelArrangement(d:{travel_type:string;classification_reason:string}){return ({package:'Package holiday','cruise-only':'Cruise only','fly-cruise':'Fly-cruise','hotel-only':'Accommodation only',tour:'Tour',rail:'Rail holiday'} as Record<string,string>)[d.travel_type]||d.classification_reason;}

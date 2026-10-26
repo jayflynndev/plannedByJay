@@ -52,3 +52,8 @@
 /* Existing offer form and media library, with visible selection and focus targets. */
 
 .offer-supplier-information{margin-block:24px;padding:20px;border:1px solid var(--line);border-radius:5px;overflow-wrap:anywhere}.offer-supplier-information summary{font-weight:700;min-height:44px;cursor:pointer}.offer-supplier-information a{display:inline-block;min-height:44px;text-decoration:underline}
+.offer-sash{position:absolute;top:16px;left:16px;padding:8px 14px;background:var(--ink);color:var(--white);font-weight:700;border-radius:3px;max-width:calc(100% - 32px)}
+.offer-pricing{margin-block:18px}.offer-price small{font-size:1rem;display:block;font-weight:400}.offer-charges{font-size:1.1rem;font-weight:600;line-height:1.6}.offer-disclosures a{text-decoration:underline;overflow-wrap:anywhere}
+.offer-compact-filters{grid-template-columns:repeat(4,minmax(0,1fr))}.offer-compact-filters>.button-row{grid-column:1/-1}
+.offer-enquiry{margin-top:30px;border:1px solid var(--line);padding:22px;border-radius:5px}.offer-enquiry summary{cursor:pointer;min-height:44px}.offer-enquiry fieldset{border:0;padding:0;display:grid;gap:16px}.offer-enquiry label{display:grid;gap:6px}.offer-enquiry :is(input,textarea){font:inherit;width:100%;min-height:46px;padding:10px;border:1px solid var(--line);border-radius:3px;box-sizing:border-box}.offer-enquiry input:disabled,.offer-enquiry textarea:disabled{background:var(--sage)}
+@media(max-width:900px){.offer-compact-filters{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:600px){.offer-compact-filters{grid-template-columns:1fr}.offer-enquiry{padding:16px}}

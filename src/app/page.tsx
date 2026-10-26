@@ -10,6 +10,7 @@ import { OfferSection } from "@/components/offers/OfferViews";
 import { offersCopy } from "@/content/offers";
 import { publicHolidayTypes, holidayPhoto } from "@/lib/holiday-types/data";
 import type { HolidayDisplay } from "@/components/holidays/HolidayPages";
+import { publicOffers } from "@/lib/offers/data";
 export function generateMetadata() {
   return {
     title: site.title,
@@ -26,6 +27,7 @@ export function generateMetadata() {
 export const dynamic = "force-dynamic";
 import { publicArticleList, imageUrl } from "@/lib/articles/data";
 export default async function Home() {
+  const featuredOffers=await publicOffers(undefined,{featured:true,limit:3}).catch(()=>({offers:[],total:0}));
   let holidays: HolidayDisplay[] = [];
   try { holidays = (await publicHolidayTypes()).map(h => ({...h, photoUrl: holidayPhoto(h.image)})); }
   catch { /* Holiday Type service failure never breaks the homepage. */ }
@@ -58,7 +60,7 @@ export default async function Home() {
       <HolidayPaths />
       <WhyJay />
       <HolidayExperiences holidays={holidays}/>
-      <OfferSection offers={[]} title={offersCopy.featuredTitle} />
+      <OfferSection offers={featuredOffers.offers} title={offersCopy.featuredTitle} />
       <TravelInspiration articles={articles} />
       <HomeCTA />
     </main>

@@ -1,26 +1,75 @@
-import Link from 'next/link';
-import {SiteImage} from '@/components/ui/SiteImage';
-import {Button} from '@/components/ui/Button';
-import {Container} from '@/components/ui/Container';
-import {offersCopy as copy} from '@/content/offers';
-
-import {priceLabel,partyTotal,travelArrangement} from '@/lib/presentation';
-import type {HolidayOffer as PublicOffer,OffersQuery} from '@/types/public-content';
-import {offerHref} from '@/lib/presentation';
-export const checkedDate=(value:string)=>new Intl.DateTimeFormat('en-GB',{dateStyle:'medium',timeZone:'UTC'}).format(new Date(value));
-const deadlineDate=(value:string)=>new Intl.DateTimeFormat('en-GB',{dateStyle:'medium',timeStyle:'short',timeZone:'Europe/London'}).format(new Date(value))+' UK time';
-
-function AtolInformation({offer:o}:{offer:PublicOffer}){const s=o.supplier.disclosures;return o.details.flight_inclusive==='yes'?<div className="offer-disclosures"><p>Protecting ATOL holder: {s.atol_holder} · ATOL {s.atol_number}</p><p>{s.protection_information}</p></div>:o.details.nonflight_protection?<p>{o.details.nonflight_protection}</p>:null;}
-function SupplierInformation({offer:o}:{offer:PublicOffer}){const s=o.supplier.disclosures;return <details className="offer-supplier-information" open><summary>About this supplier / tour operator</summary><p>{s.legal_name}</p><p>{s.business_address}</p>{s.service_address&&s.service_address!==s.business_address&&<p>Address for notices: {s.service_address}</p>}<p>{s.public_contact}</p>{o.details.flight_inclusive==='yes'&&<p>ATOL holder: {s.atol_holder} · ATOL {s.atol_number}</p>}{s.booking_conditions_url&&<p><a href={s.booking_conditions_url} rel="noopener noreferrer">Supplier booking conditions</a></p>}{s.official_website&&<p><a href={s.official_website} rel="noopener noreferrer">Supplier website</a></p>}</details>;}
-function OfferPricing({offer:o}:{offer:PublicOffer}){return <><p>Advertised price</p><p className="offer-price">{o.price_minor?priceLabel(o):'Price not entered'}</p>{o.price_minor&&o.price_people?<p className="offer-price">{o.details.uncalculable_charges?'Party price plus mandatory charges below: ':'Full party total: '}{partyTotal(o)}</p>:null}<p>{[o.details.occupancy,o.details.adults?`${o.details.adults} adults, ${o.details.children} children`:''].filter((v,i,a)=>v&&a.indexOf(v)===i).join(' · ')}</p>{o.details.unavoidable_charges&&<p>{o.details.unavoidable_charges}</p>}{o.details.uncalculable_charges&&<p className="offer-price">Additional mandatory charges not reasonably calculable: {o.details.uncalculable_charges}</p>}{o.details.price_checked_at&&<p>Price checked: {checkedDate(o.details.price_checked_at)}</p>}<p>{copy.disclaimer}</p></>;}
-export function OfferGrid({offers}:{offers:PublicOffer[]}){return <div className="offer-grid">{offers.map(o=><div key={o.reference}><article className="offer-card"><Link href={`/holiday-offers/${o.slug}`}><div className="card-photo"><SiteImage src={o.image} alt={o.featured_alt} fill sizes="(max-width:767px) 100vw,33vw" fallback={<span className="article-photo-fallback">{o.details.country}</span>}/></div></Link><div className="offer-card-copy"><p className="eyebrow">{o.details.country}</p><h3><Link href={`/holiday-offers/${o.slug}`}>{o.title}</Link></h3><p>{o.details.departure_date} · {o.details.nights} nights</p>{o.details.board_basis&&<p>{o.details.board_basis}</p>}<OfferPricing offer={o}/><p>Includes: {o.details.inclusions}</p>{o.details.exclusions&&<p>{o.details.exclusions}</p>}<p>Supplied by {o.supplier.display_name} · {o.supplier.disclosures.legal_name}</p><p className="offer-disclosures">{o.supplier.disclosures.business_address} · {o.supplier.disclosures.public_contact}</p><AtolInformation offer={o}/>{o.details.promotion_expires_at&&<p>Book by: {deadlineDate(o.details.promotion_expires_at)}</p>}{o.supplier.disclosures.booking_conditions_url&&<p><a href={o.supplier.disclosures.booking_conditions_url} rel="noopener noreferrer">Supplier booking conditions</a></p>}<Link className="article-read-label" href={`/holiday-offers/${o.slug}`}>View holiday details ↗</Link></div></article></div>)}</div>;}
-export function OfferSection({offers,title,type}:{offers:PublicOffer[];title:string;type?:string}){if(!offers.length)return null;return <section className="section offer-section"><Container><div className="section-heading"><h2>{title}</h2></div><OfferGrid offers={offers}/><p className="inspiration-action"><Button label="View Holiday Offers" href={`/holiday-offers${type?`?type=${type}`:''}`} secondary/></p></Container></section>;}
-export function OfferFilters({query,suppliers,holidayTypes=[]}:{query:OffersQuery;suppliers:{id:string;display_name:string}[];holidayTypes?:{slug:string;name:string}[]}){return <form className="offer-filters" method="get" action="/holiday-offers" aria-label="Filter holiday offers">
-  <label>Search<input name="q" defaultValue={query.q} maxLength={100}/></label><label>Destination country<input name="destination" defaultValue={query.destination} maxLength={100}/></label>
-  <label>Holiday type<select name="type" defaultValue={query.type}><option value="">All styles</option>{holidayTypes.map(t=><option key={t.slug} value={t.slug}>{t.name}</option>)}</select></label>
-  <label>Supplier<select name="supplier" defaultValue={query.supplier}><option value="">All suppliers</option>{suppliers.map(s=><option value={s.id} key={s.id}>{s.display_name}</option>)}</select></label>
-  <label>Departure airport or port<input name="departure" defaultValue={query.departure} maxLength={100}/></label><label>Travel month<input type="month" name="month" defaultValue={query.month}/></label>
-  <label>Minimum advertised price (£)<input type="number" min="0" max="1000000" name="min" defaultValue={query.min}/></label><label>Maximum advertised price (£)<input type="number" min="0" max="1000000" name="max" defaultValue={query.max}/></label><label>Board basis / fare<input name="board" defaultValue={query.board} maxLength={100}/></label><div className="button-row"><button className="button" type="submit">Apply filters</button><Link className="button button-secondary" href="/holiday-offers">Reset filters</Link></div><p>Price filters compare the displayed GBP amount. Check each offer’s per-person or party basis before comparing.</p>
-  </form>;}
-export function OffersListing({query,offers,total,suppliers,error}:{query:OffersQuery;offers:PublicOffer[];total:number;suppliers:{id:string;display_name:string}[];error?:string}){return <main id="main-content" className="offer-page section" tabIndex={-1}><Container><header className="section-heading"><p className="eyebrow">Curated holiday offers</p><h1>{copy.title}</h1><p className="intro">{copy.description}</p></header><OfferFilters query={query} suppliers={suppliers}/>{error?<p role="alert">{error}</p>:offers.length?<><p>{total} offers · Page {query.page}</p><OfferGrid offers={offers}/></>:<p>{copy.empty}</p>}<nav className="offer-pagination" aria-label="Offer pages">{query.page>1&&<Link className="button button-secondary" href={offerHref(query,query.page-1)}>Previous page</Link>}{query.page*12<total&&<Link className="button button-secondary" href={offerHref(query,query.page+1)}>Next page</Link>}</nav><p><Link className="holiday-library-link" href="/holidays">Explore Holiday Ideas</Link></p></Container></main>;}
-export function OfferDetail({offer:o}:{offer:PublicOffer}){const d=o.details;const content=<div className="offer-detail"><p className="eyebrow">{o.reference}</p><h1>{o.title||'Untitled draft'}</h1>{d.summary&&!d.description.startsWith(d.summary)&&<p className="intro">{d.summary}</p>}<p>Supplier/operator: <strong>{o.supplier.display_name}</strong></p>{o.logo&&<SiteImage src={o.logo} alt={o.supplier.logo_alt} width={160} height={80} style={{objectFit:'contain'}}/>}<div className="offer-detail-photo"><SiteImage src={o.image} alt={o.featured_alt} fill sizes="(max-width:767px) 100vw,800px"/></div><OfferPricing offer={o}/><Button label={copy.enquire} href="/plan-my-holiday"/><AtolInformation offer={o}/>{d.promotion_expires_at&&<p>Booking deadline: {deadlineDate(d.promotion_expires_at)}</p>}<h2>The holiday</h2><p className="offer-paragraphs">{d.description}</p><dl>{Object.entries({'Destination':[d.country,d.region].filter(Boolean).join(' · '),'Accommodation / ship':d.accommodation,'Departure':d.departure_point,'Travel dates':[d.departure_date,d.return_date].filter(Boolean).join(' to '),'Duration':d.nights===null?'':`${d.nights} nights`,'Travel arrangement':travelArrangement(d),'Board / fare':d.board_basis,'Room / cabin':d.room_type,'Occupancy assumptions':d.occupancy,'Verified inclusions':d.inclusions,'Exclusions and supplements':d.exclusions,'Included unavoidable charges / taxes':d.unavoidable_charges,'Optional extras':d.optional_extras,'Supplier promotional conditions':d.promotion_conditions,'Booking / cancellation information':d.booking_conditions,'Specifically verified accessibility':d.accessibility}).filter(([,v])=>v).map(([key,value])=><div key={key}><dt>{key}</dt><dd>{value}</dd></div>)}</dl><div className="offer-gallery">{o.galleryImages.map(i=><figure key={i.src}><SiteImage src={i.src} alt={i.alt} width={800} height={600} sizes="(max-width:767px) 100vw,45vw"/></figure>)}</div><p><Link className="holiday-library-link" href="/booking-information">Read the booking information</Link></p><p>This holiday is supplied by <strong>{o.supplier.display_name}</strong>.</p><SupplierInformation offer={o}/><Button label={copy.enquire} href="/plan-my-holiday"/></div>;return content;}
+import Link from "next/link";
+import { SiteImage } from "@/components/ui/SiteImage";
+import { Button } from "@/components/ui/Button";
+import { Container } from "@/components/ui/Container";
+import { offersCopy as copy } from "@/content/offers";
+import { money,averagePrice,displayedSash,travelLabels,offerListHref,type PublicOffer,type OfferQuery } from "@/lib/offers/schema";
+import { OfferEnquiryForm,AskJayLink } from "./OfferEnquiryForm";
+export const checkedDate=(date:string)=>new Intl.DateTimeFormat("en-GB",{dateStyle:"medium",timeZone:"UTC"}).format(new Date(date+"T00:00:00Z"));
+function Price({offer:o}:{offer:PublicOffer}) {
+  const average=averagePrice(o);
+  return <div className="offer-pricing"><p className="offer-price">{o.total_price_minor?money(o.total_price_minor,o.currency):"Price not entered"} <small>total for the stated party</small></p>
+    <p>{o.adults} {o.adults===1?"adult":"adults"}{o.children?`, ${o.children} ${o.children===1?"child":"children"}${o.child_ages.length?` (ages ${o.child_ages.join(", ")})`:""}`:""} · {o.adults+o.children} priced travellers</p>
+    {average&&<p>Average {money(average,o.currency)} per adult</p>}
+    {o.mandatory_charges&&<p className="offer-charges">{o.mandatory_charges}</p>}
+    {o.price_checked_on&&<p>Price checked: {checkedDate(o.price_checked_on)}</p>}
+    {o.booking_deadline&&<p>Book by: {checkedDate(o.booking_deadline)} (UK date)</p>}
+    <p>{copy.disclaimer}</p>
+  </div>;
+}
+function Protection({offer:o}:{offer:PublicOffer}) {
+  if(o.protection==="supplier-atol")return <div className="offer-disclosures"><p>ATOL holder for this advertised arrangement: {o.supplier.atol_holder} · ATOL {o.supplier.atol_number}</p>{o.protection_note&&<p>{o.protection_note}</p>}</div>;
+  return o.protection==="other" && o.protection_note?<p className="offer-disclosures">{o.protection_note}</p>:null;
+}
+function Operator({offer:o}:{offer:PublicOffer}) {
+  const s=o.supplier;
+  return <div className="offer-disclosures"><p>Supplied by <strong>{s.name}</strong>{s.legal_name&&s.legal_name!==s.name?` · ${s.legal_name}`:""}</p><p>{s.business_address}</p>
+    <p>{s.contact_email&&<a href={`mailto:${s.contact_email}`}>{s.contact_email}</a>}{s.contact_email&&s.contact_url?" · ":""}{s.contact_url&&<a href={s.contact_url} rel="noopener noreferrer">Supplier contact page</a>}</p>
+    {s.booking_conditions_url&&<p><a href={s.booking_conditions_url} rel="noopener noreferrer">Supplier booking conditions</a></p>}
+  </div>;
+}
+export function OfferGrid({offers}:{offers:PublicOffer[]}) {
+  return <div className="offer-grid">{offers.map(o=><article className="offer-card" key={o.id}>
+    <Link href={`/holiday-offers/${o.slug}`}><div className="card-photo"><SiteImage src={o.image} alt={o.featured_alt} fill sizes="(max-width:767px) 100vw,33vw" fallback={<span className="article-photo-fallback">{o.country}</span>}/>{displayedSash(o)&&<span className="offer-sash">{displayedSash(o)}</span>}</div></Link>
+    <div className="offer-card-copy"><p className="eyebrow">{[o.country,o.resort].filter(Boolean).join(" · ")}</p><h3><Link href={`/holiday-offers/${o.slug}`}>{o.title}</Link></h3>{o.accommodation&&<p>{o.accommodation}</p>}
+      <p>{o.departure_date&&checkedDate(o.departure_date)}{o.departure_point?` · From ${o.departure_point}`:""}{o.nights?` · ${o.nights} nights`:""}</p>
+      {o.board_basis&&<p>{o.board_basis}</p>}{o.why_jay&&<p><strong>Why Jay picked it:</strong> {o.why_jay}</p>}
+      <Price offer={o}/><Operator offer={o}/><Protection offer={o}/>
+      <Link className="article-read-label" href={`/holiday-offers/${o.slug}`}>View Holiday Details ↗</Link>
+    </div>
+  </article>)}</div>;
+}
+export function OfferSection({offers,title,type}:{offers:PublicOffer[];title:string;type?:string}) {
+  if(!offers.length)return null;
+  return <section className="section offer-section"><Container><div className="section-heading"><h2>{title}</h2></div><OfferGrid offers={offers}/><p className="inspiration-action"><Button label="View Holiday Offers" href={`/holiday-offers${type?`?type=${type}`:""}`} secondary/></p></Container></section>;
+}
+export function OffersListing({query,offers,total,holidayTypes=[],error}:{query:OfferQuery;offers:PublicOffer[];total:number;holidayTypes?:{id:string;name:string}[];error?:string}) {
+  return <main id="main-content" className="offer-page section" tabIndex={-1}><Container><header className="section-heading"><p className="eyebrow">Curated holiday offers</p><h1>{copy.title}</h1><p className="intro">{copy.description}</p></header>
+    <form className="offer-filters offer-compact-filters" method="get" action="/holiday-offers" aria-label="Filter holiday offers">
+      <label>Destination<input name="destination" defaultValue={query.destination} maxLength={100}/></label>
+      <label>Holiday Type<select name="type" defaultValue={query.type}><option value="">All Holiday Types</option>{holidayTypes.map(t=><option key={t.id} value={t.id}>{t.name}</option>)}</select></label>
+      <label>Departure month<input name="month" type="month" defaultValue={query.month}/></label>
+      <label>Sort by<select name="sort" defaultValue={query.sort}><option value="departure">Departure date</option><option value="price">Total price (by currency)</option></select></label>
+      <div className="button-row"><button className="button" type="submit">Apply filters</button><Link className="button button-secondary" href="/holiday-offers">Reset filters</Link></div>
+    </form>
+    {error?<p role="status">{error}</p>:offers.length?<><p>{total} offers · Page {query.page}</p><OfferGrid offers={offers}/></>:<p>{copy.empty}</p>}
+    <nav className="offer-pagination" aria-label="Offer pages">{query.page>1&&<Link href={offerListHref(query,query.page-1)}>Previous page</Link>}{query.page*12<total&&<Link href={offerListHref(query,query.page+1)}>Next page</Link>}</nav>
+    <Link className="holiday-library-link" href="/holidays">Explore Holiday Types</Link>
+  </Container></main>;
+}
+export function OfferDetail({offer:o,preview=false,privacyHref=null,enquiriesEnabled=false}:{offer:PublicOffer;preview?:boolean;privacyHref?:string|null;enquiriesEnabled?:boolean}) {
+  return <div className="offer-detail"><p className="eyebrow">{o.reference}</p><h1>{o.title||"Your holiday title"}</h1><p className="intro">{o.summary}</p>
+    <p>{[o.country,o.resort,o.accommodation].filter(Boolean).join(" · ")}</p>
+    <div className="offer-detail-photo"><SiteImage src={o.image} alt={o.featured_alt} fill sizes="(max-width:767px) 100vw,900px"/>{displayedSash(o)&&<span className="offer-sash">{displayedSash(o)}</span>}</div>
+    <AskJayLink/>
+    <h2>Your holiday at a glance</h2><dl>{Object.entries({"Travel arrangement":travelLabels[o.travel_type],"Departure":o.departure_date?checkedDate(o.departure_date):"", "From":o.departure_point,"Return":o.return_date?checkedDate(o.return_date):"", "Duration":o.nights!==null?(o.nights===0?"Same-day trip":`${o.nights} nights`):"", "Board / fare":o.board_basis,"Room / cabin":o.room_type}).filter(([,v])=>v).map(([k,v])=><div key={k}><dt>{k}</dt><dd>{v}</dd></div>)}</dl>
+    {o.body&&<div className="article-prose" dangerouslySetInnerHTML={{__html:o.body}}/>}
+    {o.why_jay&&<section><h2>Why Jay picked it</h2><p>{o.why_jay}</p></section>}
+    <h2>What&apos;s included</h2><p className="offer-paragraphs">{o.inclusions}</p>{o.exclusions&&<><h2>Important exclusions and conditions</h2><p className="offer-paragraphs">{o.exclusions}</p></>}
+    <h2>Price for your party</h2><Price offer={o}/><Operator offer={o}/><Protection offer={o}/>
+    <details className="offer-supplier-information" open><summary>About this supplier / tour operator</summary><Operator offer={o}/><Protection offer={o}/>{o.supplier.website&&<p><a href={o.supplier.website} rel="noopener noreferrer">Supplier website</a></p>}</details>
+    {o.galleryImages.length>0&&<div className="offer-gallery">{o.galleryImages.map(i=><figure key={i.src}><SiteImage src={i.src} alt={i.alt} width={800} height={600}/></figure>)}</div>}
+    <p><Link href="/booking-information">Read the booking information</Link></p>
+    <OfferEnquiryForm offerId={o.id} enabled={!preview&&enquiriesEnabled} privacyHref={privacyHref}/>
+  </div>;
+}

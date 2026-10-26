@@ -6,6 +6,28 @@ const dom=new JSDOM('<!doctype html><html><body></body></html>',{url:'http://loc
 Object.assign(globalThis,{window:dom.window,self:dom.window,document:dom.window.document,HTMLElement:dom.window.HTMLElement,Node:dom.window.Node,MutationObserver:dom.window.MutationObserver});
 Object.defineProperty(globalThis,'navigator',{value:dom.window.navigator,configurable:true});
 
+test('offer cards and detail show party totals, supplier terms and one sash without inferring ATOL or collecting enquiries',async()=>{
+  const {render,fireEvent,cleanup}=await import('@testing-library/react');
+  const {OfferGrid,OfferDetail}=await import('../src/components/offers/OfferViews');
+  const {emptyOffer}=await import('../src/lib/offers/schema');
+  const offer:import('../src/lib/offers/schema').PublicOffer={...emptyOffer(),id:'60000000-0000-4000-8000-000000000001',reference:'PBJ-FIXTURE',title:'Synthetic sunshine break',slug:'synthetic-sunshine-break',country:'Spain',resort:'Tenerife',accommodation:'Fixture hotel',departure_date:'2099-01-01',nights:7,board_basis:'Fixture board',total_price_minor:240050,price_checked_on:'2026-10-26',mandatory_charges:'Known mandatory charges included in the party total.',sash:'jays-pick',archived:false,created_at:'2026-10-26',updated_at:'2026-10-26',published_at:'2026-10-26',image:'/images/home/hero.jpg',galleryImages:[],supplier:{id:'50000000-0000-4000-8000-000000000001',name:'Jet2holidays',legal_name:'Synthetic fixture company',business_address:'Fixture public address',website:'https://example.org',contact_email:'',contact_url:'https://example.org/contact',booking_conditions_url:'https://example.org/terms',atol_holder:'Should not be inferred',atol_number:'1234'}};
+  try{
+    const cards=render(<OfferGrid offers={[offer]}/>);
+    assert.ok(cards.getByText(/£2,400.50/));assert.ok(cards.getByText(/2 priced travellers/));assert.ok(cards.getByText(offer.mandatory_charges));
+    assert.equal(cards.container.querySelectorAll('.offer-sash').length,1);assert.ok(cards.getByText("Jay's Pick"));
+    assert.equal(cards.getByRole('link',{name:'View Holiday Details ↗'}).getAttribute('href'),'/holiday-offers/'+offer.slug);
+    assert.equal(cards.getByRole('link',{name:'Supplier booking conditions'}).getAttribute('href'),'https://example.org/terms');
+    assert.doesNotMatch(cards.container.textContent||'',/1234|Should not be inferred/);cleanup();
+    const detail=render(<OfferDetail offer={offer}/>);
+    assert.ok(detail.getByRole('heading',{name:offer.title}));assert.ok(detail.container.querySelector('details.offer-supplier-information[open]'));
+    assert.equal(detail.container.querySelector('a[href="/plan-my-holiday"]'),null);
+    assert.ok(detail.container.querySelector('#ask-jay'));
+    fireEvent.click(detail.getByRole('link',{name:'Ask Jay About This Holiday'}));assert.ok(detail.container.querySelector('details#ask-jay[open]'));
+    for(const input of detail.container.querySelectorAll('#ask-jay input,#ask-jay textarea'))assert.ok(input.matches(':disabled'));
+    assert.doesNotMatch(detail.container.textContent||'',/1234|Should not be inferred/);
+  }finally{cleanup();}
+});
+
 test('holiday landing, six shared pages and homepage cards render meaningful routes with accessible headings and real related reading only',async()=>{
   const {render,cleanup}=await import('@testing-library/react');
   const {HolidayLanding,HolidayTypePage}=await import('../src/components/holidays/HolidayPages');

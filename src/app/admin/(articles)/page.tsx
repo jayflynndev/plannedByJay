@@ -8,6 +8,7 @@ export default function AdminHome() {
       </a>
       <a className="button button-secondary" href="/admin/holiday-types">Open Holiday Types</a>
       <a className="button button-secondary" href="/admin/suppliers">Open Suppliers</a>
+      <a className="button button-secondary" href="/admin/holiday-offers">Open Holiday Offers</a>
     </>
   );
 }

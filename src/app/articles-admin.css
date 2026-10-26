@@ -221,3 +221,8 @@
 .article-admin .supplier-archive-toggle { display: flex; align-items: center; gap: 10px; min-height: 44px; margin-block: 12px; }
 .article-admin .supplier-archive-toggle input { width: 20px; min-height: 20px; flex-shrink: 0; }
 .article-admin-form small { display: block; margin-top: 6px; }
+.offer-editor-section { display: grid; gap: 16px; border: 1px solid var(--line); border-radius: 4px; padding: 20px; min-width: 0; }
+.article-admin .offer-editor-check { display: flex; align-items: center; gap: 10px; min-height: 44px; }
+.article-admin .offer-editor-check input { width: 20px; min-height: 20px; flex-shrink: 0; }
+.offer-gallery-choice { display: grid; gap: 10px; min-width: 0; }
+@media(max-width:767px){.offer-editor-section{padding:14px;}}
