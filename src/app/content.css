@@ -57,3 +57,7 @@
 .offer-compact-filters{grid-template-columns:repeat(4,minmax(0,1fr))}.offer-compact-filters>.button-row{grid-column:1/-1}
 .offer-enquiry{margin-top:30px;border:1px solid var(--line);padding:22px;border-radius:5px}.offer-enquiry summary{cursor:pointer;min-height:44px}.offer-enquiry fieldset{border:0;padding:0;display:grid;gap:16px}.offer-enquiry label{display:grid;gap:6px}.offer-enquiry :is(input,textarea){font:inherit;width:100%;min-height:46px;padding:10px;border:1px solid var(--line);border-radius:3px;box-sizing:border-box}.offer-enquiry input:disabled,.offer-enquiry textarea:disabled{background:var(--sage)}
 @media(max-width:900px){.offer-compact-filters{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:600px){.offer-compact-filters{grid-template-columns:1fr}.offer-enquiry{padding:16px}}
+
+/* Keep the holiday description aligned with its own section heading. */
+.offer-description .article-prose{margin-inline:0}
+.offer-description .article-prose>:last-child{margin-bottom:0}

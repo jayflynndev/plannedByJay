@@ -10,22 +10,38 @@ test('offer cards and detail show party totals, supplier terms and one sash with
   const {render,fireEvent,cleanup}=await import('@testing-library/react');
   const {OfferGrid,OfferDetail}=await import('../src/components/offers/OfferViews');
   const {emptyOffer}=await import('../src/lib/offers/schema');
+  const {readFile}=await import('node:fs/promises');
+  const style=document.createElement('style');
+  style.textContent=(await readFile('src/app/globals.css','utf8')).replace('@import "tailwindcss";','');
+  document.head.append(style);
   const offer:import('../src/lib/offers/schema').PublicOffer={...emptyOffer(),id:'60000000-0000-4000-8000-000000000001',reference:'PBJ-FIXTURE',title:'Synthetic sunshine break',slug:'synthetic-sunshine-break',country:'Spain',resort:'Tenerife',accommodation:'Fixture hotel',departure_date:'2099-01-01',nights:7,board_basis:'Fixture board',total_price_minor:240050,price_checked_on:'2026-10-26',mandatory_charges:'Known mandatory charges included in the party total.',sash:'jays-pick',archived:false,created_at:'2026-10-26',updated_at:'2026-10-26',published_at:'2026-10-26',image:'/images/home/hero.jpg',galleryImages:[],supplier:{id:'50000000-0000-4000-8000-000000000001',name:'Jet2holidays',legal_name:'Synthetic fixture company',business_address:'Fixture public address',website:'https://example.org',contact_email:'',contact_url:'https://example.org/contact',booking_conditions_url:'https://example.org/terms',atol_holder:'Should not be inferred',atol_number:'1234'}};
   try{
-    const cards=render(<OfferGrid offers={[offer]}/>);
+    const cards=render(<OfferGrid offers={[{...offer,departure_point:'Fixture airport',why_jay:'A personal reason for this selection.'}]}/>);
+    for(const text of [offer.title,offer.accommodation,'Spain · Tenerife','1 Jan 2099 · From Fixture airport · 7 nights',offer.board_basis,'Price checked: 26 Oct 2026'])assert.ok(cards.getByText(text));
+    assert.ok(cards.getByText('Jet2holidays'));assert.ok(cards.getByText(/A personal reason for this selection/));
+    for(const link of cards.getAllByRole('link'))assert.notEqual(window.getComputedStyle(link).height,'100%','card links must not take up the whole card and push its copy outside');
     assert.ok(cards.getByText(/£2,400.50/));assert.ok(cards.getByText(/2 priced travellers/));assert.ok(cards.getByText(offer.mandatory_charges));
     assert.equal(cards.container.querySelectorAll('.offer-sash').length,1);assert.ok(cards.getByText("Jay's Pick"));
     assert.equal(cards.getByRole('link',{name:'View Holiday Details ↗'}).getAttribute('href'),'/holiday-offers/'+offer.slug);
     assert.equal(cards.getByRole('link',{name:'Supplier booking conditions'}).getAttribute('href'),'https://example.org/terms');
     assert.doesNotMatch(cards.container.textContent||'',/1234|Should not be inferred/);cleanup();
-    const detail=render(<OfferDetail offer={offer}/>);
+    const body='<p>The first saved description paragraph.</p><p>The second saved description paragraph.</p>';
+    const detail=render(<OfferDetail offer={{...offer,body,why_jay:'A personal reason.',inclusions:'Saved inclusions.',exclusions:'Saved conditions.'}}/>);
     assert.ok(detail.getByRole('heading',{name:offer.title}));assert.ok(detail.container.querySelector('details.offer-supplier-information[open]'));
+    const description=detail.getByRole('region',{name:'About this holiday'});
+    assert.equal(description.previousElementSibling?.tagName,'DL');
+    assert.equal(description.querySelector('.article-prose')?.innerHTML,body,'saved paragraphs remain intact');
+    assert.equal(description.querySelectorAll('p').length,2);
+    assert.ok(detail.getByRole('heading',{name:'Why Jay picked it'}));assert.ok(detail.getByRole('heading',{name:"What's included"}));assert.ok(detail.getByRole('heading',{name:'Important exclusions and conditions'}));
     assert.equal(detail.container.querySelector('a[href="/plan-my-holiday"]'),null);
     assert.ok(detail.container.querySelector('#ask-jay'));
     fireEvent.click(detail.getByRole('link',{name:'Ask Jay About This Holiday'}));assert.ok(detail.container.querySelector('details#ask-jay[open]'));
     for(const input of detail.container.querySelectorAll('#ask-jay input,#ask-jay textarea'))assert.ok(input.matches(':disabled'));
     assert.doesNotMatch(detail.container.textContent||'',/1234|Should not be inferred/);
-  }finally{cleanup();}
+    detail.rerender(<OfferDetail offer={offer}/>);assert.equal(detail.queryByRole('region',{name:'About this holiday'}),null);
+    cleanup();
+    const sameDay=render(<OfferGrid offers={[{...offer,nights:0}]}/>);assert.ok(sameDay.getByText(/Same-day trip/));
+  }finally{cleanup();style.remove();}
 });
 
 test('holiday landing, six shared pages and homepage cards render meaningful routes with accessible headings and real related reading only',async()=>{

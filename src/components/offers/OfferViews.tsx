@@ -30,9 +30,9 @@ function Operator({offer:o}:{offer:PublicOffer}) {
 }
 export function OfferGrid({offers}:{offers:PublicOffer[]}) {
   return <div className="offer-grid">{offers.map(o=><article className="offer-card" key={o.id}>
-    <Link href={`/holiday-offers/${o.slug}`}><div className="card-photo"><SiteImage src={o.image} alt={o.featured_alt} fill sizes="(max-width:767px) 100vw,33vw" fallback={<span className="article-photo-fallback">{o.country}</span>}/>{displayedSash(o)&&<span className="offer-sash">{displayedSash(o)}</span>}</div></Link>
+    <Link className="offer-card-photo" href={`/holiday-offers/${o.slug}`}><div className="card-photo"><SiteImage src={o.image} alt={o.featured_alt} fill sizes="(max-width:767px) 100vw,33vw" fallback={<span className="article-photo-fallback">{o.country}</span>}/>{displayedSash(o)&&<span className="offer-sash">{displayedSash(o)}</span>}</div></Link>
     <div className="offer-card-copy"><p className="eyebrow">{[o.country,o.resort].filter(Boolean).join(" · ")}</p><h3><Link href={`/holiday-offers/${o.slug}`}>{o.title}</Link></h3>{o.accommodation&&<p>{o.accommodation}</p>}
-      <p>{o.departure_date&&checkedDate(o.departure_date)}{o.departure_point?` · From ${o.departure_point}`:""}{o.nights?` · ${o.nights} nights`:""}</p>
+      <p>{[o.departure_date&&checkedDate(o.departure_date),o.departure_point&&`From ${o.departure_point}`,o.nights!==null&&(o.nights===0?"Same-day trip":`${o.nights} ${o.nights===1?"night":"nights"}`)].filter(Boolean).join(" · ")}</p>
       {o.board_basis&&<p>{o.board_basis}</p>}{o.why_jay&&<p><strong>Why Jay picked it:</strong> {o.why_jay}</p>}
       <Price offer={o}/><Operator offer={o}/><Protection offer={o}/>
       <Link className="article-read-label" href={`/holiday-offers/${o.slug}`}>View Holiday Details ↗</Link>
@@ -63,7 +63,7 @@ export function OfferDetail({offer:o,preview=false,privacyHref=null,enquiriesEna
     <div className="offer-detail-photo"><SiteImage src={o.image} alt={o.featured_alt} fill sizes="(max-width:767px) 100vw,900px"/>{displayedSash(o)&&<span className="offer-sash">{displayedSash(o)}</span>}</div>
     <AskJayLink/>
     <h2>Your holiday at a glance</h2><dl>{Object.entries({"Travel arrangement":travelLabels[o.travel_type],"Departure":o.departure_date?checkedDate(o.departure_date):"", "From":o.departure_point,"Return":o.return_date?checkedDate(o.return_date):"", "Duration":o.nights!==null?(o.nights===0?"Same-day trip":`${o.nights} nights`):"", "Board / fare":o.board_basis,"Room / cabin":o.room_type}).filter(([,v])=>v).map(([k,v])=><div key={k}><dt>{k}</dt><dd>{v}</dd></div>)}</dl>
-    {o.body&&<div className="article-prose" dangerouslySetInnerHTML={{__html:o.body}}/>}
+    {o.body&&<section className="offer-description" aria-labelledby="offer-description-heading"><h2 id="offer-description-heading">About this holiday</h2><div className="article-prose" dangerouslySetInnerHTML={{__html:o.body}}/></section>}
     {o.why_jay&&<section><h2>Why Jay picked it</h2><p>{o.why_jay}</p></section>}
     <h2>What&apos;s included</h2><p className="offer-paragraphs">{o.inclusions}</p>{o.exclusions&&<><h2>Important exclusions and conditions</h2><p className="offer-paragraphs">{o.exclusions}</p></>}
     <h2>Price for your party</h2><Price offer={o}/><Operator offer={o}/><Protection offer={o}/>
