@@ -21,7 +21,7 @@ export function offerError(error: {code?: string} | null) {
 export function offerRecord(raw: Record<string, unknown>): Offer {
   const fields = Object.fromEntries(Object.keys(emptyOffer()).map(k => [k,raw[k]]));
   for (const key of ["departure_date","return_date","price_checked_on","booking_deadline"]) fields[key] ||= "";
-  return {...offerInput.parse(fields), body: cleanHtml(String(raw.body || "")), id: String(raw.id), reference: String(raw.reference || "Private preview"), archived: raw.archived === true, created_at: String(raw.created_at || ""), updated_at: String(raw.updated_at || ""), published_at: raw.published_at ? String(raw.published_at) : null};
+  return {...offerInput.parse(fields), body: cleanHtml(String(raw.body || "")), id: String(raw.id), reference: String(raw.reference || ""), archived: raw.archived === true, created_at: String(raw.created_at || ""), updated_at: String(raw.updated_at || ""), published_at: raw.published_at ? String(raw.published_at) : null};
 }
 const publicSupplierFields = {id:true,name:true,website:true,legal_name:true,business_address:true,contact_email:true,contact_url:true,booking_conditions_url:true,atol_holder:true,atol_number:true} as const;
 export function displayOffer(o: Offer, supplier: Record<string, unknown>): PublicOffer {
@@ -52,7 +52,13 @@ export async function saveOffer(client: SupabaseClient, input: unknown) {
 export async function previewOffer(client: SupabaseClient, input: unknown) {
   const value = prepareOffer(input);
   const supplier = value.supplier_id ? await getSupplier(client,value.supplier_id) : null;
-  return displayOffer(offerRecord(value),supplier || {id:null,name:"Supplier not selected"});
+  let reference="";
+  if(value.id){
+    const result=await client.from("holiday_offers").select("reference").eq("id",value.id).maybeSingle();offerError(result.error);
+    if(!result.data)throw new ArticleError("This saved offer is no longer available.",404);
+    reference=result.data.reference;
+  }
+  return displayOffer(offerRecord({...value,reference}),supplier || {id:null,name:"Supplier not selected"});
 }
 export async function publicOffers(query: OfferQuery = emptyOfferQuery, options: {featured?: boolean; slug?: string; limit?: number} = {}) {
   const c = publicArticlesClient();

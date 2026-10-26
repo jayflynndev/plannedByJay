@@ -538,7 +538,7 @@ test("offer editor reuses paste/media, multiple Holiday Types, party pricing and
   globalThis.fetch=async(input,init)=>{
     if(String(input).includes("/media"))return Response.json({images:[{path:"30000000-0000-4000-8000-000000000001-coast.webp",url:"/images/home/hero.jpg",alt:"Coast"}]});
     const offer=prepareOffer(JSON.parse(String(init?.body)));
-    const metadata={id:"60000000-0000-4000-8000-000000000001",reference:"PBJ-FIXTURE",archived:false,created_at:"2026-10-26T12:00:00Z",updated_at:"2026-10-26T12:00:00Z"};
+    const metadata={id:"60000000-0000-4000-8000-000000000001",reference:"000042",archived:false,created_at:"2026-10-26T12:00:00Z",updated_at:"2026-10-26T12:00:00Z"};
     if(String(input).endsWith("/preview"))return Response.json({offer:{...offer,...metadata,published_at:null,supplier,image:"/images/home/hero.jpg",galleryImages:[]}});
     if(fail)return Response.json({error:"Temporary offer save failure"},{status:503});
     writes.push(offer);if(offer.status==="published")firstPublished ||= "2026-10-26T12:00:00Z";
@@ -571,7 +571,7 @@ test("offer editor reuses paste/media, multiple Holiday Types, party pricing and
     await waitFor(()=>assert.match(view.getByRole("alert").textContent||"",/save failure/));assert.ok(body.querySelector("strong"));
     fail=false;fireEvent.click(view.getByRole("button",{name:"Save Draft"}));
     await waitFor(()=>assert.ok(view.getByText("Offer draft saved successfully.")));
-    assert.equal(writes[0].total_price_minor,240050);assert.deepEqual(writes[0].holiday_type_ids,types.map(t=>t.id));
+    assert.ok(view.getByText("Offer reference: 000042"));assert.equal(writes[0].total_price_minor,240050);assert.deepEqual(writes[0].holiday_type_ids,types.map(t=>t.id));
     assert.equal(writes[0].featured,true);assert.ok(writes[0].featured_image);
     fireEvent.click(view.getByRole("button",{name:"Preview"}));
     await waitFor(()=>assert.ok(view.getByRole("region",{name:"Private holiday offer preview"})));assert.equal(writes.length,1);
@@ -626,7 +626,7 @@ test("offer enquiry acknowledgement waits for a server reference and prevents re
   const {render,fireEvent,cleanup,waitFor}=await import("@testing-library/react");
   const {OfferEnquiryForm}=await import("../src/components/offers/OfferEnquiryForm");
   const original=globalThis.fetch;let receipt=false,calls=0;const tokens:string[]=[];
-  globalThis.fetch=async(_input,init)=>{calls++;const body=JSON.parse(String(init?.body));assert.equal(body.offer_id,"60000000-0000-4000-8000-000000000001");assert.equal("total_price_minor" in body,false);tokens.push(body.request_id);return Response.json(receipt?{reference:"70000000-0000-4000-8000-000000000001"}:{});};
+  globalThis.fetch=async(_input,init)=>{calls++;const body=JSON.parse(String(init?.body));assert.equal(body.offer_id,"60000000-0000-4000-8000-000000000001");assert.equal("total_price_minor" in body,false);tokens.push(body.request_id);return Response.json(receipt?{reference:"000042"}:{});};
   try{
     const view=render(<OfferEnquiryForm offerId="60000000-0000-4000-8000-000000000001" enabled privacyHref="/privacy"/>);
     fireEvent.change(view.getByLabelText("Your name"),{target:{value:"Fixture customer"}});fireEvent.change(view.getByLabelText("Email address"),{target:{value:"customer@example.org"}});
@@ -636,6 +636,6 @@ test("offer enquiry acknowledgement waits for a server reference and prevents re
     await waitFor(()=>assert.ok(view.getByText(/Your enquiry has been received/)));
     assert.equal(tokens[0],tokens[1]);assert.equal(calls,2);
     fireEvent.submit(view.getByRole("form",{name:"Offer-specific enquiry"}));assert.equal(calls,2);
-    assert.ok(view.getByRole("button",{name:"Enquiry received"}).matches(":disabled"));
+    assert.ok(view.getByText("Your enquiry has been received. Offer reference: 000042"));assert.ok(view.getByRole("button",{name:"Enquiry received"}).matches(":disabled"));
   }finally{cleanup();globalThis.fetch=original;}
 });

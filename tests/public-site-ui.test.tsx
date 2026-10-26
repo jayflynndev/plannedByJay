@@ -6,7 +6,7 @@ const dom=new JSDOM('<!doctype html><html><body></body></html>',{url:'http://loc
 Object.assign(globalThis,{window:dom.window,self:dom.window,document:dom.window.document,HTMLElement:dom.window.HTMLElement,Node:dom.window.Node,MutationObserver:dom.window.MutationObserver});
 Object.defineProperty(globalThis,'navigator',{value:dom.window.navigator,configurable:true});
 
-test('offer cards and detail show party totals, supplier terms and one sash without inferring ATOL or collecting enquiries',async()=>{
+test('compact offer cards show party totals and references while full disclosures remain on the detail page',async()=>{
   const {render,fireEvent,cleanup}=await import('@testing-library/react');
   const {OfferGrid,OfferDetail}=await import('../src/components/offers/OfferViews');
   const {emptyOffer}=await import('../src/lib/offers/schema');
@@ -14,20 +14,29 @@ test('offer cards and detail show party totals, supplier terms and one sash with
   const style=document.createElement('style');
   style.textContent=(await readFile('src/app/globals.css','utf8')).replace('@import "tailwindcss";','');
   document.head.append(style);
-  const offer:import('../src/lib/offers/schema').PublicOffer={...emptyOffer(),id:'60000000-0000-4000-8000-000000000001',reference:'PBJ-FIXTURE',title:'Synthetic sunshine break',slug:'synthetic-sunshine-break',country:'Spain',resort:'Tenerife',accommodation:'Fixture hotel',departure_date:'2099-01-01',nights:7,board_basis:'Fixture board',total_price_minor:240050,price_checked_on:'2026-10-26',mandatory_charges:'Known mandatory charges included in the party total.',sash:'jays-pick',archived:false,created_at:'2026-10-26',updated_at:'2026-10-26',published_at:'2026-10-26',image:'/images/home/hero.jpg',galleryImages:[],supplier:{id:'50000000-0000-4000-8000-000000000001',name:'Jet2holidays',legal_name:'Synthetic fixture company',business_address:'Fixture public address',website:'https://example.org',contact_email:'',contact_url:'https://example.org/contact',booking_conditions_url:'https://example.org/terms',atol_holder:'Should not be inferred',atol_number:'1234'}};
+  const offer:import('../src/lib/offers/schema').PublicOffer={...emptyOffer(),id:'60000000-0000-4000-8000-000000000001',reference:'000042',title:'Synthetic sunshine break',slug:'synthetic-sunshine-break',country:'Spain',resort:'Tenerife',accommodation:'Fixture hotel',departure_date:'2099-01-01',nights:7,board_basis:'Fixture board',total_price_minor:240050,price_checked_on:'2026-10-26',mandatory_charges:'Known mandatory charges included in the party total.',sash:'jays-pick',archived:false,created_at:'2026-10-26',updated_at:'2026-10-26',published_at:'2026-10-26',image:'/images/home/hero.jpg',galleryImages:[],supplier:{id:'50000000-0000-4000-8000-000000000001',name:'Jet2holidays',legal_name:'Synthetic fixture company',business_address:'Fixture public address',website:'https://example.org',contact_email:'',contact_url:'https://example.org/contact',booking_conditions_url:'https://example.org/terms',atol_holder:'Should not be inferred',atol_number:'1234'}};
   try{
     const cards=render(<OfferGrid offers={[{...offer,departure_point:'Fixture airport',why_jay:'A personal reason for this selection.'}]}/>);
-    for(const text of [offer.title,offer.accommodation,'Spain · Tenerife','1 Jan 2099 · From Fixture airport · 7 nights',offer.board_basis,'Price checked: 26 Oct 2026'])assert.ok(cards.getByText(text));
+    for(const text of [offer.title,offer.accommodation,'Spain · Tenerife','1 Jan 2099','From Fixture airport','7 nights',offer.board_basis,'Price checked 26 Oct 2026','Offer reference: 000042'])assert.ok(cards.getByText(text));
     assert.ok(cards.getByText('Jet2holidays'));assert.ok(cards.getByText(/A personal reason for this selection/));
     for(const link of cards.getAllByRole('link'))assert.notEqual(window.getComputedStyle(link).height,'100%','card links must not take up the whole card and push its copy outside');
-    assert.ok(cards.getByText(/£2,400.50/));assert.ok(cards.getByText(/2 priced travellers/));assert.ok(cards.getByText(offer.mandatory_charges));
+    assert.ok(cards.getByText(/£2,400.50/));assert.ok(cards.getByText('total'));assert.ok(cards.getByText('2 adults'));assert.ok(cards.getByText(offer.mandatory_charges));
     assert.equal(cards.container.querySelectorAll('.offer-sash').length,1);assert.ok(cards.getByText("Jay's Pick"));
-    assert.equal(cards.getByRole('link',{name:'View Holiday Details ↗'}).getAttribute('href'),'/holiday-offers/'+offer.slug);
-    assert.equal(cards.getByRole('link',{name:'Supplier booking conditions'}).getAttribute('href'),'https://example.org/terms');
+    assert.equal(cards.getByRole('link',{name:'View Holiday'}).getAttribute('href'),'/holiday-offers/'+offer.slug);
+    assert.equal(cards.queryByRole('link',{name:'Supplier booking conditions'}),null);
+    assert.equal(cards.queryByRole('link',{name:'Supplier contact page'}),null);
+    for(const text of [offer.supplier.legal_name,offer.supplier.business_address])assert.equal(cards.queryByText(text),null);
+    const fullReason='These are the saved editorial words. '.repeat(12);
+    cards.rerender(<OfferGrid offers={[{...offer,children:1,inclusions:'Free Child Place, Baggage included.',why_jay:fullReason}]}/>);
+    assert.ok(cards.getByText('Free Child Place'));assert.ok(cards.getByText('2 adults + 1 child'));
+    assert.ok((cards.container.querySelector('.offer-card-why')?.textContent||'').length<150);
+    assert.doesNotMatch(cards.container.textContent||'',new RegExp(fullReason));
     assert.doesNotMatch(cards.container.textContent||'',/1234|Should not be inferred/);cleanup();
     const body='<p>The first saved description paragraph.</p><p>The second saved description paragraph.</p>';
     const detail=render(<OfferDetail offer={{...offer,body,why_jay:'A personal reason.',inclusions:'Saved inclusions.',exclusions:'Saved conditions.'}}/>);
     assert.ok(detail.getByRole('heading',{name:offer.title}));assert.ok(detail.container.querySelector('details.offer-supplier-information[open]'));
+    assert.ok(detail.getByText('Offer reference: 000042'));assert.ok(detail.getAllByText(offer.supplier.business_address).length);
+    assert.ok(detail.getAllByRole('link',{name:'Supplier booking conditions'}).every(a=>a.getAttribute('href')==='https://example.org/terms'));
     const description=detail.getByRole('region',{name:'About this holiday'});
     assert.equal(description.previousElementSibling?.tagName,'DL');
     assert.equal(description.querySelector('.article-prose')?.innerHTML,body,'saved paragraphs remain intact');

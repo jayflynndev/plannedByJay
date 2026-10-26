@@ -20,8 +20,8 @@ export function OfferEnquiryForm({offerId,enabled=false,privacyHref=null}:{offer
       try {
         const data=new FormData(e.currentTarget);requestId.current ||= crypto.randomUUID();
         const r=await fetch("/api/offer-enquiries",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({request_id:requestId.current,offer_id:offerId,name:data.get("name"),email:data.get("email"),phone:data.get("phone"),message:data.get("message"),website:data.get("website")})});
-        const result=await r.json();if(!r.ok || !result.reference)throw new Error(result.error || "Your enquiry could not be received.");
-        setMessage("Your enquiry has been received. Reference: "+result.reference);
+        const result=await r.json();if(!r.ok || typeof result.reference!=="string" || !/^[0-9]{6}$/.test(result.reference))throw new Error(result.error || "Your enquiry could not be received.");
+        setMessage("Your enquiry has been received. Offer reference: "+result.reference);
         setReceived(true);
       }catch(error){setFailed(true);setMessage(error instanceof Error?error.message:"Your enquiry could not be received.");}
       finally{working.current=false;setBusy(false);}

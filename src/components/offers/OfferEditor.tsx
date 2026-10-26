@@ -4,6 +4,7 @@ import { useEffect,useRef,useState } from "react";
 import { VisualEditor } from "@/components/articles/VisualEditor";
 import { ImageSelector } from "@/components/articles/ImageSelector";
 import { OfferDetail } from "./OfferViews";
+import { OfferReference } from "./OfferReference";
 import { emptyOffer,offerInput,offerSlug,duration,ukToday,money,averagePrice,travelLabels,sashLabels,type Offer,type OfferInput,type PublicOffer,type PublicSupplier } from "@/lib/offers/schema";
 export function OfferEditor({initial,suppliers,holidayTypes,initialImageUrl="",galleryUrls={},publicBaseUrl}:{initial?:Offer;suppliers:(PublicSupplier&{status:string;archived:boolean})[];holidayTypes:{id:string;name:string}[];initialImageUrl?:string;galleryUrls?:Record<string,string>;publicBaseUrl:string}) {
   const [value,setValue]=useState<OfferInput>(()=>initial?{...offerInput.parse(Object.fromEntries(Object.keys(emptyOffer()).map(k=>[k,initial[k as keyof OfferInput]]))),status:initial.archived?"draft":initial.status}:emptyOffer());
@@ -49,7 +50,8 @@ export function OfferEditor({initial,suppliers,holidayTypes,initialImageUrl="",g
   const supplier=suppliers.find(s=>s.id===value.supplier_id);
   return <>
     <div className="article-admin-heading"><h1>{value.id?"Edit Holiday Offer":"Add Holiday Offer"}</h1><a href="/admin/holiday-offers">All Holiday Offers</a></div>
-    <p>{dirty?"Unsaved changes":saved?"Saved":"Not saved yet"}{saved?" · "+saved.reference:""}</p>
+    <p>{dirty?"Unsaved changes":saved?"Saved":"Not saved yet"}</p>
+    {saved?<OfferReference reference={saved.reference}/>:<p>Offer reference assigned automatically on first save.</p>}
     {saved?.archived&&<p>Archived. Restore this offer from All Holiday Offers before publishing.</p>}
     <fieldset disabled={!!busy} className="article-admin-form">
       <section className="offer-editor-section"><h2>A. Holiday</h2>

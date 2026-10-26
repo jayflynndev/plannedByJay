@@ -31,6 +31,7 @@ export type OfferInput = z.output<typeof offerInput>;
 export type Offer = OfferInput & {id: string; reference: string; archived: boolean; created_at: string; updated_at: string; published_at: string | null};
 export type PublicSupplier = {id: string; name: string; website: string; legal_name: string; business_address: string; contact_email: string; contact_url: string; booking_conditions_url: string; atol_holder: string; atol_number: string};
 export type PublicOffer = Offer & {supplier: PublicSupplier; image: string | null; galleryImages: {src: string; alt: string}[]};
+export const isOfferReference = (value: unknown): value is string => typeof value === "string" && /^[0-9]{6}$/.test(value);
 export const emptyOffer = () => offerInput.parse({});
 export const offerSlug = (title: string) => slugWords(title).slice(0, 60).replace(/-$/, "") || "holiday";
 export function ukToday(now = new Date()) {return new Intl.DateTimeFormat("en-CA", {timeZone: "Europe/London", year: "numeric", month: "2-digit", day: "2-digit"}).format(now);}

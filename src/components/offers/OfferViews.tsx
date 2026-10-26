@@ -5,6 +5,8 @@ import { Container } from "@/components/ui/Container";
 import { offersCopy as copy } from "@/content/offers";
 import { money,averagePrice,displayedSash,travelLabels,offerListHref,type PublicOffer,type OfferQuery } from "@/lib/offers/schema";
 import { OfferEnquiryForm,AskJayLink } from "./OfferEnquiryForm";
+import { OfferReference } from "./OfferReference";
+import { cardBenefit,cardReason } from "@/lib/offers/presentation";
 export const checkedDate=(date:string)=>new Intl.DateTimeFormat("en-GB",{dateStyle:"medium",timeZone:"UTC"}).format(new Date(date+"T00:00:00Z"));
 function Price({offer:o}:{offer:PublicOffer}) {
   const average=averagePrice(o);
@@ -30,12 +32,28 @@ function Operator({offer:o}:{offer:PublicOffer}) {
 }
 export function OfferGrid({offers}:{offers:PublicOffer[]}) {
   return <div className="offer-grid">{offers.map(o=><article className="offer-card" key={o.id}>
-    <Link className="offer-card-photo" href={`/holiday-offers/${o.slug}`}><div className="card-photo"><SiteImage src={o.image} alt={o.featured_alt} fill sizes="(max-width:767px) 100vw,33vw" fallback={<span className="article-photo-fallback">{o.country}</span>}/>{displayedSash(o)&&<span className="offer-sash">{displayedSash(o)}</span>}</div></Link>
+    <Link className="offer-card-photo" href={`/holiday-offers/${o.slug}`} aria-label={`View ${o.title}`}><div className="card-photo"><SiteImage src={o.image} alt={o.featured_alt} fill sizes="(max-width:767px) 100vw,(max-width:1023px) 38vw,350px" fallback={<span className="article-photo-fallback">{o.country}</span>}/>{displayedSash(o)&&<span className="offer-sash">{displayedSash(o)}</span>}</div></Link>
     <div className="offer-card-copy"><p className="eyebrow">{[o.country,o.resort].filter(Boolean).join(" · ")}</p><h3><Link href={`/holiday-offers/${o.slug}`}>{o.title}</Link></h3>{o.accommodation&&<p>{o.accommodation}</p>}
-      <p>{[o.departure_date&&checkedDate(o.departure_date),o.departure_point&&`From ${o.departure_point}`,o.nights!==null&&(o.nights===0?"Same-day trip":`${o.nights} ${o.nights===1?"night":"nights"}`)].filter(Boolean).join(" · ")}</p>
-      {o.board_basis&&<p>{o.board_basis}</p>}{o.why_jay&&<p><strong>Why Jay picked it:</strong> {o.why_jay}</p>}
-      <Price offer={o}/><Operator offer={o}/><Protection offer={o}/>
-      <Link className="article-read-label" href={`/holiday-offers/${o.slug}`}>View Holiday Details ↗</Link>
+      <ul className="offer-card-facts">
+        {o.departure_date&&<li><time dateTime={o.departure_date}>{checkedDate(o.departure_date)}</time></li>}
+        {o.nights!==null&&<li>{o.nights===0?"Same-day trip":`${o.nights} ${o.nights===1?"night":"nights"}`}</li>}
+        {o.departure_point&&<li>From {o.departure_point}</li>}{o.board_basis&&<li>{o.board_basis}</li>}
+      </ul>
+      {cardBenefit(o)&&<p className="offer-card-benefit">{cardBenefit(o)}</p>}
+      {o.why_jay&&<p className="offer-card-why"><strong>Why Jay picked it:</strong> {cardReason(o.why_jay)}</p>}
+      <p className="offer-card-supplier">Supplied by <strong>{o.supplier.name}</strong></p><OfferReference reference={o.reference}/>
+    </div>
+    <div className="offer-card-price">
+      <div>
+      <p className="offer-price">{o.total_price_minor?money(o.total_price_minor,o.currency):"Price not entered"}{o.total_price_minor&&<span> total</span>}</p>
+      <p>{o.adults} {o.adults===1?"adult":"adults"}{o.children?` + ${o.children} ${o.children===1?"child":"children"}${o.child_ages.length?` (ages ${o.child_ages.join(", ")})`:""}`:""}</p>
+      {averagePrice(o)&&<p className="offer-card-note">Average {money(averagePrice(o),o.currency)} per adult</p>}
+      {o.mandatory_charges&&<p className="offer-charges">{o.mandatory_charges}</p>}
+      {o.booking_deadline&&<p className="offer-card-note">Book by {checkedDate(o.booking_deadline)}</p>}
+      {o.price_checked_on&&<p className="offer-card-note">Price checked {checkedDate(o.price_checked_on)}</p>}
+      <p className="offer-card-note">Prices and availability may change.</p>
+      </div>
+      <Link className="button" href={`/holiday-offers/${o.slug}`}>View Holiday <span aria-hidden="true">↗</span></Link>
     </div>
   </article>)}</div>;
 }
@@ -58,7 +76,7 @@ export function OffersListing({query,offers,total,holidayTypes=[],error}:{query:
   </Container></main>;
 }
 export function OfferDetail({offer:o,preview=false,privacyHref=null,enquiriesEnabled=false}:{offer:PublicOffer;preview?:boolean;privacyHref?:string|null;enquiriesEnabled?:boolean}) {
-  return <div className="offer-detail"><p className="eyebrow">{o.reference}</p><h1>{o.title||"Your holiday title"}</h1><p className="intro">{o.summary}</p>
+  return <div className="offer-detail"><OfferReference reference={o.reference}/><h1>{o.title||"Your holiday title"}</h1><p className="intro">{o.summary}</p>
     <p>{[o.country,o.resort,o.accommodation].filter(Boolean).join(" · ")}</p>
     <div className="offer-detail-photo"><SiteImage src={o.image} alt={o.featured_alt} fill sizes="(max-width:767px) 100vw,900px"/>{displayedSash(o)&&<span className="offer-sash">{displayedSash(o)}</span>}</div>
     <AskJayLink/>
