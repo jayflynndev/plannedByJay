@@ -12,7 +12,7 @@
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "test:server": "node --conditions=react-server --import tsx --test tests/navigation-config.test.ts tests/public-site.test.ts tests/holiday-pages.test.ts tests/articles.test.ts",
-    "test:form": "node --import tsx --test tests/public-site-ui.test.tsx tests/frontend-only.test.tsx tests/articles-ui.test.tsx tests/articles-public.test.tsx",
+    "test:form": "node --import tsx --test tests/public-site-ui.test.tsx tests/frontend-only.test.tsx tests/articles-ui.test.tsx tests/articles-public.test.tsx tests/holiday-types-public.test.tsx",
     "test": "npm run test:server && npm run test:form"
   },
   "dependencies": {

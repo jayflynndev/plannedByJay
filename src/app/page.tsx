@@ -8,6 +8,8 @@ import { publicOrigin } from "@/lib/presentation";
 import { site } from "@/content/site";
 import { OfferSection } from "@/components/offers/OfferViews";
 import { offersCopy } from "@/content/offers";
+import { publicHolidayTypes, holidayPhoto } from "@/lib/holiday-types/data";
+import type { HolidayDisplay } from "@/components/holidays/HolidayPages";
 export function generateMetadata() {
   return {
     title: site.title,
@@ -24,6 +26,9 @@ export function generateMetadata() {
 export const dynamic = "force-dynamic";
 import { publicArticleList, imageUrl } from "@/lib/articles/data";
 export default async function Home() {
+  let holidays: HolidayDisplay[] = [];
+  try { holidays = (await publicHolidayTypes()).map(h => ({...h, photoUrl: holidayPhoto(h.image)})); }
+  catch { /* Holiday Type service failure never breaks the homepage. */ }
   let articles: import("@/types/public-content").ArticlePreview[] = [];
   try {
     const r = await publicArticleList({ limit: 3 });
@@ -52,7 +57,7 @@ export default async function Home() {
       <Hero />
       <HolidayPaths />
       <WhyJay />
-      <HolidayExperiences />
+      <HolidayExperiences holidays={holidays}/>
       <OfferSection offers={[]} title={offersCopy.featuredTitle} />
       <TravelInspiration articles={articles} />
       <HomeCTA />

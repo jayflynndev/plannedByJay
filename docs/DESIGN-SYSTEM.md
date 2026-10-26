@@ -1,10 +1,10 @@
 # Planned by Jay design system
 
-## Explore Holidays
+## Holiday Types
 
-The `/holidays` landing grid reuses the established 4:3 photographs, editorial cards and cream/forest/sage/terracotta tokens. A single `HolidayTypePage` template gives each guide an image/introduction, distinct planning considerations, styles, native expandable questions, optional related-reading presentation, cross-links and one final enquiry action. It has no booking widgets, promotional prices or repeated lead capture. Editable text/crops live in `src/content/holiday-types.ts`.
+The `/holidays` landing grid reuses the established 4:3 photographs, editorial cards and cream/forest/sage/terracotta tokens. A single `HolidayTypePage` template gives each type an image/introduction, rich content, planning/ideas grids where the heading structure supports them, cross-links and opening/closing Plan My Holiday actions. FAQ sections have been removed. Editable records live in the Holiday Types CMS, with shared labels in `src/content/holiday-types.ts`. There are no offer placeholders, booking widgets or promotional prices.
 
-Use semantic H1/H2/H3 hierarchy, visible focus, native keyboard-operable question summaries and 44px link/button targets. At <=767px the hero and planning grid stack, with a 4:3 hero crop; landing cards follow existing one/two/three-column breakpoints. Three editorial style columns stack below 1024px. Reuse `SiteImage` with local assets and a labelled neutral failure state; photography never establishes accommodation availability or accessibility. Related article cards reuse the existing published-preview treatment. CSS stays scoped to `.holiday-page`; homepage layout is unchanged.
+Use semantic H1/H2/H3 hierarchy, visible focus and 44px link/button targets. At <=767px the hero and planning grid stack, with a 4:3 hero crop; landing cards follow existing one/two/three-column breakpoints. Three editorial style columns stack below 1024px. Reuse `SiteImage` with existing local assets or shared article-library photographs and a labelled neutral failure state; photography never establishes accommodation availability or accessibility. CSS stays scoped to `.holiday-page`; the homepage card layout is unchanged and reads published CMS records.
 
 The direction combines a calm editorial layout with a friendly, practical service. Photographs complement plain, readable copy. No carousels or animation libraries.
 

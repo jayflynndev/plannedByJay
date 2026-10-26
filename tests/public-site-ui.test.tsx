@@ -10,17 +10,19 @@ test('holiday landing, six shared pages and homepage cards render meaningful rou
   const {render,cleanup}=await import('@testing-library/react');
   const {HolidayLanding,HolidayTypePage}=await import('../src/components/holidays/HolidayPages');
   const {HolidayExperiences}=await import('../src/components/home/HolidayExperiences');
-  const {holidayTypes}=await import('../src/content/holiday-types');
+  const {default:originals}=await import('./helpers/holiday-originals.json');
+  const {holidayInput}=await import('../src/lib/holiday-types/schema');
+  const holidayTypes=originals.map(h=>({...holidayInput.parse({name:h.name,slug:h.slug,heading:h.heading,introduction:h.introduction,image:h.image,image_alt:h.image_alt,body:'<h2>Introduction</h2><p>Useful detail.</p><h2>Things worth thinking through</h2><h3>Practical details</h3><p>Planning advice.</p><h2>Styles to explore</h2><h3>An idea</h3><p>More advice.</p>'}),photoUrl:h.image}));
   try {
-    const landing=render(<HolidayLanding/>);assert.equal(landing.getAllByRole('heading',{level:1}).length,1);
+    const landing=render(<HolidayLanding holidays={holidayTypes}/>);assert.equal(landing.getAllByRole('heading',{level:1}).length,1);
     assert.equal(landing.getByRole('link',{name:'View All Holiday Offers'}).getAttribute('href'),'/holiday-offers');for(const item of holidayTypes)assert.ok(landing.container.querySelector(`a[href="/holidays/${item.slug}"]`));cleanup();
-    const home=render(<HolidayExperiences/>);assert.equal(home.container.querySelectorAll('a[href^="/holidays/"]').length,6);assert.equal(home.container.querySelector('a[href="/plan-my-holiday"]'),null);cleanup();
+    const home=render(<HolidayExperiences holidays={holidayTypes}/>);assert.equal(home.container.querySelectorAll('a[href^="/holidays/"]').length,6);assert.equal(home.container.querySelector('a[href="/plan-my-holiday"]'),null);cleanup();
     for(const item of holidayTypes){
       const page=render(<HolidayTypePage holiday={item}/>);
-      assert.equal(page.getAllByRole('heading',{level:1}).length,1);assert.ok(page.getByRole('heading',{level:1,name:item.headline}));
-      assert.equal(page.getByRole('link',{name:'Plan My Holiday'}).getAttribute('href'),'/plan-my-holiday');
+      assert.equal(page.getAllByRole('heading',{level:1}).length,1);assert.ok(page.getByRole('heading',{level:1,name:item.heading}));
+      assert.ok(page.getAllByRole('link',{name:'Plan My Holiday'}).every(a=>a.getAttribute('href')==='/plan-my-holiday'));
       assert.equal(page.queryByText('Useful reading for this kind of holiday'),null);
-      assert.equal(page.container.querySelectorAll('details summary').length,item.questions.length);cleanup();
+      assert.equal(page.container.querySelectorAll('details summary').length,0);assert.equal(page.queryByText(/common questions/i),null);assert.ok(page.container.querySelector('.holiday-planning-grid'));assert.ok(page.container.querySelector('.holiday-ideas-grid'));cleanup();
     }
     const related=render(<HolidayTypePage holiday={holidayTypes[0]} articles={[{id:'fixture',title:'A real published guide',slug:'published-guide',excerpt:'Useful advice',content_type:'Travel advice',image:null}]}/>);
     assert.ok(related.getByRole('link',{name:/A real published guide/}));assert.ok(related.getByRole('heading',{name:'Useful reading for this kind of holiday'}));

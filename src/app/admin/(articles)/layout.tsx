@@ -10,9 +10,10 @@ export default async function AdminLayout({
   await pageAdmin();
   return (
     <main id="main-content" className="article-admin">
-      <nav aria-label="Article administration">
+      <nav aria-label="Website administration">
         <a href="/admin">Admin home</a>
         <a href="/admin/articles">Articles</a>
+        <a href="/admin/holiday-types">Holiday Types</a>
         <LogoutButton />
       </nav>
       {children}

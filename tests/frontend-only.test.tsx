@@ -29,5 +29,5 @@ test('public listings have honest empty states and archived content URLs return 
 test('no supplier, offer or enquiry backend is reintroduced',async()=>{
  for(const path of ['src/lib/enquiries','src/lib/offers','src/app/api/enquiries','src/app/api/cms','src/components/offers/OfferEditor.tsx'])await assert.rejects(access(path));
  const form=await readFile('src/components/enquiry/EnquiryForm.tsx','utf8');assert.doesNotMatch(form,/fetch\(|localStorage|sessionStorage/);
- const migrations=await readdir('supabase/migrations');assert.deepEqual(migrations,['20261025_articles_cms.sql']);
+ const migrations=await readdir('supabase/migrations');assert.deepEqual(migrations,['20261025_articles_cms.sql','20261026_holiday_types_cms.sql']);
 });

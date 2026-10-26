@@ -1,14 +1,14 @@
 # Planned by Jay website guide
 
-The project contains the existing public website and the Articles CMS. Static content remains local. The Articles CMS is now the sole backend module; see [ARTICLES.md](ARTICLES.md) for its one manual migration, Auth setup and everyday publishing. Enquiry processing, offers/suppliers administration and other backend services remain absent.
+The project contains the existing public website, Articles CMS and Holiday Types CMS. Shared website copy remains local; article and Holiday Type records are edited in Admin. See [ARTICLES.md](ARTICLES.md) for the existing Articles/Auth setup and [HOLIDAY-TYPES.md](HOLIDAY-TYPES.md) for the new manual Holiday Types migration and editing instructions. Enquiry processing, offers/suppliers administration and other backend services remain absent.
 
 ## Edit the existing website
 
-- `src/content/home.ts`: homepage wording, imagery and portrait cropping.
+- `src/content/home.ts`: homepage wording, hero imagery and portrait cropping. Holiday cards come from published Holiday Types.
 - `src/content/why-jay.ts`: personal introduction, portrait path/alt/object-position.
 - `src/content/site.ts`: verified business/contact details, approved logos, footer and social links.
 - `src/content/navigation.ts`: public navigation and canonical Holiday Brief action; RootLayout passes one snapshot to the client navbar.
-- `src/content/holiday-types.ts`: the six existing inspirational guides and their images/copy. No offers database or related-article query remains.
+- `src/content/holiday-types.ts`: shared Holiday Types listing labels only. Edit page names, introductions, headings, formatted content, photographs and closing invitations at `/admin/holiday-types`. The database is the sole source of page records; the original six are imported by the manual migration, with their URLs and deletion protected. FAQ material is removed.
 - `src/content/articles.ts` and `src/content/offers.ts`: public listing labels/empty-state copy. Articles are managed at `/admin/articles`; offers remain empty. Do not insert fictional or expired offers to fill the layout.
 - `src/content/enquiry.ts`: disabled Holiday Brief labels. All answer fields are disabled, stage navigation is a presentation only, and no submission or personal-data collection exists. It does not accept enquiries.
 - `src/content/policies.ts`: public policy copy and local approval guards. Privacy/Cookies retain unpublished empty shells; obsolete backend-processing drafts are removed. Booking Information retains its existing text and approval. Cleanup does not newly approve legal text.
@@ -17,9 +17,9 @@ Public images remain in `public/images/`; the portrait is reused, not duplicated
 
 ## Pages and checks
 
-Home, Why Jay, Explore Holidays and six guides, Travel Advice, Holiday Offers, the disabled Holiday Brief and approved policy routes remain. Travel Advice and homepage cards display published, unexpired articles automatically. Empty libraries and Holiday Offers retain empty states. The static sitemap contains only existing public/static routes and approved policies. Search indexing remains disabled in RootLayout.
+Home, Why Jay, Holiday Types (`/holidays`), Travel Advice, Holiday Offers, the disabled Holiday Brief and approved policy routes remain. Published Holiday Types automatically appear on the landing page and homepage, with one shared `/holidays/[slug]` template and generated metadata. The original six stay in order; new types follow them. Draft/unpublished types return 404 publicly. Travel Advice and homepage article cards display published, unexpired articles automatically. The sitemap reads published CMS routes and approved policies. Search indexing remains disabled in RootLayout.
 
-Use Node 22.13+ (Node 24 used here). `npm ci`, `npm test`, `npm run lint`, `npm run typecheck`, `npm run build`. `npm run dev` is for the owner to start; no second development server is required. Articles require the publishable Supabase configuration in `.env.example`; `.env.local` and hosted credentials were not changed.
+Use Node 22.13+. `npm ci`, `npm test`, `npm run lint`, `npm run typecheck`, `npm run build`. Both CMS sections reuse the publishable Supabase configuration in `.env.example`; no new environment variables are needed. `.env.local` and hosted credentials were not changed. Before releasing Holiday Types, manually run `supabase/migrations/20261026_holiday_types_cms.sql` in SQL Editor against the existing Articles project. Do not re-run the original Articles migration. The new seed is re-runnable and does not overwrite later edits.
 
 Source/configuration edits require an owner-authorised deployment. No automatic push, deployment, database reset or future backend design is part of this work. Until deployed, production remains the previous release.
 

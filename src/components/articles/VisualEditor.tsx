@@ -6,10 +6,12 @@ export function VisualEditor({
   value,
   onChange,
   disabled = false,
+  label = "Article body",
 }: {
   value: string;
   onChange: (html: string) => void;
   disabled?: boolean;
+  label?: string;
 }) {
   const callback = useRef(onChange);
   useEffect(() => {
@@ -36,7 +38,7 @@ export function VisualEditor({
       transformPastedHTML: (html) => html.replace(/<(\/?)h1\b/gi, "<$1h2"),
       attributes: {
         role: "textbox",
-        "aria-label": "Article body",
+        "aria-label": label,
         "aria-multiline": "true",
       },
     },

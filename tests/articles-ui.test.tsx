@@ -347,3 +347,99 @@ test("business sign-in uses the existing Auth endpoint and only navigates after 
     cleanup();
   }
 });
+
+test("Holiday Type editor reuses formatted paste and media, preserves failed edits, previews privately and confirms publication/unpublishing", async () => {
+  const {render, fireEvent, cleanup, waitFor} = await import("@testing-library/react");
+  const {HolidayTypeEditor} = await import("../src/components/holidays/HolidayTypeEditor");
+  const {prepareHoliday} = await import("../src/lib/holiday-types/save");
+  const original = globalThis.fetch, originalConfirm = window.confirm;
+  let fails = false, version = 0, submissions = 0;
+  const writes: Record<string, unknown>[] = [];
+  const id = "40000000-0000-4000-8000-000000000001";
+  globalThis.fetch = async (input, init) => {
+    if (String(input).includes("/media")) return Response.json({images: [{path: "30000000-0000-4000-8000-000000000001-coast.webp", url: "/images/home/hero.jpg", alt: "Coast"}]});
+    const body = prepareHoliday(JSON.parse(String(init?.body)));
+    if (String(input).endsWith("/preview")) return Response.json({holiday: body});
+    submissions++;
+    if (fails) return Response.json({error: "Temporary Holiday Type save failure"}, {status: 503});
+    writes.push(body);
+    return Response.json({holiday: {...body, id, version: ++version, is_original: false, display_order: 100, created_at: "2026-10-26T12:00:00Z", updated_at: "2026-10-26T12:00:00Z", published_at: version >= 2 ? "2026-10-26T12:00:00Z" : null}});
+  };
+  window.confirm = () => true;
+  const view = render(<HolidayTypeEditor publicBaseUrl="https://plannedbyjay.com"/>);
+  try {
+    await waitFor(() => assert.ok(view.getByRole("textbox", {name: "Page content"})));
+    fireEvent.change(view.getByLabelText("Name"), {target: {value: "All-Inclusive"}});
+    assert.equal((view.getByLabelText("URL slug") as HTMLInputElement).value, "all-inclusive");
+    assert.equal((view.getByLabelText("Main heading") as HTMLInputElement).value, "All-Inclusive");
+    fireEvent.change(view.getByLabelText("Short introduction"), {target: {value: "A natural introduction for the card."}});
+    const body = view.getByRole("textbox", {name: "Page content"});
+    fireEvent.focus(body);
+    fireEvent.paste(body, {clipboardData: {types: ["text/html", "text/plain"], getData: (type: string) => type === "text/html" ? "<h2>A useful heading</h2><p><strong>Bold</strong> and <em>italic</em> <u>underlined</u> advice.</p><ul><li>A useful point</li></ul>" : "A useful heading"}});
+    await waitFor(() => assert.ok(body.querySelector("h2")));
+    assert.ok(body.querySelector("ul")); assert.ok(body.querySelector("strong")); assert.ok(body.querySelector("u"));
+    fireEvent.click(view.getByRole("button", {name: "Choose or upload photograph"}));
+    await waitFor(() => assert.ok(view.getByRole("button", {name: "Choose Coast"})));
+    fireEvent.click(view.getByRole("button", {name: "Choose Coast"}));
+    fails = true;
+    fireEvent.click(view.getByRole("button", {name: "Save Draft"}));
+    assert.ok(view.getByText("Saving draft..."));
+    assert.ok(view.getByRole("button", {name: "Publish"}).matches(":disabled"));
+    fireEvent.click(view.getByRole("button", {name: "Save Draft"}));
+    await waitFor(() => assert.match(view.getByRole("alert").textContent || "", /save failure/));
+    assert.equal(submissions, 1); assert.match(body.innerHTML, /Bold/);
+    assert.equal((view.getByLabelText("Short introduction") as HTMLTextAreaElement).value, "A natural introduction for the card.");
+    fails = false;
+    fireEvent.click(view.getByRole("button", {name: "Save Draft"}));
+    await waitFor(() => assert.ok(view.getByText("Draft saved successfully.")));
+    assert.ok(String(writes[0].image).endsWith("coast.webp"));
+    fireEvent.click(view.getByRole("button", {name: "Preview"}));
+    await waitFor(() => assert.ok(view.getByRole("region", {name: "Private Holiday Type preview"})));
+    assert.equal(writes.length, 1);
+    assert.ok(view.getByRole("region", {name: "Private Holiday Type preview"}).querySelector("strong"));
+    fireEvent.click(view.getByRole("button", {name: "Close preview"}));
+    fireEvent.click(view.getByRole("button", {name: "Publish"}));
+    await waitFor(() => assert.ok(view.getByText("Holiday Type published successfully.")));
+    assert.equal(view.getByRole("link", {name: "View Holiday Type"}).getAttribute("href"), "https://plannedbyjay.com/holidays/all-inclusive");
+    assert.equal((view.getByLabelText("URL slug") as HTMLInputElement).readOnly, true);
+    fireEvent.change(view.getByLabelText("Name"), {target: {value: "Edited holiday name"}});
+    assert.equal((view.getByLabelText("URL slug") as HTMLInputElement).value, "all-inclusive");
+    fireEvent.click(view.getByRole("button", {name: "Save Changes"}));
+    await waitFor(() => assert.ok(view.getByText("Holiday Type changes saved successfully.")));
+    assert.equal(writes[2].status, "published");
+    window.confirm = () => false;
+    fireEvent.click(view.getByRole("button", {name: "Unpublish"}));
+    assert.equal(writes.length, 3);
+    window.confirm = () => true;
+    fireEvent.click(view.getByRole("button", {name: "Unpublish"}));
+    await waitFor(() => assert.ok(view.getByText("Holiday Type unpublished and returned to drafts.")));
+    assert.equal(writes[3].status, "draft");
+    assert.equal((view.getByLabelText("URL slug") as HTMLInputElement).readOnly, true);
+  } finally {cleanup(); globalThis.fetch = original; window.confirm = originalConfirm;}
+});
+
+test("Holiday Type list protects original deletion and confirms versioned deletion for new types", async () => {
+  const {render, fireEvent, cleanup, waitFor} = await import("@testing-library/react");
+  const {HolidayTypeActions} = await import("../src/components/holidays/HolidayTypeActions");
+  const {AppRouterContext} = await import("next/dist/shared/lib/app-router-context.shared-runtime");
+  const original = globalThis.fetch, confirm = window.confirm;
+  const holiday = {id: "40000000-0000-4000-8000-000000000001", name: "Family Holidays", status: "published", version: 2, is_original: true};
+  let refreshed = 0, calls = 0;
+  const router = {bfcacheId: "fixture", back() {}, forward() {}, push() {}, replace() {}, refresh() {refreshed++;}, prefetch: async () => {}};
+  globalThis.fetch = async (input, init) => {
+    calls++; assert.equal(String(input), "/api/holiday-types"); assert.equal(init?.method, "DELETE");
+    assert.deepEqual(JSON.parse(String(init?.body)), {id: holiday.id, version: 2});
+    return Response.json({ok: true});
+  };
+  try {
+    const view = render(<AppRouterContext.Provider value={router}><HolidayTypeActions holiday={holiday}/></AppRouterContext.Provider>);
+    assert.equal(view.queryByRole("button", {name: "Delete"}), null);
+    view.rerender(<AppRouterContext.Provider value={router}><HolidayTypeActions holiday={{...holiday, is_original: false}}/></AppRouterContext.Provider>);
+    window.confirm = () => false;
+    fireEvent.click(view.getByRole("button", {name: "Delete"})); assert.equal(calls, 0);
+    window.confirm = () => true;
+    fireEvent.click(view.getByRole("button", {name: "Delete"}));
+    await waitFor(() => assert.ok(view.getByText("Holiday Type deleted.")));
+    assert.equal(refreshed, 1); assert.equal(calls, 1);
+  } finally {cleanup(); globalThis.fetch = original; window.confirm = confirm;}
+});

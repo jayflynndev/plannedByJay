@@ -1,0 +1,74 @@
+[
+  {
+    "slug": "family",
+    "name": "Family Holidays",
+    "heading": "A holiday that works for everyone coming along.",
+    "introduction": "Beach days, busy days and time together, with the practical details thought through.",
+    "image": "/images/destinations/family.jpg",
+    "image_alt": "Sunlit beach and turquoise sea",
+    "image_position": "50% 55%",
+    "closing_heading": "Have a family trip in mind?",
+    "closing_body": "Tell me who is coming, when you can travel and what would make the holiday work for you.",
+    "bodyHash": "16a681cd8b11a1d6bae46dfb99e5c2366ee7f6d7612740c4853ecc76f90e694a"
+  },
+  {
+    "slug": "cruises",
+    "name": "Cruises",
+    "heading": "New to cruising? Start with the kind of days you would enjoy.",
+    "introduction": "Get to know the choices, from UK departures to river journeys and fly-cruises.",
+    "image": "/images/destinations/cruise.jpg",
+    "image_alt": "Gentle ocean waves beneath a pale sky",
+    "image_position": "50% 50%",
+    "closing_heading": "Ready to talk through a cruise?",
+    "closing_body": "Tell me what appeals, what you are unsure about and whether you have particular dates or departure preferences.",
+    "bodyHash": "1c422b4c105da11af670e12bad19d2d9824d9db415b0061f65f3adefeb9990fe"
+  },
+  {
+    "slug": "couples",
+    "name": "Couples Escapes",
+    "heading": "Time away together, in a way that suits you both.",
+    "introduction": "A quiet base, a busy city or a few days away — it need not mean a luxury retreat.",
+    "image": "/images/destinations/couples.jpg",
+    "image_alt": "Modern white villa with a sunlit swimming pool",
+    "image_position": "50% 50%",
+    "closing_heading": "What would you both enjoy?",
+    "closing_body": "Share your ideas, dates and comfortable budget when you are ready to take the next step.",
+    "bodyHash": "4a331374520374fa56bd0875dc161f604f5431b27d4bf61e7e08d372c45065cd"
+  },
+  {
+    "slug": "city-breaks",
+    "name": "City Breaks",
+    "heading": "Choose a base that makes the city easier to enjoy.",
+    "introduction": "Look beyond hotel stars to the neighbourhood, journey and time you have to explore.",
+    "image": "/images/destinations/city.jpg",
+    "image_alt": "Historic European city architecture beside a canal",
+    "image_position": "50% 50%",
+    "closing_heading": "Have a city or a few dates in mind?",
+    "closing_body": "Tell me what you would like to see and how you prefer to spend your days.",
+    "bodyHash": "aa8ecfea392fa122cc7f4ca2a0a5c6a9d9281b7940d5958147ffb08aacc484ee"
+  },
+  {
+    "slug": "something-different",
+    "name": "Something Different",
+    "heading": "Start with an idea, rather than a familiar holiday format.",
+    "introduction": "Rail, touring, nature or several stops: explore a different way to spend your time away.",
+    "image": "/images/destinations/different.jpg",
+    "image_alt": "Mountain landscape stretching into the distance",
+    "image_position": "50% 50%",
+    "closing_heading": "Have an idea you would like to explore?",
+    "closing_body": "Tell me what interests you and I can research the possibilities and the practical arrangements.",
+    "bodyHash": "bdcc7184c8bd35447d1910daa6be44f108c3dc12a4a11184f1ff3ae3f94676a9"
+  },
+  {
+    "slug": "accessible",
+    "name": "Accessible Travel",
+    "heading": "Start with what works for you, then check the details.",
+    "introduction": "Individual requirements, practical questions and specific supplier confirmation.",
+    "image": "/images/destinations/accessible.jpg",
+    "image_alt": "Open coastal landscape beside calm water; illustrative destination photograph",
+    "image_position": "50% 50%",
+    "closing_heading": "Would you like to discuss what you need?",
+    "closing_body": "Use the Holiday Brief to indicate that there are requirements to talk through privately. Detailed medical information is not needed there.",
+    "bodyHash": "085aa7963ec8f3a5e7a2e02bfa73b24aa43cf2987dcd445f5f1f0651b5f0eab5"
+  }
+]

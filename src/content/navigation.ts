@@ -4,7 +4,7 @@ import 'server-only';
 // RootLayout passes these values into Navbar; never import this config into a client component.
 export const navigation = [
   { label: 'Home', href: '/' },
-  { label: 'Explore Holidays', href: '/holidays' },
+  { label: 'Holiday Types', href: '/holidays' },
   { label: 'Holiday Offers', href: '/holiday-offers' },
   { label: 'Travel Advice', href: '/travel-advice' },
   { label: 'Why Book With Jay?', href: '/why-jay' },

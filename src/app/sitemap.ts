@@ -1,10 +1,13 @@
 import type { MetadataRoute } from "next";
 import { publicOrigin } from "@/lib/presentation";
-import { holidayTypes } from "@/content/holiday-types";
+import { publicHolidayTypes } from "@/lib/holiday-types/data";
 import { approvedPolicies } from "@/content/policies";
 import { publicArticlesClient } from "@/lib/articles/client";
 export const dynamic = "force-dynamic";
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  let holidays: MetadataRoute.Sitemap = [];
+  try { holidays = (await publicHolidayTypes()).map(h => ({url: publicOrigin() + "/holidays/" + h.slug, lastModified: h.updated_at})); }
+  catch { /* Never fall back to unpublished or hard-coded Holiday Type URLs. */ }
   const articles: MetadataRoute.Sitemap = [];
   const c = publicArticlesClient();
   if (c) {
@@ -26,6 +29,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }
   return [
     ...articles,
+    ...holidays,
     ...[
       "",
       "/why-jay",
@@ -33,7 +37,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       "/travel-advice",
       "/holiday-offers",
       "/plan-my-holiday",
-      ...holidayTypes.map((t) => "/holidays/" + t.slug),
       ...approvedPolicies().map((p) => p.href),
     ].map((path) => ({ url: publicOrigin() + path })),
   ];
