@@ -1,9 +1,9 @@
 import "server-only";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { ArticleError } from "@/lib/articles/client";
-import { supplierInput, supplierFields, type Supplier } from "./schema";
+import { supplierInput, type Supplier } from "./schema";
 
-export const supplierProjection = "id,name,website,legal_name,business_address,contact_email,contact_url,atol_holder,atol_number,booking_conditions_url,specialism,status,sources,archived,created_at,updated_at,version";
+export const supplierProjection = "id,name,website,legal_name,business_address,contact_email,contact_url,atol_holder,atol_number,booking_conditions_url,specialism,status,archived,created_at,updated_at,version";
 export function supplierRecord(raw: Record<string, unknown>): Supplier {
   return {...supplierInput.parse(Object.fromEntries(Object.keys(supplierInput.parse({name: "_"})).map(k => [k, raw[k]]))),
     id: String(raw.id), archived: raw.archived === true, created_at: String(raw.created_at), updated_at: String(raw.updated_at)};
@@ -32,9 +32,6 @@ export async function saveSupplier(client: SupabaseClient, input: unknown) {
   const p = supplierInput.safeParse(input);
   if (!p.success) throw new ArticleError(p.error.issues.map(i => i.message).join(" "));
   const {id, version, ...fields} = p.data;
-  // Editing an accepted value removes its previous attribution instead of implying a fresh check.
-  for (const key of Object.keys(supplierFields) as (keyof typeof supplierFields)[])
-    if (fields.sources[key]?.value !== fields[key]) delete fields.sources[key];
   const query = id ? client.from("suppliers").update(fields).eq("id", id).eq("version", version) : client.from("suppliers").insert(fields);
   const r = await query.select(supplierProjection).maybeSingle();
   supplierDatabaseError(r.error);

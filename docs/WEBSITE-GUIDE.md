@@ -1,6 +1,6 @@
 # Planned by Jay website guide
 
-The project contains the existing public website, Articles CMS, Holiday Types CMS and a private supplier directory. Shared website copy remains local; records are edited in Admin. See [ARTICLES.md](ARTICLES.md) for Articles/Auth, [HOLIDAY-TYPES.md](HOLIDAY-TYPES.md) for Holiday Types and [SUPPLIERS.md](SUPPLIERS.md) for the directory and its limited public-page lookup. Enquiry processing and offers/booking administration remain absent.
+The project contains the existing public website, Articles CMS, Holiday Types CMS and a private supplier directory. Shared website copy remains local; records are edited in Admin. See [ARTICLES.md](ARTICLES.md) for Articles/Auth, [HOLIDAY-TYPES.md](HOLIDAY-TYPES.md) for Holiday Types and [SUPPLIERS.md](SUPPLIERS.md) for the manual supplier directory. Enquiry processing and offers/booking administration remain absent.
 
 ## Edit the existing website
 
@@ -12,7 +12,7 @@ The project contains the existing public website, Articles CMS, Holiday Types CM
 - `src/content/articles.ts` and `src/content/offers.ts`: public listing labels/empty-state copy. Articles are managed at `/admin/articles`; offers remain empty. Do not insert fictional or expired offers to fill the layout.
 - `src/content/enquiry.ts`: disabled Holiday Brief labels. All answer fields are disabled, stage navigation is a presentation only, and no submission or personal-data collection exists. It does not accept enquiries.
 - `src/content/policies.ts`: public policy copy and local approval guards. Privacy/Cookies retain unpublished empty shells; obsolete backend-processing drafts are removed. Booking Information retains its existing text and approval. Cleanup does not newly approve legal text.
-- `/admin/suppliers`: search existing private supplier records instantly, add/edit details and archive/restore with confirmation. Only the name is required. Draft permits incomplete records; Approved means Jay has reviewed the information. Lookup suggestions need acceptance and do not save or approve records. No public supplier pages or offer system is introduced.
+- `/admin/suppliers`: search existing private supplier records instantly, add/edit details and archive/restore with confirmation. Only the name is required. Draft permits incomplete records; Approved means Jay has reviewed the information. Enter or paste the details in one form, then Save Supplier or Save Changes. ATOL details are optional; email and contact-page URL are alternatives. No public supplier pages or offer system is introduced.
 
 Public images remain in `public/images/`; the portrait is reused, not duplicated. Brand/layout styles remain in `src/app/globals.css`, public article/offer styles in `src/app/content.css`, and the form layout in `src/app/enquiry.css`. Keep the current responsive design and British English. The public article and offer detail presentation components remain reusable but old individual URLs return 404; no archived records are served.
 
@@ -24,7 +24,7 @@ Use Node 22.13+. `npm ci`, `npm test`, `npm run lint`, `npm run typecheck`, `npm
 
 Source/configuration edits require an owner-authorised deployment. No automatic push, deployment, database reset or future backend design is part of this work. Until deployed, production remains the previous release.
 
-Before releasing Suppliers, manually run `supabase/migrations/20261026_suppliers_directory.sql` in the existing Supabase project's SQL Editor. No extra credentials, services or environment variables are needed. The directory starts empty; it does not import preferred suppliers. Find Supplier Details supports Jet2holidays by name, or structured details from a supplied official HTTPS website for other suppliers. It is a partial lookup, not general internet search or a current CAA/register check. See SUPPLIERS.md for exact source handling, limits and the local certificate-verification limitation.
+For a fresh supplier-directory installation, manually run `supabase/migrations/20261026_suppliers_directory.sql` in Supabase SQL Editor. Existing installations need no migration for the manual-form cleanup. No extra credentials, services or environment variables are needed. Existing supplier records and permissions are preserved. See SUPPLIERS.md for adding, editing and archiving records.
 
 
 Article editor polish: choose Paragraph, Heading or Subheading from the text-style dropdown; the compact formatting buttons have tooltips and accessible labels. Existing paste and keyboard shortcuts are retained. Beneath the title, **Short preview / introduction (optional)** accepts up to 200 characters (aim for 150-200). It supplies public article cards and SEO/social descriptions; leaving it blank generates a body-text preview without headings, preferring complete sentences. Existing stored previews remain available. No SQL migration is required: the existing excerpt column is reused.

@@ -24,7 +24,7 @@ export function SupplierDirectory({initial}: {initial: Supplier[]}) {
   return <>
     <div className="article-admin-heading"><h1>Suppliers</h1><a className="button" href="/admin/suppliers/new">Add Supplier</a></div>
     <label>Search suppliers<input type="search" value={query} onChange={e => setQuery(e.target.value)} placeholder="Search saved suppliers"/></label>
-    <p>This filters saved records instantly. Find Supplier Details is available inside the Add/Edit form.</p>
+    <p>Search saved supplier names, websites and specialisms.</p>
     <label className="supplier-archive-toggle"><input type="checkbox" checked={showArchived} onChange={e => setShowArchived(e.target.checked)}/>Include archived suppliers</label>
     <div aria-live="polite">{message && <p role={failed ? "alert" : "status"} className={failed ? "article-admin-error" : "article-admin-notice"}>{message}</p>}</div>
     {!suppliers.length ? <p>No suppliers added yet.</p> : !matches.length ? <p>No suppliers match this search. Try another name or include archived suppliers.</p> : <ul className="article-admin-list">{matches.map(s => <li key={s.id}>
