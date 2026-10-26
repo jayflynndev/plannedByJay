@@ -17,7 +17,7 @@ export async function POST(request: Request) {
         article: {
           ...p.data,
           body: cleanHtml(p.data.body),
-          excerpt: excerpt(p.data.body),
+          excerpt: p.data.excerpt || excerpt(p.data.body),
         },
       },
       { headers: { "Cache-Control": "private, no-store" } },

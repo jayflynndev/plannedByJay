@@ -37,8 +37,11 @@ test("deterministic short slugs, strict inputs and safe formatted content", () =
   assert.doesNotMatch(clean, /script|onerror|onclick|javascript:|<img/);
   assert.match(clean, /noopener/);
   assert.equal(bodyText("<p><br></p>"), "");
+  assert.equal(excerpt("<h2>Repeated title</h2><p>A complete introduction.</p>"), "A complete introduction.");
+  assert.equal(excerpt("<p>" + "A useful introduction with enough detail to explain this topic clearly. " + "More words ".repeat(40) + "</p>"), "A useful introduction with enough detail to explain this topic clearly.");
+  assert.equal(articleInput.parse({excerpt: "Custom introduction."}).excerpt, "Custom introduction.");
   assert.ok(
-    excerpt("<p>" + "Useful travel advice. ".repeat(30) + "</p>").length <= 155,
+    excerpt("<p>" + "Useful travel advice. ".repeat(30) + "</p>").length <= 200,
   );
 });
 

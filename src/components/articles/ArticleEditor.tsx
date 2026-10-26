@@ -38,6 +38,8 @@ export function ArticleEditor({
     [categoryError, setCategoryError] = useState(""),
     [tag, setTag] = useState(""),
     [busy, setBusy] = useState(false),
+    [publicLink, setPublicLink] = useState(""),
+    [copyMessage, setCopyMessage] = useState(""),
     [message, setMessage] = useState(""),
     [failed, setFailed] = useState(false),
     [photos, setPhotos] = useState(false),
@@ -112,6 +114,8 @@ export function ArticleEditor({
     saving.current = true;
     setBusy(true);
     setMessage("");
+    setPublicLink("");
+    setCopyMessage("");
     try {
       const payload = {
         ...Object.fromEntries(
@@ -160,12 +164,16 @@ export function ArticleEditor({
           month: "2-digit",
           day: "2-digit",
         }).format(new Date());
+        if (status === "published" && (!next.expires_on || next.expires_on >= today))
+          setPublicLink(new URL("/travel-advice/" + next.slug, window.location.origin).href);
         setMessage(
           status === "published"
             ? next.expires_on && next.expires_on < today
               ? "Saved as published, but the expiry date has passed so this article is not public."
-              : "Article published."
-            : "Draft saved privately.",
+              : "Article published successfully."
+            : saved?.status === "published"
+              ? "Article unpublished and returned to drafts."
+              : "Draft saved successfully.",
         );
       }
       setFailed(false);
@@ -198,14 +206,6 @@ export function ArticleEditor({
             })
           : " - Not saved yet"}
       </p>
-      {message && (
-        <p
-          role={failed ? "alert" : "status"}
-          className={failed ? "article-admin-error" : "article-admin-notice"}
-        >
-          {message}
-        </p>
-      )}
       <fieldset disabled={busy} className="article-admin-form">
         <label>
           Article title
@@ -215,6 +215,12 @@ export function ArticleEditor({
             onChange={(e) => change("title", e.target.value)}
           />
         </label>
+        <label>
+          Short preview / introduction (optional)
+          <textarea rows={3} maxLength={200} value={value.excerpt}
+            aria-describedby="article-excerpt-help" onChange={(e) => change("excerpt", e.target.value)} />
+        </label>
+        <small id="article-excerpt-help">{value.excerpt.length}/200 characters. Aim for 150-200 characters. Leave blank to use the article text automatically.</small>
         <details>
           <summary>Article URL (optional)</summary>
           <label>
@@ -401,7 +407,7 @@ export function ArticleEditor({
             className="button button-secondary"
             onClick={() => void save("draft")}
           >
-            Save Draft
+            {value.status === "published" ? "Unpublish" : "Save Draft"}
           </button>
           <button
             type="button"
@@ -417,6 +423,19 @@ export function ArticleEditor({
           >
             Publish
           </button>
+        </div>
+        <div aria-live={failed ? "assertive" : "polite"} aria-atomic="true" className="article-save-feedback">
+          {(busy || message) && <p role={failed ? "alert" : "status"} className={failed ? "article-admin-error" : "article-admin-notice"}>
+            {busy ? "Working... Please wait." : message}
+          </p>}
+          {publicLink && !busy && <div className="article-admin-actions">
+            <a href={publicLink}>View Article</a>
+            <button type="button" onClick={async () => {
+              try { await navigator.clipboard.writeText(publicLink); setCopyMessage("Link copied."); }
+              catch { setCopyMessage("Copy this link: " + publicLink); }
+            }}>Copy Link</button>
+            {copyMessage && <span>{copyMessage}</span>}
+          </div>}
         </div>
         <p>
           Save Draft keeps the article private (including returning a published

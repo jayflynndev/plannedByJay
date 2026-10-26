@@ -22,3 +22,10 @@ Home, Why Jay, Explore Holidays and six guides, Travel Advice, Holiday Offers, t
 Use Node 22.13+ (Node 24 used here). `npm ci`, `npm test`, `npm run lint`, `npm run typecheck`, `npm run build`. `npm run dev` is for the owner to start; no second development server is required. Articles require the publishable Supabase configuration in `.env.example`; `.env.local` and hosted credentials were not changed.
 
 Source/configuration edits require an owner-authorised deployment. No automatic push, deployment, database reset or future backend design is part of this work. Until deployed, production remains the previous release.
+
+
+Article editor polish: choose Paragraph, Heading or Subheading from the text-style dropdown; the compact formatting buttons have tooltips and accessible labels. Existing paste and keyboard shortcuts are retained. Beneath the title, **Short preview / introduction (optional)** accepts up to 200 characters (aim for 150-200). It supplies public article cards and SEO/social descriptions; leaving it blank generates a body-text preview without headings, preferring complete sentences. Existing stored previews remain available. No SQL migration is required: the existing excerpt column is reused.
+
+Save Draft, Publish and Unpublish temporarily disable editing and show progress beside the controls. Results remain there until the next edit/action. Successful publication provides View Article and Copy Link using the saved slug; expired articles instead explain why they are not public. Failed saves keep the current editor content. Unpublish saves the current article as a private draft. No deployment or hosted database changes are performed by this update.
+
+Polish validation: 21 automated tests passed (the public-route fixture used a temporary WebSocket shim for the installed Node 20 runtime). ESLint, TypeScript and production build passed. The project requires Node 22.13+; obtaining Node 22 locally was blocked by registry certificate verification. No browser connection was available for visual checks, and no hosted writes were tested.

@@ -38,8 +38,14 @@ export function bodyText(html: string) {
     .trim();
 }
 export function excerpt(html: string) {
-  const text = bodyText(html.replace(/<\/(?:p|h[23]|li|blockquote)>/g, "$& "));
-  if (text.length <= 155) return text;
-  const part = text.slice(0, 152);
-  return part.slice(0, Math.max(part.lastIndexOf(" "), 110)) + "...";
+  const text = bodyText(html
+    .replace(/<h[1-6]\b[^>]*>[\s\S]*?<\/h[1-6]>/gi, " ")
+    .replace(/<(?:br\b[^>]*|\/(?:p|li|blockquote))>/gi, " "));
+  if (text.length <= 200) return text;
+  const part = text.slice(0, 197);
+  const sentences = [...part.matchAll(/[.!?](?=\s|$)/g)];
+  const end = sentences.at(-1)?.index;
+  if (end !== undefined && end >= 60) return part.slice(0, end + 1);
+  const space = part.lastIndexOf(" ");
+  return (space > 0 ? part.slice(0, space) : "") + "...";
 }

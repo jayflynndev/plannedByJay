@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { JSDOM } from "jsdom";
-import { cleanHtml, excerpt } from "../src/lib/articles/html";
+import { cleanHtml } from "../src/lib/articles/html";
 const dom = new JSDOM("<!doctype html><html><body></body></html>", {
   url: "http://localhost:3000",
 });
@@ -147,7 +147,7 @@ test("visual editor pastes Word-style content; inline creation, tags, photos, fa
         article: {
           ...body,
           body: cleanHtml(body.body),
-          excerpt: excerpt(body.body),
+          excerpt: body.excerpt || "",
         },
       });
     if (saveFails)
@@ -164,8 +164,8 @@ test("visual editor pastes Word-style content; inline creation, tags, photos, fa
         created_at: "2026-10-25T12:00:00Z",
         updated_at: "2026-10-25T13:00:00Z",
         published_at:
-          body.status === "published" ? "2026-10-25T13:00:00Z" : null,
-        excerpt: excerpt(body.body),
+          version >= 2 ? "2026-10-25T13:00:00Z" : null,
+        excerpt: body.excerpt || "",
       },
     });
   };
@@ -183,6 +183,7 @@ test("visual editor pastes Word-style content; inline creation, tags, photos, fa
       (view.getByLabelText("URL slug") as HTMLInputElement).value,
       "travel-agent-costs",
     );
+    fireEvent.change(view.getByLabelText("Short preview / introduction (optional)"), {target: {value: "A purposeful custom introduction."}});
     const body = view.getByRole("textbox", { name: "Article body" });
     fireEvent.focus(body);
     fireEvent.paste(body, {
@@ -198,6 +199,12 @@ test("visual editor pastes Word-style content; inline creation, tags, photos, fa
     assert.ok(body.querySelector("strong"));
     assert.ok(body.querySelector("ul"));
     assert.ok(body.querySelector("u"));
+    fireEvent.change(view.getByRole("combobox", {name: "Text style"}), {target: {value: "subheading"}});
+    await waitFor(() => assert.ok(body.querySelector("h3")));
+    fireEvent.change(view.getByRole("combobox", {name: "Text style"}), {target: {value: "paragraph"}});
+    fireEvent.click(view.getByRole("button", {name: "Bold"}));
+    await waitFor(() => assert.equal(view.getByRole("button", {name: "Bold"}).getAttribute("aria-pressed"), "true"));
+    fireEvent.click(view.getByRole("button", {name: "Bold"}));
     fireEvent.change(view.getByLabelText("Category"), {
       target: { value: "__new" },
     });
@@ -248,8 +255,9 @@ test("visual editor pastes Word-style content; inline creation, tags, photos, fa
     assert.match(body.innerHTML, /Bold advice/);
     saveFails = false;
     fireEvent.click(view.getByRole("button", { name: "Save Draft" }));
-    await waitFor(() => assert.ok(view.getByText("Draft saved privately.")));
+    await waitFor(() => assert.ok(view.getByText("Draft saved successfully.")));
     assert.equal(saved[0].status, "draft");
+    assert.equal(saved[0].excerpt, "A purposeful custom introduction.");
     assert.deepEqual(saved[0].tags, ["Cruise advice", "Tenerife"]);
     assert.equal(saved[0].category_id, cid);
     assert.ok(saved[0].featured_image);
@@ -265,8 +273,12 @@ test("visual editor pastes Word-style content; inline creation, tags, photos, fa
     );
     fireEvent.click(view.getByRole("button", { name: "Close preview" }));
     fireEvent.click(view.getByRole("button", { name: "Publish" }));
-    await waitFor(() => assert.ok(view.getByText("Article published.")));
+    await waitFor(() => assert.ok(view.getByText("Article published successfully.")));
     assert.equal(saved[1].status, "published");
+    assert.equal(view.getByRole("link", {name: "View Article"}).getAttribute("href"), "http://localhost:3000/travel-advice/travel-agent-costs");
+    fireEvent.click(view.getByRole("button", {name: "Unpublish"}));
+    await waitFor(() => assert.ok(view.getByText("Article unpublished and returned to drafts.")));
+
     assert.equal("created_at" in saved[1], false);
     assert.equal(
       (view.getByLabelText("URL slug") as HTMLInputElement).readOnly,

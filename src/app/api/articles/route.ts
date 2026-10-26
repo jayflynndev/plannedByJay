@@ -7,7 +7,7 @@ import {
   databaseError,
 } from "@/lib/articles/client";
 import { articleInput, suggestSlug } from "@/lib/articles/schema";
-import { cleanHtml, bodyText, excerpt } from "@/lib/articles/html";
+import { cleanHtml, bodyText } from "@/lib/articles/html";
 export async function POST(request: Request) {
   try {
     const client = await writeClient(request);
@@ -23,7 +23,7 @@ export async function POST(request: Request) {
       throw new ArticleError("Add a title and article text before publishing.");
     const { tags, ...article } = value;
     const result = await client.rpc("save_article", {
-      p_article: { ...article, excerpt: excerpt(value.body) },
+      p_article: article,
       p_tags: tags,
     });
     databaseError(result.error);

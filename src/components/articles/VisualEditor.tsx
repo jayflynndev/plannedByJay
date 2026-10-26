@@ -83,23 +83,22 @@ export function VisualEditor({
       onMouseDown={(e) => e.preventDefault()}
       onClick={action}
     >
-      {label}
+      <span aria-hidden="true">{({ Bold: <b>B</b>, Italic: <i>I</i>, Underline: <u>U</u>,
+        "Bulleted list": "\u2022 \u2261", "Numbered list": "1. \u2261", Link: <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2"><path d="m10 13 4-4m-6 6-1 1a4 4 0 0 1-6-6l4-4a4 4 0 0 1 6 0m2 3 1-1a4 4 0 0 1 6 6l-4 4a4 4 0 0 1-6 0" /></svg>, Quote: "\u275e", Undo: "\u21b6", Redo: "\u21b7" } as Record<string, React.ReactNode>)[label]}</span>
     </button>
   );
   return (
     <div className="article-word-editor">
       <div role="toolbar" aria-label="Article formatting">
-        {button("Paragraph", () => editor.chain().focus().setParagraph().run())}
-        {button(
-          "Heading",
-          () => editor.chain().focus().toggleHeading({ level: 2 }).run(),
-          state?.h2,
-        )}
-        {button(
-          "Subheading",
-          () => editor.chain().focus().toggleHeading({ level: 3 }).run(),
-          state?.h3,
-        )}
+        <select aria-label="Text style" title="Text style" disabled={disabled}
+          value={state?.h2 ? "heading" : state?.h3 ? "subheading" : "paragraph"}
+          onChange={(e) => {
+            if (e.target.value === "paragraph") editor.chain().focus().setParagraph().run();
+            else editor.chain().focus().setHeading({ level: e.target.value === "heading" ? 2 : 3 }).run();
+          }}>
+          <option value="paragraph">Paragraph</option><option value="heading">Heading</option><option value="subheading">Subheading</option>
+        </select>
+        <span className="article-toolbar-separator" aria-hidden="true" />
         {button(
           "Bold",
           () => editor.chain().focus().toggleBold().run(),
@@ -115,6 +114,7 @@ export function VisualEditor({
           () => editor.chain().focus().toggleUnderline().run(),
           state?.underline,
         )}
+        <span className="article-toolbar-separator" aria-hidden="true" />
         {button(
           "Bulleted list",
           () => editor.chain().focus().toggleBulletList().run(),
@@ -157,6 +157,7 @@ export function VisualEditor({
           () => editor.chain().focus().toggleBlockquote().run(),
           state?.quote,
         )}
+        <span className="article-toolbar-separator" aria-hidden="true" />
         {button("Undo", () => editor.chain().focus().undo().run())}
         {button("Redo", () => editor.chain().focus().redo().run())}
       </div>

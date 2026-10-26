@@ -13,6 +13,7 @@ export const articleInput = z
       .max(60)
       .regex(/^(?:[a-z0-9]+(?:-[a-z0-9]+)*)?$/)
       .default(""),
+    excerpt: z.string().trim().max(200).default(""),
     body: z.string().max(150000).default(""),
     author: z.string().trim().max(120).default("Jay"),
     category_id: z.uuid().nullable().default(null),

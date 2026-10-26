@@ -1,5 +1,6 @@
 "use client";
-import { useState } from "react";
+import { useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 export function ArticleActions({
   article,
   publicUrl,
@@ -9,17 +10,23 @@ export function ArticleActions({
   publicUrl: string;
   publicAvailable?: boolean;
 }) {
+  const router = useRouter();
+  const submitting = useRef(false);
+  const [unpublished, setUnpublished] = useState(false);
   const [message, setMessage] = useState(""),
     [busy, setBusy] = useState(false);
   return (
     <div className="article-admin-actions">
       <a href={"/admin/articles/" + article.id + "/edit"}>Edit</a>
-      {article.status === "published" && (
+      {article.status === "published" && !unpublished && (
         <button
           type="button"
           disabled={busy}
           onClick={async () => {
+            if (submitting.current) return;
+            submitting.current = true;
             setBusy(true);
+            setMessage("Unpublishing...");
             try {
               const r = await fetch("/api/articles", {
                 method: "PATCH",
@@ -32,17 +39,21 @@ export function ArticleActions({
               });
               const d = await r.json();
               if (!r.ok) throw new Error(d.error);
-              window.location.reload();
+              setUnpublished(true);
+              setMessage("Article unpublished and returned to drafts.");
+              router.refresh();
             } catch (e) {
               setMessage(e instanceof Error ? e.message : "Unpublish failed.");
+            } finally {
+              submitting.current = false;
               setBusy(false);
             }
           }}
         >
-          Return to Draft
+          {busy ? "Unpublishing..." : "Return to Draft"}
         </button>
       )}
-      {article.status === "published" && publicAvailable && (
+      {article.status === "published" && !unpublished && publicAvailable && (
         <button
           type="button"
           onClick={async () => {

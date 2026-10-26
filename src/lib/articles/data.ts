@@ -5,7 +5,7 @@ import { cleanHtml, excerpt } from "./html";
 import { articleConfig, publicArticlesClient, databaseError } from "./client";
 export const articleProjection =
   "id,title,slug,body,author,category_id,status,excerpt,expires_on,featured_image,featured_alt,created_at,updated_at,published_at,version";
-export function articleRecord(raw: Record<string, unknown>): Article {
+export function articleRecord(raw: Record<string, unknown>, publicPreview = false): Article {
   const fields = Object.fromEntries(
     Object.keys(articleInput.parse({})).map((k) => [k, raw[k]]),
   );
@@ -18,7 +18,7 @@ export function articleRecord(raw: Record<string, unknown>): Article {
     }),
     id: String(raw.id),
     body: cleanHtml(String(raw.body || "")),
-    excerpt: excerpt(String(raw.body || "")),
+    excerpt: String(raw.excerpt || "").trim() || (publicPreview ? excerpt(String(raw.body || "")) : ""),
     created_at: String(raw.created_at),
     updated_at: String(raw.updated_at),
     published_at: raw.published_at ? String(raw.published_at) : null,
@@ -70,7 +70,7 @@ export async function publicArticle(slug: string) {
     .eq("status", "published")
     .maybeSingle();
   databaseError(r.error);
-  return r.data ? articleRecord(r.data) : null;
+  return r.data ? articleRecord(r.data, true) : null;
 }
 export async function publicArticleList({
   q = "",
@@ -98,7 +98,7 @@ export async function publicArticleList({
     .abortSignal(AbortSignal.timeout(8000));
   databaseError(r.error);
   return {
-    articles: (r.data || []).map(articleRecord),
+    articles: (r.data || []).map((raw) => articleRecord(raw, true)),
     categories: await categories(c),
     total: r.count || 0,
   };
