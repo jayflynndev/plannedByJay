@@ -10,7 +10,7 @@ import { offerMailConfig,sendOfferNotification,type EnquiryNotification } from "
 import { isOfferReference } from "./schema";
 // Retained Resend credentials are reused, but presence of old keys alone is not a
 // successful delivery test. Keep collection closed until delivery is actually verified.
-const deliveryVerified=false;
+const deliveryVerified=true;
 function storageConfig() {
   const url=process.env.SUPABASE_URL,key=process.env.SUPABASE_SECRET_KEY;
   if(!url||!key)return null;

@@ -8,6 +8,23 @@ import { offerEnquiryAvailability,completeOfferEnquiry,notificationNeedsReview,n
 import { duplicateInput,offerRecord } from "../src/lib/offers/data";
 import { sendOfferNotification } from "../src/lib/offers/notifications";
 import { cardBenefit,cardReason,inclusionItems } from "../src/lib/offers/presentation";
+import { policies } from "../src/content/policies";
+
+test('verified enquiry delivery still requires storage, mail configuration and published privacy',()=>{
+  const keys=['SUPABASE_URL','SUPABASE_SECRET_KEY','RESEND_API_KEY','ENQUIRY_EMAIL_FROM','ENQUIRY_EMAIL_TO'],old=keys.map(k=>process.env[k]),privacy=policies.privacy;
+  Object.assign(process.env,{SUPABASE_URL:'https://fixture.supabase.co',SUPABASE_SECRET_KEY:'sb_secret_fixture',RESEND_API_KEY:'fixture-key',ENQUIRY_EMAIL_FROM:'Fixture <sender@example.org>',ENQUIRY_EMAIL_TO:'jay@plannedbyjay.com'});
+  try{
+    assert.equal(offerEnquiryAvailability().enabled,true);
+    for(const key of keys){
+      const configured=process.env[key];delete process.env[key];
+      assert.equal(offerEnquiryAvailability().enabled,false,`${key} is required`);
+      process.env[key]=configured;
+    }
+    process.env.ENQUIRY_EMAIL_TO='wrong@example.org';assert.equal(offerEnquiryAvailability().enabled,false);
+    process.env.ENQUIRY_EMAIL_TO='jay@plannedbyjay.com';
+    policies.privacy={...privacy,approved:false};assert.equal(offerEnquiryAvailability().enabled,false);
+  }finally{policies.privacy=privacy;keys.forEach((k,i)=>{if(old[i]===undefined)delete process.env[k];else process.env[k]=old[i];});}
+});
 test("offers migrations support private drafts, atomic multi-type saves, stable URLs, eligibility and private enquiry snapshots",async()=>{
   const {db,admin,other,run,sample,save,supplierId,dates}=await offerFixture();
   const publicList=async(params:unknown[]=[]) => (await db.query<{result:{offers:Record<string,unknown>[];total:number}}>("select public.public_holiday_offers() result",params)).rows[0].result;
@@ -262,6 +279,6 @@ test('enquiry completion returns the saved offer reference and resolves historic
     const input={request_id:requestId,offer_id:offerId,name:'Fixture customer',email:'fixture@example.org'};
     const complete=()=>completeOfferEnquiry(new Request('https://plannedbyjay.com/api/offer-enquiries'),input);
     assert.deepEqual(await complete(),{accepted:true,reference:'000042',notification:'accepted'});legacy=true;assert.deepEqual(await complete(),{accepted:true,reference:'000042',notification:'accepted'});
-    assert.equal(messages,2);assert.equal(updates,2);assert.equal(snapshots[1].reference,'PBJ-HISTORICAL');assert.equal(offerEnquiryAvailability().enabled,false);
+    assert.equal(messages,2);assert.equal(updates,2);assert.equal(snapshots[1].reference,'PBJ-HISTORICAL');assert.equal(offerEnquiryAvailability().enabled,true);
   }finally{globalThis.fetch=original;keys.forEach((k,i)=>{if(old[i]===undefined)delete process.env[k];else process.env[k]=old[i];});}
 });
