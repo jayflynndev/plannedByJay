@@ -160,7 +160,7 @@ test('policy layouts retain semantic headings, real links and reviewed dates wit
       assert.equal(view.getAllByRole('heading',{level:1}).length,1);
       assert.equal(view.queryAllByRole('heading',{level:2}).length,policy.sections.length);
       assert.equal(view.container.querySelector('time')?.getAttribute('dateTime')||null,policy.updatedAt);
-      if(policy.updatedAt)assert.ok(view.getByText('22 October 2026'));
+      if(policy.updatedAt)assert.ok(view.getByText(new Date(`${policy.updatedAt}T00:00:00Z`).toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric',timeZone:'UTC'})));
       assert.ok(view.queryAllByRole('link').every(link=>/^(https:\/\/|mailto:)/.test(link.getAttribute('href')||'')));
       for(const issue of policy.reviewRequired)assert.equal(view.queryByText(issue),null);
       assert.doesNotMatch(view.container.textContent || '', /before (?:this (?:notice|policy) can be|publication)|must (?:be )?(?:confirmed|checked).*publish|proposed basis|criteria to finalise|TODO/i);
@@ -207,7 +207,7 @@ test('policy routes return not-found for unapproved or unresolved drafts and ren
   }finally{Object.assign(policies,originals);cleanup();}
 });
 
-test('the privacy draft stays private and one approved policy links both disabled enquiry journeys',async()=>{
+test('the approved privacy policy links both disabled enquiry journeys while incomplete approvals stay private',async()=>{
   const marker=require.resolve('server-only'),cached=require.cache[marker];
   require.cache[marker]={exports:{},id:marker,filename:marker,loaded:true} as NodeModule;
   const original=policies.privacy;
@@ -220,7 +220,8 @@ test('the privacy draft stays private and one approved policy links both disable
     const {OfferEnquiryForm}=await import('../src/components/offers/OfferEnquiryForm');
     const {EnquiryForm}=await import('../src/components/enquiry/EnquiryForm');
     const {offerEnquiryAvailability}=await import('../src/lib/offers/enquiries');
-    assert.equal(original.approved,false);assert.equal(original.updatedAt,null);
+    assert.equal(original.approved,true);assert.ok(original.updatedAt);assert.deepEqual(original.reviewRequired,[]);
+    policies.privacy={...original,approved:false};
     assert.equal(approvedPolicyHref('privacy'),null);
     assert.throws(()=>PolicyPage({policy:'privacy'}),{digest:'NEXT_HTTP_ERROR_FALLBACK;404'});
     const footer=render(<Footer/>);assert.equal(footer.container.querySelector('a[href="/privacy"]'),null);cleanup();
@@ -229,8 +230,8 @@ test('the privacy draft stays private and one approved policy links both disable
     assert.doesNotMatch(preview.container.textContent||'',/pbj-enquiry-session|Turnstile|VHUB|erase_holiday_enquiry/);
     for(const issue of original.reviewRequired)assert.equal(preview.queryByText(issue),null);
     cleanup();
-    // Approval is simulated only in this test; it must not open either submission gate.
-    policies.privacy={...original,approved:true,reviewRequired:[],updatedAt:'2026-10-27'};
+    // Restore the real approved policy; publication must not open either submission gate.
+    policies.privacy=original;
     const href=approvedPolicyHref('privacy');assert.equal(href,'/privacy');
     const page=render(PolicyPage({policy:'privacy'}));assert.ok(page.getByRole('heading',{name:'Privacy Policy',level:1}));cleanup();
     const publishedFooter=render(<Footer/>);assert.ok(publishedFooter.container.querySelector('a[href="/privacy"]'));cleanup();

@@ -5,9 +5,10 @@ import { navigation } from '../src/content/navigation';
 import { site } from '../src/content/site';
 test('policy links require explicit approval, resolved review, date and actual text; trading details do not assert independent protection',()=>{
   const booking=[{href:'/booking-information',label:'Booking Information'}];
-  assert.deepEqual(approvedPolicies(),booking);const original=policies.privacy;
-  try{policies.privacy={...original,approved:true};assert.deepEqual(approvedPolicies(),booking);
+  assert.deepEqual(approvedPolicies(),[{href:'/privacy',label:'Privacy Policy'},...booking]);const original=policies.privacy;
+  try{policies.privacy={...original,approved:false};assert.deepEqual(approvedPolicies(),booking);
     assert.equal(approvedPolicyHref('privacy'),null);
+    policies.privacy={...original,reviewRequired:['Synthetic unresolved review']};assert.deepEqual(approvedPolicies(),booking);
     policies.privacy={...original,approved:true,reviewRequired:[],sections:[]};assert.deepEqual(approvedPolicies(),booking);
     policies.privacy={...original,approved:true,reviewRequired:[],updatedAt:null};assert.deepEqual(approvedPolicies(),booking);
     policies.privacy={...original,approved:true,reviewRequired:[],updatedAt:'2026-10-25',sections:[{heading:'Test policy',paragraphs:['Approved test text']} ]};assert.deepEqual(approvedPolicies(),[{href:'/privacy',label:'Privacy Policy'},...booking]);

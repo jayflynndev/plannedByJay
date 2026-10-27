@@ -27,10 +27,8 @@ export const policies: Record<PolicyKey, Policy> = {
   privacy: {
     title: "Privacy Policy",
     approved: true,
-    updatedAt: null,
-    reviewRequired: [
-      "Jay: review and approve the complete wording before publication; see docs/PRIVACY-REVIEW.md for the published provider terms, the recorded Vercel Hobby commercial-use issue and the existing delivery-test instructions.",
-    ],
+    updatedAt: "2026-10-27",
+    reviewRequired: [],
     sections: [
       {
         heading: "Who we are and how to contact us",
