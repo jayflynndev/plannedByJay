@@ -38,7 +38,11 @@ export function briefErrors(value:unknown,stage?:number){
   return errors;
 }
 export const bespokeInput=z.object({request_id:z.uuid(),brief:briefSchema,website:text(200).default('')}).strict();
-export const isBespokeReference=(value:unknown):value is string=>typeof value==='string'&&/^PBJ-[A-F0-9]{16}$/.test(value);
+export const BESPOKE_REFERENCE_FORMAT='six-digits-v1';
+export const isBespokeReference=(value:unknown):value is string=>typeof value==='string'&&/^[0-9]{6}$/.test(value);
+export const isLegacyBespokeReference=(value:unknown):value is string=>typeof value==='string'&&/^PBJ-[A-F0-9]{16}$/.test(value);
+// Only previously issued enquiries retain the legacy customer-facing alias.
+export const isCustomerEnquiryReference=(value:unknown):value is string=>isBespokeReference(value)||isLegacyBespokeReference(value);
 // Historical snapshots do not depend on today's option values or question labels.
 export const briefSnapshotSchema=z.object({schema_version:z.literal(1),answers:z.object({name:z.string(),email:z.email(),phone:z.string()}).passthrough(),summary:z.array(z.object({label:z.string().max(300),value:z.string().max(3000)})).min(1).max(30)});
 export function briefSnapshot(answers:z.output<typeof briefSchema>){

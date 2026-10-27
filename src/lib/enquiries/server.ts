@@ -5,27 +5,39 @@ import type {SupabaseClient} from '@supabase/supabase-js';
 import {ArticleError} from '@/lib/articles/client';
 import {offerEnquiryAvailability,offerEnquiryServiceClient,notificationNeedsReview} from '@/lib/offers/enquiries';
 import {sendEnquiryNotification} from '@/lib/offers/notifications';
-import {bespokeInput,briefSnapshot,briefSnapshotSchema,isBespokeReference} from './schema';
+import {bespokeInput,briefSnapshot,briefSnapshotSchema,isBespokeReference,isCustomerEnquiryReference,isLegacyBespokeReference} from './schema';
 
 export function bespokeEnquiryAvailability(){
   return {enabled:process.env.BESPOKE_ENQUIRIES_ENABLED==='true'&&offerEnquiryAvailability().enabled};
 }
-export type StoredBespokeEnquiry={id:string;reference:string;name:string;email:string;phone:string;created_at:string;brief:ReturnType<typeof briefSnapshot>;notification_id:string|null;notified_at:string|null;notification_attempted_at:string|null;last_notification_error:string|null};
+export type StoredBespokeEnquiry={id:string;reference:string;issued_reference?:string|null;name:string;email:string;phone:string;created_at:string;brief:ReturnType<typeof briefSnapshot>;notification_id:string|null;notified_at:string|null;notification_attempted_at:string|null;last_notification_error:string|null};
+export function customerEnquiryReference(enquiry:Pick<StoredBespokeEnquiry,'reference'|'issued_reference'>){
+  // A stale PostgREST column cache must not hide a migrated customer's alias.
+  if(isBespokeReference(enquiry.reference)&&enquiry.issued_reference===undefined)throw new ArticleError('The enquiry reference mapping is temporarily unavailable. Please retry shortly.',503);
+  if(enquiry.issued_reference!=null){
+    if(!isLegacyBespokeReference(enquiry.issued_reference)||(isLegacyBespokeReference(enquiry.reference)&&enquiry.reference!==enquiry.issued_reference))throw new ArticleError('The original enquiry reference is unavailable.',503);
+    return enquiry.issued_reference;
+  }
+  if(!isCustomerEnquiryReference(enquiry.reference))throw new ArticleError('The enquiry reference is unavailable.',503);
+  return enquiry.reference;
+}
 export const bespokeServiceClient=offerEnquiryServiceClient;
 export async function loadBespokeEnquiry(client:SupabaseClient,id:string){
   const r=await client.from('bespoke_enquiries').select('*').eq('id',id).single();
-  if(r.error||!r.data||!isBespokeReference(r.data.reference))throw new ArticleError('The saved holiday brief could not be loaded. It remains available for administrator recovery.',503);
+  if(r.error||!r.data||!isCustomerEnquiryReference(r.data.reference))throw new ArticleError('The saved holiday brief could not be loaded. It remains available for administrator recovery.',503);
+  customerEnquiryReference(r.data);
   return r.data as StoredBespokeEnquiry;
 }
 export async function notifyBespokeEnquiry(client:SupabaseClient,enquiry:StoredBespokeEnquiry,confirmedUnsent=false){
   if(enquiry.notification_id)return;
   if(notificationNeedsReview(enquiry.created_at)&&!confirmedUnsent)throw new ArticleError('Check Resend and the mailbox before retrying this older notification, to avoid sending a duplicate.',409);
   const snapshot=briefSnapshotSchema.safeParse(enquiry.brief);
-  if(!snapshot.success||!isBespokeReference(enquiry.reference)||!Number.isFinite(Date.parse(enquiry.created_at)))throw new ArticleError('The stored brief is incomplete. It is retained for administrator review.',503);
+  if(!snapshot.success||!Number.isFinite(Date.parse(enquiry.created_at)))throw new ArticleError('The stored brief is incomplete. It is retained for administrator review.',503);
+  const reference=customerEnquiryReference(enquiry);
   const submitted=new Intl.DateTimeFormat('en-GB',{dateStyle:'medium',timeStyle:'short',timeZone:'Europe/London'}).format(new Date(enquiry.created_at));
-  const text=['Planned by Jay: bespoke holiday brief',`Enquiry reference: ${enquiry.reference}`,`Submitted: ${submitted} (Europe/London)`,`Internal enquiry ID: ${enquiry.id}`,'',...snapshot.data.summary.flatMap(row=>[row.label,row.value,''])].join('\n');
+  const text=['Planned by Jay: bespoke holiday brief',`Enquiry reference: ${reference}`,`Submitted: ${submitted} (Europe/London)`,`Internal enquiry ID: ${enquiry.id}`,'',...snapshot.data.summary.flatMap(row=>[row.label,row.value,''])].join('\n');
   try{
-    const receipt=await sendEnquiryNotification({idempotencyKey:'bespoke-enquiry/'+enquiry.id,replyTo:enquiry.email,subject:'Bespoke holiday enquiry '+enquiry.reference,text});
+    const receipt=await sendEnquiryNotification({idempotencyKey:'bespoke-enquiry/'+enquiry.id,replyTo:enquiry.email,subject:'Bespoke holiday enquiry '+reference,text});
     const marked=await client.from('bespoke_enquiries').update({notification_id:receipt,notified_at:new Date().toISOString(),notification_attempted_at:new Date().toISOString(),last_notification_error:null}).eq('id',enquiry.id).is('notification_id',null);
     if(marked.error)throw new ArticleError('Resend accepted the email, but its receipt could not be saved. The brief is retained; retry uses the same notification key.',503);
   }catch(error){
@@ -48,9 +60,10 @@ export async function completeBespokeEnquiry(request:Request,input:unknown){
   if(r.error||!r.data)throw new ArticleError(r.error?.code==='54000'?'Please wait before sending another enquiry.':'Your holiday brief could not be received. Your answers are retained here; please try again.',r.error?.code==='54000'?429:503);
   let enquiry:StoredBespokeEnquiry;
   try{enquiry=await loadBespokeEnquiry(client,String(r.data));}catch{throw new ArticleError('Your holiday brief was saved, but confirmation could not be loaded. Retry this submission; it will not create a second enquiry.',503);}
+  const reference=customerEnquiryReference(enquiry);
   try{await notifyBespokeEnquiry(client,enquiry);}catch{
     console.error('Bespoke enquiry notification pending',{enquiryId:enquiry.id});
-    return {accepted:true as const,reference:enquiry.reference,notification:'pending' as const};
+    return {accepted:true as const,reference,notification:'pending' as const};
   }
-  return {accepted:true as const,reference:enquiry.reference,notification:'accepted' as const};
+  return {accepted:true as const,reference,notification:'accepted' as const};
 }

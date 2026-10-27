@@ -4,7 +4,7 @@ import {useRef,useState,useEffect} from 'react';
 import {enquiryContent as content,enquiryOptions as options} from '@/content/enquiry';
 import {optionLabel} from '@/lib/presentation';
 import {Field,ChoiceGroup,descriptionIds} from './Fields';
-import {emptyBrief,briefErrors,stageFields,isBespokeReference,type EnquiryDraft} from '@/lib/enquiries/schema';
+import {emptyBrief,briefErrors,stageFields,isCustomerEnquiryReference,BESPOKE_REFERENCE_FORMAT,type EnquiryDraft} from '@/lib/enquiries/schema';
 export function EnquiryForm({privacyHref=null,enabled=false}:{privacyHref?:string|null;enabled?:boolean}){
  const [step,setStep]=useState(0);const titleRef=useRef<HTMLHeadingElement>(null),previousStep=useRef(0);
  const [draft,setDraft]=useState(emptyBrief),[errors,setErrors]=useState<Record<string,string>>({});
@@ -32,9 +32,9 @@ export function EnquiryForm({privacyHref=null,enabled=false}:{privacyHref?:strin
    working.current=true;setBusy(true);setFailure('');
    try{
      requestId.current ||= crypto.randomUUID();
-     const response=await fetch('/api/enquiries',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({request_id:requestId.current,brief:draft,website:honeypot.current?.value||''})});
+     const response=await fetch('/api/enquiries',{method:'POST',headers:{'Content-Type':'application/json','X-Bespoke-Reference-Format':BESPOKE_REFERENCE_FORMAT},body:JSON.stringify({request_id:requestId.current,brief:draft,website:honeypot.current?.value||''})});
      const result=await response.json();
-     if(!response.ok||result.accepted!==true||!isBespokeReference(result.reference)||!['accepted','pending'].includes(result.notification)){
+     if(!response.ok||result.accepted!==true||!isCustomerEnquiryReference(result.reference)||!['accepted','pending'].includes(result.notification)){
        if(result.errors&&typeof result.errors==='object'){
          const safe:Record<string,string>={};for(const [key,value] of Object.entries(result.errors))if(typeof value==='string')safe[key]=value;
          setErrors(safe);const invalidStage=stageFields.findIndex(fields=>(fields as readonly string[]).includes(Object.keys(safe)[0]?.split('.')[0]));if(invalidStage>=0)setStep(invalidStage);

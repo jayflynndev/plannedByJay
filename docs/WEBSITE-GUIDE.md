@@ -31,6 +31,8 @@ For Holiday Offers, manually run `supabase/migrations/20261026_holiday_offers_cm
 
 For bespoke enquiries, manually run `supabase/migrations/20261027_bespoke_enquiries.sql`, set `BESPOKE_ENQUIRIES_ENABLED=true` in the existing deployment environment and deploy normally. Reuse the current private Supabase/Resend settings. Before this switch is set, the answer fields and submission endpoint remain closed. Test once using Jay's own details and check Admin, inbox and on-screen reference. No hosted migration, configuration change or live bespoke email was performed automatically.
 
+The original bespoke setup is now applied and deployed, as confirmed by Jay. For the reference-format correction, **deploy the compatible application first**, then manually run `supabase/migrations/20261027_bespoke_enquiry_references.sql`. Do not edit or rerun the original migration. New enquiries receive random six-digit strings. Existing PBJ codes are retained as permanent customer aliases alongside their new numeric reference; original notifications and repeated confirmations keep their issued code. See [BESPOKE-ENQUIRIES.md](BESPOKE-ENQUIRIES.md#six-digit-reference-correction-application-order) for reconciliation and rollout details. No activation, security or Resend settings change.
+
 For a fresh supplier-directory installation, manually run `supabase/migrations/20261026_suppliers_directory.sql` in Supabase SQL Editor. Existing installations need no migration for the manual-form cleanup. No extra credentials, services or environment variables are needed. Existing supplier records and permissions are preserved. See SUPPLIERS.md for adding, editing and archiving records.
 
 
