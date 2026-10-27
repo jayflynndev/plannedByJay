@@ -20,8 +20,8 @@ export type Policy = {
   }[];
 };
 
-// EDIT HERE: Public policy content. Privacy is an owner-review draft; Cookies is unpublished.
-// Ready for Jay's final review using the confirmed New Travel trading arrangement.
+// EDIT HERE: Approved public policy content. Cookies remains unpublished.
+// Both enquiry journeys use the established New Travel trading arrangement.
 // A document stays 404/unlinked/out of the sitemap until reviewed AND explicitly approved.
 export const policies: Record<PolicyKey, Policy> = {
   privacy: {
@@ -56,8 +56,8 @@ export const policies: Record<PolicyKey, Policy> = {
       {
         heading: "The Plan My Holiday brief",
         paragraphs: [
-          "Plan My Holiday is currently a read-only preview. It does not submit, store or email your answers. Its existing privacy link uses this same notice.",
-          "If enabled, the brief would ask about destinations, holiday style, party size, children’s ages, dates or flexibility, duration, departure preferences, total budget, priorities and how far ahead you are planning. It would also ask for your name, email and preferred contact method, with a telephone number if you want telephone contact. Its data handling will be confirmed under this notice before it accepts answers.",
+          "Plan My Holiday uses this same notice. When submissions are available, the three-stage brief lets you review and edit your answers before sending them. If the form is unavailable, its answer fields are disabled and it does not submit, store or email your answers.",
+          "The brief asks about destinations, holiday style, party size, children’s ages, dates or flexibility, duration, departure preferences, total budget, priorities and how far ahead you are planning. It also asks for your name, email and preferred contact method, with a telephone number if you want telephone contact. A saved copy retains the submitted answers, the question labels and option descriptions, a random enquiry reference and submission time.",
           "The practical-requirements option is a request for a private discussion, not a request for medical details. Please do not put passport, payment, medical or disability details in either form’s free text. If detailed health information is needed later, we will explain why, who needs it and the additional legal condition or consent required before collecting or sharing it.",
           "If you provide information about other travellers, make sure they know about it and can read this notice. Only children’s ages needed for holiday pricing are requested in an initial enquiry, not their names or dates of birth.",
         ],
@@ -74,9 +74,9 @@ export const policies: Record<PolicyKey, Policy> = {
       {
         heading: "Storage, email notifications and access",
         paragraphs: [
-          "Offer enquiries and their holiday snapshots are stored privately in Supabase, with access restricted to the authorised administrator and the protected service handling submissions. They are not public website records.",
+          "Offer enquiries and their holiday snapshots, and bespoke holiday briefs with their submitted answers, are stored privately in Supabase, with access restricted to the authorised administrator and the protected service handling submissions. They are not public website records.",
           "Resend emails your contact details, message and holiday information to jay@plannedbyjay.com. The business mailbox uses Microsoft 365 through GoDaddy, and notifications use your supplied email as the reply address. Copies and delivery records can therefore exist in Supabase, Resend and the business mailbox.",
-          "If email sending fails or is unconfirmed, Jay can review and retry the saved record privately. Older messages are checked before resending. A saved-enquiry confirmation does not promise email arrival. This describes the offer-enquiry system; the read-only Holiday Brief has no active submission connection.",
+          "If email sending fails or is unconfirmed, Jay can review and retry the saved record privately. Older messages are checked before resending. A saved-enquiry confirmation does not promise email arrival. This applies to both enquiry routes. A bespoke notification contains the complete submitted brief; it does not automatically create a booking or forward your answers to New Travel or a supplier.",
         ],
       },
       {
@@ -138,8 +138,8 @@ export const policies: Record<PolicyKey, Policy> = {
         heading: "Website security, cookies and technical information",
         paragraphs: [
           "Hosting and technical services handle information needed to deliver and secure the website, such as network addresses, request times, requested pages and browser information. Notification-error logs use an internal record reference and error code rather than your question or contact details.",
-          "A hidden anti-spam field and a limit on repeated offer submissions help prevent misuse. The enquiry stores a keyed, coded value derived from the network address rather than the raw address. This is not anonymous data and follows the enquiry retention process. No CAPTCHA service is connected to these forms.",
-          "The website application does not include advertising pixels, optional analytics or social-media tracking. It does not use localStorage or sessionStorage for enquiry answers. The offer request token is held in page memory for retries. Essential administrator sign-in cookies are used only for administration; visitors do not need an administrator account to browse or enquire.",
+          "A hidden anti-spam field and a limit on repeated submissions help prevent misuse of both enquiry forms. Each enquiry stores a keyed, coded value derived from the network address rather than the raw address. This is not anonymous data and follows the enquiry retention process. An identical bespoke brief from the same coded client within ten minutes reuses the saved record, which helps prevent accidental duplicates after a page reload. No CAPTCHA service is connected to these forms.",
+          "The website application does not include advertising pixels, optional analytics or social-media tracking. It does not use localStorage or sessionStorage for enquiry answers. Each form’s request token is held in page memory for retries. Essential administrator sign-in cookies are used only for administration; visitors do not need an administrator account to browse or enquire.",
           "You can control cookies through your browser, although blocking necessary sign-in cookies can prevent administrator access. If non-essential tracking is introduced, its use and any legally required choices will be explained before it is used.",
         ],
         technologies: [

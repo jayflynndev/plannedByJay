@@ -1,3 +1,4 @@
+import Link from 'next/link';
 export default function AdminHome() {
   return (
     <>
@@ -10,6 +11,7 @@ export default function AdminHome() {
       <a className="button button-secondary" href="/admin/suppliers">Open Suppliers</a>
       <a className="button button-secondary" href="/admin/holiday-offers">Open Holiday Offers</a>
       <a className="button button-secondary" href="/admin/offer-enquiries">Open Offer Enquiries</a>
+      <Link className="button button-secondary" href="/admin/bespoke-enquiries">Open Bespoke Enquiries</Link>
     </>
   );
 }

@@ -34,15 +34,15 @@ Drafts, archived offers, departed offers and expired promotions are absent from 
 
 Include known mandatory charges in the party total. For any charge that cannot reasonably be calculated, explain the calculation and when it is payable in Mandatory charges / local taxes; that text appears prominently beside the price. The [ASA travel-pricing guidance](https://www.asa.org.uk/advice-online/travel-marketing-pricing.html) explains the distinction. A changeable supplier price still needs an accurate checking date and review; a disclaimer is not a substitute for entering the correct amount. No prices, supplier credentials or protection claims are seeded.
 
-## Offer-specific enquiries: implementation ready, launch checks outstanding
+## Offer-specific enquiries: operational
 
 The existing four-field form now displays a read-only summary of the saved holiday. The server validates contact data, stores an authoritative holiday snapshot through the existing RPC and uses the existing Resend configuration for a fixed-recipient notification with Reply-To and submission date/time. No private key or customer-supplied price is trusted in the browser.
 
-**Public submissions remain disabled.** The Privacy Policy has an unpublished owner-review draft (see [PRIVACY-REVIEW.md](PRIVACY-REVIEW.md)) and actual mailbox delivery has not yet been verified. The local TLS issue is Norton HTTPS inspection and Node's certificate trust, not proof of a Resend outage. Strict Windows TLS checks recognise the existing Resend key as send-only and confirm the existing enquiry schema; no real enquiry or email was created. No migration is needed.
+**Offer enquiries are operational.** Jay has confirmed public submission, private storage, actual inbox arrival and the correct on-screen acknowledgement. The Privacy Policy is published and `deliveryVerified` remains true. No offer activation change or migration is required for bespoke setup.
 
 If the database accepts an enquiry but email/receipt recording fails, the customer gets an honest saved-but-notification-pending acknowledgement. The private record remains available at `/admin/offer-enquiries` for a controlled notification retry. Pending records, stored receipts and original snapshots survive failures; unchanged idempotency keys/payloads prevent duplicate acceptance in Resend's retry window. Older pending messages require a mailbox/Resend check before resending. Accepted by Resend never claims actual mailbox arrival.
 
-See [OFFER-ENQUIRY-LAUNCH.md](OFFER-ENQUIRY-LAUNCH.md) for the exact privacy action, owner-authorised production test, recovery procedure and the existing `deliveryVerified` launch control. No new gate, service, background scheduler or customer-management system is introduced. The separate bespoke Holiday Brief remains disabled.
+See [OFFER-ENQUIRY-LAUNCH.md](OFFER-ENQUIRY-LAUNCH.md) for the confirmed live status and recovery procedure. No new offer gate, service, background scheduler or customer-management system is introduced. The bespoke Holiday Brief now shares the existing services, with one separate migration and activation setting; see [BESPOKE-ENQUIRIES.md](BESPOKE-ENQUIRIES.md).
 
 ## Validation limits
 

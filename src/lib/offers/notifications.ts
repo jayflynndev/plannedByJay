@@ -19,8 +19,14 @@ export async function sendOfferNotification(enquiry:EnquiryNotification,send:typ
   if(!price.success||!currency.success)throw new ArticleError("The saved enquiry price is unavailable.",503);
   const submitted=new Intl.DateTimeFormat("en-GB",{dateStyle:"medium",timeStyle:"short",timeZone:"Europe/London"}).format(new Date(enquiry.created_at));
   const text=["Planned by Jay: offer enquiry",`Offer reference: ${reference}`,`Holiday: ${String(s.title)}`,`Submitted: ${submitted} (Europe/London)`,`Internal enquiry ID: ${enquiry.id}`,`Supplier: ${String((s.supplier as {name?:string})?.name||"")}`,`Travel: ${String(s.departure_date||"")} to ${String(s.return_date||"")} (${String(s.nights??"")} nights)`,`Advertised party total: ${money(price.data,currency.data)} (${currency.data})`,`Party: ${String(s.adults)} adults, ${String(s.children)} children; child ages: ${JSON.stringify(s.child_ages||[])}`,`Price checked: ${String(s.price_checked_on||"")}`,`Charges: ${String(s.mandatory_charges||"")}`,"",`Name: ${enquiry.name}`,`Email: ${enquiry.email}`,`Phone: ${enquiry.phone||"Not supplied"}`,"Question:",enquiry.message||"No question supplied."].join("\n");
+  return sendEnquiryNotification({idempotencyKey:"offer-enquiry/"+enquiry.id,replyTo:enquiry.email,subject:"Holiday enquiry "+reference,text},send);
+}
+// Shared transport: both enquiry journeys use the same sender, recipient and Resend account.
+export async function sendEnquiryNotification(message:{idempotencyKey:string;replyTo:string;subject:string;text:string},send:typeof fetch=fetch) {
+  const config=offerMailConfig();
+  if(!config)throw new ArticleError("Offer enquiry notification delivery is unavailable.",503);
   let response:Response;
-  try {response=await send("https://api.resend.com/emails",{method:"POST",cache:"no-store",signal:AbortSignal.timeout(10000),headers:{Authorization:`Bearer ${config.key}`,"Content-Type":"application/json","Idempotency-Key":"offer-enquiry/"+enquiry.id},body:JSON.stringify({from:config.from,to:[config.to],reply_to:enquiry.email,subject:"Holiday enquiry "+reference,text})});}
+  try {response=await send("https://api.resend.com/emails",{method:"POST",cache:"no-store",signal:AbortSignal.timeout(10000),headers:{Authorization:`Bearer ${config.key}`,"Content-Type":"application/json","Idempotency-Key":message.idempotencyKey},body:JSON.stringify({from:config.from,to:[config.to],reply_to:message.replyTo,subject:message.subject,text:message.text})});}
   catch(error) {
     const failure=new ArticleError("The enquiry notification could not be delivered. Keep your details and try again shortly.",503);
     const code=(error as {cause?:{code?:unknown}})?.cause?.code;

@@ -4,58 +4,49 @@ import {useRef,useState,useEffect} from 'react';
 import {enquiryContent as content,enquiryOptions as options} from '@/content/enquiry';
 import {optionLabel} from '@/lib/presentation';
 import {Field,ChoiceGroup,descriptionIds} from './Fields';
-type EnquiryDraft = {
-  destinationChoice: string;
-  destinationIdeas: string;
-  holidayType: string;
-  adults: string;
-  children: string;
-  childrenAges: string[];
-  dateChoice: string;
-  startDate: string;
-  endDate: string;
-  travelPeriod: string;
-  flexibleNotes: string;
-  duration: string;
-  departurePreferences: string;
-  budget: string;
-  preferences: string;
-  requirementsDiscussion: boolean;
-  name: string;
-  email: string;
-  phone: string;
-  contactMethod: string;
-  intention: string;
-};
-const draft: EnquiryDraft = {
-  destinationChoice: '',
-  destinationIdeas: '',
-  holidayType: '',
-  adults: '1',
-  children: '0',
-  childrenAges: [],
-  dateChoice: '',
-  startDate: '',
-  endDate: '',
-  travelPeriod: '',
-  flexibleNotes: '',
-  duration: '',
-  departurePreferences: '',
-  budget: '',
-  preferences: '',
-  requirementsDiscussion: false,
-  name: '',
-  email: '',
-  phone: '',
-  contactMethod: 'email',
-  intention: '',
-};
-export function EnquiryForm({privacyHref=null}:{privacyHref?:string|null}){
- const [step,setStep]=useState(0);const titleRef=useRef<HTMLHeadingElement>(null);
- const errors:Record<string,string>={};
- useEffect(()=>{titleRef.current?.focus({preventScroll:true});},[step]);
- function changeStep(next:number){setStep(next);}
- function nextPreviewStage(event:React.FormEvent){event.preventDefault();if(step<2)setStep(step+1);}
+import {emptyBrief,briefErrors,stageFields,isBespokeReference,type EnquiryDraft} from '@/lib/enquiries/schema';
+export function EnquiryForm({privacyHref=null,enabled=false}:{privacyHref?:string|null;enabled?:boolean}){
+ const [step,setStep]=useState(0);const titleRef=useRef<HTMLHeadingElement>(null),previousStep=useRef(0);
+ const [draft,setDraft]=useState(emptyBrief),[errors,setErrors]=useState<Record<string,string>>({});
+ const [busy,setBusy]=useState(false),[failure,setFailure]=useState('');
+ const [receipt,setReceipt]=useState<{reference:string;notification:string}|null>(null);
+ const working=useRef(false),requestId=useRef(''),honeypot=useRef<HTMLInputElement>(null);
+ const available=enabled&&!!privacyHref;
+ useEffect(()=>{
+   titleRef.current?.focus({preventScroll:true});
+   if(previousStep.current!==step)titleRef.current?.scrollIntoView?.({block:'start'});
+   previousStep.current=step;
+ },[step]);
+ function changeStep(next:number){if(!working.current){setErrors({});setFailure('');setStep(next);}}
+ function update<K extends keyof EnquiryDraft>(key:K,value:EnquiryDraft[K]){requestId.current='';setDraft(current=>({...current,[key]:value}));setErrors({});setFailure('');}
+ function focusError(found:Record<string,string>){const first=Object.keys(found)[0],field=document.getElementById(first);const target=field?.matches('input,select,textarea')?field:field?.querySelector<HTMLElement>('input,select,textarea');(target as HTMLElement|null)?.focus();target?.scrollIntoView?.({block:'center'});}
+ async function submit(event:React.FormEvent){
+   event.preventDefault();if(working.current||receipt)return;
+   if(!available){if(step<2)setStep(step+1);return;}
+   const found=briefErrors(draft,step<2?step:undefined);setErrors(found);
+   if(Object.keys(found).length){
+     const invalidStage=stageFields.findIndex(fields=>(fields as readonly string[]).includes(Object.keys(found)[0].split('.')[0]));
+     if(invalidStage>=0&&invalidStage!==step)setStep(invalidStage);else focusError(found);return;
+   }
+   if(step<2){setStep(step+1);return;}
+   working.current=true;setBusy(true);setFailure('');
+   try{
+     requestId.current ||= crypto.randomUUID();
+     const response=await fetch('/api/enquiries',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({request_id:requestId.current,brief:draft,website:honeypot.current?.value||''})});
+     const result=await response.json();
+     if(!response.ok||result.accepted!==true||!isBespokeReference(result.reference)||!['accepted','pending'].includes(result.notification)){
+       if(result.errors&&typeof result.errors==='object'){
+         const safe:Record<string,string>={};for(const [key,value] of Object.entries(result.errors))if(typeof value==='string')safe[key]=value;
+         setErrors(safe);const invalidStage=stageFields.findIndex(fields=>(fields as readonly string[]).includes(Object.keys(safe)[0]?.split('.')[0]));if(invalidStage>=0)setStep(invalidStage);
+       }
+       throw new Error(result.error||'Your holiday brief could not be received. Your answers are retained here; please try again.');
+     }
+     setReceipt({reference:result.reference,notification:result.notification});
+   }catch(error){setFailure(error instanceof Error?error.message:'Your holiday brief could not be received. Your answers are retained here; please try again.');}
+   finally{working.current=false;setBusy(false);}
+ }
+ useEffect(()=>{if(receipt){titleRef.current?.focus({preventScroll:true});titleRef.current?.closest('.enquiry-success')?.scrollIntoView?.({block:'start'});}},[receipt]);
+ if(receipt)return <div className="enquiry-success" role="status"><span className="success-mark" aria-hidden="true">✓</span><h2 ref={titleRef} tabIndex={-1}>Your holiday brief has been received.</h2><p className="intro">Jay will review your holiday ideas and get in touch using your contact details.</p><p>Enquiry reference</p><p className="enquiry-reference">{receipt.reference}</p>{receipt.notification==='pending'&&<p className="reference-note">Your brief is saved securely. Jay’s email notification is pending and can be recovered privately. You do not need to submit it again.</p>}<p className="reference-note">This is an enquiry, not a booking or a confirmation of holiday availability or prices.</p></div>;
   const input = (
     key: keyof EnquiryDraft,
     label: string,
@@ -71,12 +62,12 @@ export function EnquiryForm({privacyHref=null}:{privacyHref?:string|null}){
     const id = String(key);
     return (
       <Field id={id} label={label} hint={settings.hint} errors={errors}>
-        <input disabled
+        <input
           id={id}
           name={id}
           type={settings.type || 'text'}
           value={String(draft[key])}
-
+          onChange={event=>update(key,event.target.value as EnquiryDraft[typeof key])}
           min={key === 'adults' ? 1 : undefined}
           max={key === 'adults' ? 50 : undefined}
           step={settings.type === 'number' ? 1 : undefined}
@@ -97,11 +88,11 @@ export function EnquiryForm({privacyHref=null}:{privacyHref?:string|null}){
     hint?: string,
   ) => (
     <Field id={String(key)} label={label} hint={hint} errors={errors}>
-      <select disabled
+      <select
         id={String(key)}
         name={String(key)}
         value={String(draft[key])}
-
+        onChange={event=>update(key,event.target.value as EnquiryDraft[typeof key])}
         required
         aria-invalid={!!errors[key]}
         aria-describedby={descriptionIds(String(key), hint, errors)}
@@ -126,7 +117,7 @@ export function EnquiryForm({privacyHref=null}:{privacyHref?:string|null}){
       label={label}
       options={list}
       value={String(draft[key])}
-
+      onChange={value=>update(key,value as EnquiryDraft[typeof key])}
       hint={hint}
       errors={errors}
     />
@@ -139,11 +130,11 @@ export function EnquiryForm({privacyHref=null}:{privacyHref?:string|null}){
     maxLength = 2000,
   ) => (
     <Field id={key} label={label} hint={hint} errors={errors}>
-      <textarea disabled
+      <textarea
         id={key}
         name={key}
         value={draft[key]}
-
+        onChange={event=>update(key,event.target.value)}
         rows={4}
         maxLength={maxLength}
         placeholder={placeholder}
@@ -166,16 +157,15 @@ export function EnquiryForm({privacyHref=null}:{privacyHref?:string|null}){
           </li>
         ))}
       </ol>
-      {(
+      {!available&&(
         <p className="form-notice" role="status">
           {content.messages.unavailable}
         </p>
       )}
       <form
-        onSubmit={nextPreviewStage}
-
+        onSubmit={submit}
         noValidate
-        aria-label="Read-only Holiday Brief preview"
+        aria-label={available?'Holiday Brief':'Read-only Holiday Brief preview'}
       >
         <div className="stage-heading">
           <p className="eyebrow">
@@ -187,7 +177,8 @@ export function EnquiryForm({privacyHref=null}:{privacyHref?:string|null}){
           <p>{content.steps[step].description}</p>
           <small>{content.controls.required}</small>
         </div>
-        <fieldset className="stage-fields" disabled>
+        {failure&&<p className="form-notice" role="alert">{failure}</p>}
+        <fieldset className="stage-fields" disabled={!available||busy}>
           {step === 0 && (
             <>
               {radios(
@@ -217,13 +208,17 @@ export function EnquiryForm({privacyHref=null}:{privacyHref?:string|null}){
                     label={content.fields.children}
                     errors={errors}
                   >
-                    <input disabled
+                    <input
                       id="children"
                       type="number"
                       min={0}
                       max={20}
                       step={1}
                       value={draft.children}
+                      onChange={event=>{
+                        const value=event.target.value,count=/^\d+$/.test(value)?Math.min(20,Number(value)):0;
+                        requestId.current='';setDraft(current=>({...current,children:value,childrenAges:Array.from({length:count},(_,i)=>current.childrenAges[i]??'')}));setErrors({});
+                      }}
                       required
                       aria-invalid={!!errors.children}
                       aria-describedby={descriptionIds(
@@ -252,7 +247,7 @@ export function EnquiryForm({privacyHref=null}:{privacyHref?:string|null}){
                           label={`${content.fields.agePrefix} ${index + 1} ${content.fields.ageSuffix}`}
                           errors={errors}
                         >
-                          <input disabled
+                          <input
                             id={id}
                             type="number"
                             min={0}
@@ -260,6 +255,7 @@ export function EnquiryForm({privacyHref=null}:{privacyHref?:string|null}){
                             step={1}
                             required
                             value={age}
+                            onChange={event=>update('childrenAges',draft.childrenAges.map((old,i)=>i===index?event.target.value:old))}
                             aria-invalid={!!errors[id]}
                             aria-describedby={`childrenAges-hint ${errors[id] ? `${id}-error` : ''}`}
 
@@ -329,10 +325,10 @@ export function EnquiryForm({privacyHref=null}:{privacyHref?:string|null}){
               )}
               <div className="requirements-box">
                 <label className="check-option">
-                  <input disabled
+                  <input
                     type="checkbox"
                     checked={draft.requirementsDiscussion}
-
+                    onChange={event=>update('requirementsDiscussion',event.target.checked)}
                     aria-describedby="requirements-hint"
                   />
                   <span>{content.fields.requirementsDiscussion}</span>
@@ -434,12 +430,13 @@ export function EnquiryForm({privacyHref=null}:{privacyHref?:string|null}){
             </>
           )}
         </fieldset>
+        <div className="honeypot" aria-hidden="true"><label htmlFor="brief-website">Leave this blank</label><input id="brief-website" name="website" ref={honeypot} tabIndex={-1} autoComplete="off" disabled={!available||busy}/></div>
         <div className="form-actions">
           {step > 0 && (
             <button
               type="button"
               className="button button-secondary"
-              disabled
+              disabled={busy}
               onClick={() => changeStep(step - 1)}
             >
               {content.controls.back}
@@ -448,9 +445,9 @@ export function EnquiryForm({privacyHref=null}:{privacyHref?:string|null}){
           <button
             type="submit"
             className="button"
-            disabled={step === 2}
+            disabled={busy||(!available&&step===2)}
           >
-            {step===2?'Enquiries unavailable':'View next stage'}
+            {busy?'Sending your brief…':step===2?(available?'Send holiday brief':'Enquiries unavailable'):'View next stage'}
             <span aria-hidden="true">↗</span>
           </button>
         </div>

@@ -49,6 +49,7 @@ export function ChoiceGroup({
   value,
   hint,
   errors,
+  onChange,
 }: {
   id: string;
   label: string;
@@ -56,6 +57,7 @@ export function ChoiceGroup({
   value: string;
   hint?: string;
   errors: FieldErrors;
+  onChange: (value:string)=>void;
 }) {
   return (
     <fieldset
@@ -76,13 +78,13 @@ export function ChoiceGroup({
             key={option.value}
             className={`choice-option ${value === option.value ? 'selected' : ''}`}
           >
-            <input disabled
+            <input
               type="radio"
               name={id}
               value={option.value}
               required
               checked={value === option.value}
-
+              onChange={()=>onChange(option.value)}
             />
             <span>{option.label}</span>
           </label>

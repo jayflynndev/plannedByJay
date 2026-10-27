@@ -226,7 +226,7 @@ test('the approved privacy policy links both disabled enquiry journeys while inc
     assert.throws(()=>PolicyPage({policy:'privacy'}),{digest:'NEXT_HTTP_ERROR_FALLBACK;404'});
     const footer=render(<Footer/>);assert.equal(footer.container.querySelector('a[href="/privacy"]'),null);cleanup();
     const preview=render(<PolicyDocument policy={original}/>);
-    for(const text of ['Supabase','Resend','Microsoft 365','12 calendar months','read-only preview','legitimate interests'])assert.ok(preview.container.textContent?.includes(text));
+    for(const text of ['Supabase','Resend','Microsoft 365','12 calendar months','three-stage brief','legitimate interests'])assert.ok(preview.container.textContent?.includes(text));
     assert.doesNotMatch(preview.container.textContent||'',/pbj-enquiry-session|Turnstile|VHUB|erase_holiday_enquiry/);
     for(const issue of original.reviewRequired)assert.equal(preview.queryByText(issue),null);
     cleanup();

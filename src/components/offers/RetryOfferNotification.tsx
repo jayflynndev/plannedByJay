@@ -2,7 +2,7 @@
 import {useRef,useState} from "react";
 import {useRouter} from "next/navigation";
 
-export function RetryOfferNotification({id,needsReview}:{id:string;needsReview:boolean}) {
+export function RetryOfferNotification({id,needsReview,endpoint="/api/offer-enquiries/notification"}:{id:string;needsReview:boolean;endpoint?:"/api/offer-enquiries/notification"|"/api/enquiries/notification"}) {
   const router=useRouter(),working=useRef(false);
   const [busy,setBusy]=useState(false),[message,setMessage]=useState(""),[failed,setFailed]=useState(false);
   return <div className="offer-notification-retry">
@@ -12,7 +12,7 @@ export function RetryOfferNotification({id,needsReview}:{id:string;needsReview:b
       if(needsReview&&!window.confirm("Have you checked Resend and the mailbox and confirmed that this notification has not already been accepted? If it was accepted, record its existing receipt instead of sending it again."))return;
       working.current=true;setBusy(true);setMessage("");setFailed(false);
       try{
-        const response=await fetch("/api/offer-enquiries/notification",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({id,confirmedUnsent:needsReview})});
+        const response=await fetch(endpoint,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({id,confirmedUnsent:needsReview})});
         const result=await response.json();if(!response.ok||result.notification!=="accepted")throw new Error(result.error||"The notification remains pending. The enquiry is safely retained.");
         setMessage("Notification accepted by Resend. Check the mailbox for arrival.");router.refresh();
       }catch(error){setFailed(true);setMessage(error instanceof Error?error.message:"The notification remains pending. The enquiry is safely retained.");}

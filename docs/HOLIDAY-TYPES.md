@@ -24,7 +24,7 @@ Progress and persistent results appear beside the action buttons and are announc
 
 Published records automatically supply `/holidays`, `/holidays/[slug]`, homepage holiday cards, descriptions, canonical/social metadata and sitemap entries. The original six stay in order; new types follow by creation date. Drafts and unpublished types return 404 publicly and are omitted from public cards and the sitemap. No manual SEO entry is needed. The existing site-wide noindex setting remains unchanged.
 
-The Holiday Brief remains disabled and does not collect personal information. The template has no FAQ section or empty offers section. Published eligible offers now reference stable Holiday Type IDs through the Holiday Offers module and appear on each selected type's page; the section is omitted when there are no matches. See HOLIDAY-OFFERS.md. The separately authorised private supplier directory is documented in SUPPLIERS.md.
+The existing Holiday Brief now has its own enquiry setup and activation procedure; see [BESPOKE-ENQUIRIES.md](BESPOKE-ENQUIRIES.md). The template has no FAQ section or empty offers section. Published eligible offers now reference stable Holiday Type IDs through the Holiday Offers module and appear on each selected type's page; the section is omitted when there are no matches. See HOLIDAY-OFFERS.md. The separately authorised private supplier directory is documented in SUPPLIERS.md.
 
 ## Validation and remaining owner checks
 

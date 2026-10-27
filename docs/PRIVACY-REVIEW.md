@@ -1,12 +1,12 @@
 # Privacy Policy: ready for Jay's final review
 
-The complete policy is `policies.privacy` in `src/content/policies.ts`. It covers the website and both enquiry routes. It remains `approved: false`, with no publication date; the only policy review entry is Jay's final approval. `/privacy` therefore remains unavailable and unlinked. No forms, backend, credentials, migrations or launch controls have changed.
+The approved policy is `policies.privacy` in `src/content/policies.ts`. Jay has confirmed `/privacy` is publicly accessible and a full public Holiday Offer enquiry was stored and notified successfully. The bespoke implementation uses the same notice and existing New Travel arrangement; only its technical form/storage description has been brought up to date. There is no new privacy approval process. See [BESPOKE-ENQUIRIES.md](BESPOKE-ENQUIRIES.md) for the manual migration and single activation switch.
 
 ## Established operational basis
 
 Johnny-James Flynn is a self-employed consultant trading as Planned by Jay on New Travel Holidays Limited's behalf. Jay has confirmed that the agreement covers the website customer journey from initial enquiry through booking, including customer-information responsibilities. The policy names both parties, explains Jay's day-to-day handling and gives one contact for privacy requests. It does not invent sole-controller, joint-controller or processor classifications. Do not send Jay back to New Travel to repeat this confirmation.
 
-The policy retains the previously adopted monthly manual review and normal deletion of inactive unsuccessful enquiries 12 calendar months after last meaningful customer contact. It describes actual private Supabase storage, Resend notifications to Jay, Microsoft 365 through GoDaddy, pending-email recovery and administrator-only sign-in cookies. Initial enquiries are not automatically forwarded to New Travel or suppliers. There is no marketing subscription, active CAPTCHA or application analytics. The Holiday Brief is still a read-only preview with no submission connection; the policy describes its existing fields and does not pretend it is operational.
+The policy retains the previously adopted monthly manual review and normal deletion of inactive unsuccessful enquiries 12 calendar months after last meaningful customer contact. It describes actual private Supabase storage, Resend notifications to Jay, Microsoft 365 through GoDaddy, pending-email recovery and administrator-only sign-in cookies. Initial enquiries are not automatically forwarded to New Travel or suppliers. There is no marketing subscription, active CAPTCHA or application analytics. The Holiday Brief is now connected using those same services, with public collection closed until its manual setup is applied.
 
 ## Published provider safeguards checked on 27 October 2026
 
@@ -19,18 +19,12 @@ The policy retains the previously adopted monthly manual review and normal delet
 
 These are documented standard mechanisms, rather than a blanket assertion that all account-specific arrangements or transfer assessments have been verified. The customer policy reflects that distinction and links directly to the terms. No additional data-protection infrastructure is required for this wording.
 
-## One material operational issue: recorded Vercel Hobby plan
+## Current launch position
 
-The last owner-confirmed hosting plan in project history (`0edead6:docs/PRIVACY-FINAL-ACTIONS.md`) is Vercel Hobby. The current [Hobby documentation](https://vercel.com/docs/plans/hobby) limits it to personal, non-commercial use. Planned by Jay is a commercial consultancy. Before live enquiry processing, Jay should move the existing project to Vercel Pro with its applicable DPA, or retain evidence of an already-completed equivalent commercial arrangement. No plan purchase, account change or deployment has been made here. This does not require any CMS/form rebuild or another New Travel confirmation.
+The New Travel trading arrangement and provider review are established context. Do not reopen them or revisit the hosting-plan decision during bespoke setup. Offer enquiries remain operational. For bespoke enquiries, run the single new migration, set `BESPOKE_ENQUIRIES_ENABLED=true` in the intended deployment, then deploy and perform one owner-contact public-form test. [BESPOKE-ENQUIRIES.md](BESPOKE-ENQUIRIES.md) gives the exact steps and private retry procedure.
 
-## Publication and delivery test
-
-1. Jay reviews this final wording. After approval, clear the final `reviewRequired` entry, set `updatedAt` to the actual review/publication date and set `approved: true`. Jay commits/deploys himself on eligible hosting. `/privacy`, the footer and both forms then use the same policy automatically.
-2. Keep `deliveryVerified=false`. Run the existing owner-contact test SQL once, then use **Admin > Offer enquiries > Retry email notification**. Confirm actual receipt in `jay@plannedbyjay.com` (including junk), the saved holiday details and Reply-To. Exact SQL and recovery instructions: [OFFER-ENQUIRY-LAUNCH.md](OFFER-ENQUIRY-LAUNCH.md#short-owner-controlled-production-test).
-3. Only after policy publication and successful mailbox delivery should the existing offer `deliveryVerified` control be enabled through Jay's normal deployment process. Neither has been enabled here. The bespoke Brief remains read-only; its absent submission connection cannot be activated just by approving a policy or checking an email.
-
-Keep applying the existing retention procedure to database and email copies. The admin area reviews/retries notifications; it is not a deletion interface. An authorised database owner handles applicable erasure and related copies. Submission times and notification retries do not establish last meaningful customer contact.
+Continue applying the existing monthly retention procedure to both enquiry tables and related email/provider copies. The admin inboxes review and retry notifications; they do not introduce a deletion workflow. Submission and notification retry times do not establish last meaningful customer contact.
 
 ## Checks
 
-The final wording passed all 50 tests, lint, TypeScript and production build, including private-policy guards and shared links. Production `/privacy` remains not-found with the policy text absent. Earlier mobile/desktop preview checks passed at 320, 390, 900 and 1440 pixels; presentation code is unchanged. File hashes confirm forms, backend, CMS, migrations and other content were untouched during this update. No live customer enquiry or email was sent by these checks. The available local runtime is Node 20 (tests used a temporary WebSocket shim); the project specifies Node 22.13 or later.
+The bespoke completion checks include the shared privacy link and unchanged publication guard. Both forms use page-memory retry tokens and keep answers out of browser storage. Automated mail uses isolated fixtures; the actual bespoke mailbox test follows Jay's manual setup, not an assistant claim of delivery. The project runtime is Node 22.13 or later; the available local Node 20 uses a temporary test-only WebSocket shim during automated validation.

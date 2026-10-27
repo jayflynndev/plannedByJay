@@ -27,8 +27,9 @@ test('public listings have honest empty states and archived content URLs return 
  }finally{cleanup();}
 });
 
-test('bespoke enquiries and obsolete CMS integrations remain absent alongside authorised offers',async()=>{
- for(const path of ['src/lib/enquiries','src/app/api/enquiries','src/app/api/cms','src/lib/suppliers/lookup.ts'])await assert.rejects(access(path));
- const form=await readFile('src/components/enquiry/EnquiryForm.tsx','utf8');assert.doesNotMatch(form,/fetch\(|localStorage|sessionStorage/);
- const migrations=await readdir('supabase/migrations');assert.deepEqual(migrations.sort(),['20261025_articles_cms.sql','20261026_holiday_offers_cms.sql','20261026_holiday_offer_references.sql','20261026_holiday_types_cms.sql','20261026_suppliers_directory.sql'].sort());
+test('authorised bespoke enquiries use private server handling while obsolete integrations remain absent',async()=>{
+ for(const path of ['src/app/api/cms','src/lib/suppliers/lookup.ts'])await assert.rejects(access(path));
+ const form=await readFile('src/components/enquiry/EnquiryForm.tsx','utf8');assert.doesNotMatch(form,/localStorage|sessionStorage|SUPABASE_SECRET|RESEND_API_KEY/);
+ for(const path of ['src/lib/enquiries/server.ts','src/app/api/enquiries/route.ts'])await access(path);
+ const migrations=await readdir('supabase/migrations');assert.deepEqual(migrations.sort(),['20261025_articles_cms.sql','20261026_holiday_offers_cms.sql','20261026_holiday_offer_references.sql','20261026_holiday_types_cms.sql','20261026_suppliers_directory.sql','20261027_bespoke_enquiries.sql'].sort());
 });
