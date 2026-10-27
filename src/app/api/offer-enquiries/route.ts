@@ -7,6 +7,6 @@ export async function POST(request:Request) {
     const availability=offerEnquiryAvailability();
     if(!availability.enabled)throw new ArticleError(availability.message,503);
     const receipt=await completeOfferEnquiry(request,await readJson(request));
-    return Response.json(receipt,{headers:{"Cache-Control":"private, no-store"}});
+    return Response.json(receipt,{status:receipt.notification==="pending"?202:200,headers:{"Cache-Control":"private, no-store"}});
   }catch(e){return failure(e);}
 }

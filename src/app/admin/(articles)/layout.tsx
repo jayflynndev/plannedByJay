@@ -16,6 +16,7 @@ export default async function AdminLayout({
         <a href="/admin/holiday-types">Holiday Types</a>
         <a href="/admin/suppliers">Suppliers</a>
         <a href="/admin/holiday-offers">Holiday Offers</a>
+        <a href="/admin/offer-enquiries">Offer enquiries</a>
         <LogoutButton />
       </nav>
       {children}

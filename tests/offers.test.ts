@@ -4,7 +4,7 @@ import { randomUUID } from "node:crypto";
 import { offerFixture,offerSql,offerReferencesSql } from "./helpers/offer-fixture";
 import { prepareOffer } from "../src/lib/offers/validation";
 import { emptyOffer,averagePrice,displayedSash,offerQuery } from "../src/lib/offers/schema";
-import { offerEnquiryAvailability,completeOfferEnquiry } from "../src/lib/offers/enquiries";
+import { offerEnquiryAvailability,completeOfferEnquiry,notificationNeedsReview,notifyOfferEnquiry,offerEnquiryServiceClient,storeOfferEnquiry,requireEnquiryAdmin,type StoredOfferEnquiry } from "../src/lib/offers/enquiries";
 import { duplicateInput,offerRecord } from "../src/lib/offers/data";
 import { sendOfferNotification } from "../src/lib/offers/notifications";
 import { cardBenefit,cardReason,inclusionItems } from "../src/lib/offers/presentation";
@@ -51,6 +51,92 @@ test("offers migrations support private drafts, atomic multi-type saves, stable 
     await db.query("update public.holiday_offers set booking_deadline='2000-01-01' where id=$1",[future.id]);
     assert.equal((await publicList()).total,0);
     assert.equal((await db.query<{count:number}>("select count(*)::int count from public.holiday_types")).rows[0].count,6);
+  }finally{await db.close();}
+});
+
+test('durable enquiries survive mail/receipt failures and retries accept only one notification',async()=>{
+  const {db,sample,save}=await offerFixture();
+  const published=await save({...sample,status:'published'});
+  const keys=['SUPABASE_URL','SUPABASE_SECRET_KEY','RESEND_API_KEY','ENQUIRY_EMAIL_FROM','ENQUIRY_EMAIL_TO'],old=keys.map(k=>process.env[k]);
+  const originalFetch=globalThis.fetch,originalError=console.error;
+  Object.assign(process.env,{SUPABASE_URL:'https://fixture.supabase.co',SUPABASE_SECRET_KEY:'sb_secret_fixture',RESEND_API_KEY:'fixture-key',ENQUIRY_EMAIL_FROM:'Fixture <sender@example.org>',ENQUIRY_EMAIL_TO:'jay@plannedbyjay.com'});
+  let mailFails=true,receiptFails=false,storageFails=false,lookupFails=false,mailCalls=0,rpcCalls=0;
+  const sent=new Map<string,{id:string;body:string}>(),logged:unknown[][]=[];
+  console.error=(...args)=>{logged.push(args);};
+  globalThis.fetch=async(input,init)=>{
+    const url=new URL(String(input));
+    if(url.pathname.endsWith('/rpc/receive_offer_enquiry')){
+      rpcCalls++;if(storageFails)return Response.json({code:'XX000',message:'Fixture database failure'},{status:503});
+      const p=JSON.parse(String(init?.body));
+      try {const result=await db.query<{id:string}>('select public.receive_offer_enquiry($1,$2,$3,$4,$5,$6,$7) id',[p.p_request_id,p.p_offer_id,p.p_name,p.p_email,p.p_phone,p.p_message,p.p_client_hash]);return Response.json(result.rows[0].id);}
+      catch(error){return Response.json({code:(error as {code:string}).code,message:'Fixture SQL rejection'},{status:400});}
+    }
+    if(url.pathname.endsWith('/offer_enquiries')){
+      const id=url.searchParams.get('id')!.replace(/^eq\./,'');
+      if(init?.method==='PATCH'){
+        if(receiptFails)return Response.json({code:'XX000',message:'Fixture receipt failure'},{status:503});
+        const update=JSON.parse(String(init.body));assert.deepEqual(Object.keys(update).sort(),['notification_id','notified_at']);
+        await db.query('update public.offer_enquiries set notification_id=$1,notified_at=$2 where id=$3 and notification_id is null',[update.notification_id,update.notified_at,id]);return new Response(null,{status:204});
+      }
+      if(lookupFails)return Response.json({code:'XX000',message:'Fixture read failure'},{status:503});
+      const result=await db.query<{row:StoredOfferEnquiry}>("select to_jsonb(e)||jsonb_build_object('offer',jsonb_build_object('reference',o.reference)) row from public.offer_enquiries e join public.holiday_offers o on o.id=e.offer_id where e.id=$1",[id]);return Response.json(result.rows[0].row);
+    }
+    assert.equal(url.href,'https://api.resend.com/emails');mailCalls++;
+    if(mailFails)return Response.json({message:'Fixture temporary mail failure'},{status:503});
+    const key=new Headers(init?.headers).get('Idempotency-Key')!,body=String(init?.body),prior=sent.get(key);
+    if(prior)assert.equal(body,prior.body,'the retry payload, including submission time, is unchanged');
+    else sent.set(key,{id:'fixture-mail-'+sent.size,body});
+    return Response.json({id:sent.get(key)!.id});
+  };
+  const input={request_id:randomUUID(),offer_id:String(published.id),name:'Fixture customer',email:'fixture@example.org',phone:'01234567890',message:'A fixture question'};
+  const complete=(value:unknown=input)=>completeOfferEnquiry(new Request('https://plannedbyjay.com/api/offer-enquiries'),value);
+  const rows=async()=>(await db.query<{row:StoredOfferEnquiry}>('select to_jsonb(e) row from public.offer_enquiries e order by created_at')).rows.map(r=>r.row);
+  try{
+    const pending=await Promise.all([complete(),complete()]);
+    for(const receipt of pending)assert.deepEqual(receipt,{accepted:true,reference:published.reference,notification:'pending'});
+    assert.equal((await rows()).length,1);assert.equal((await rows())[0].notification_id,null);
+    mailFails=false;receiptFails=true;assert.equal((await complete()).notification,'pending');assert.equal(sent.size,1);assert.equal((await rows())[0].notification_id,null);
+    receiptFails=false;assert.equal((await complete()).notification,'accepted');assert.ok((await rows())[0].notification_id);assert.equal(sent.size,1);
+    const callsBefore=mailCalls;assert.equal((await complete()).notification,'accepted');assert.equal(mailCalls,callsBefore,'stored receipts prevent repeat sends');
+    storageFails=true;await assert.rejects(complete({...input,request_id:randomUUID()}),/could not be received/);assert.equal(mailCalls,callsBefore);storageFails=false;
+    const second={...input,request_id:randomUUID()};lookupFails=true;await assert.rejects(complete(second),/was saved.*Retry/);assert.equal((await rows()).length,2);lookupFails=false;
+    assert.equal((await complete(second)).notification,'accepted');assert.equal((await rows()).length,2);
+    const beforeInvalid=rpcCalls;
+    for(const invalid of [{...input,name:''},{...input,email:'invalid'},{...input,website:'spam'},{...input,phone:'1'.repeat(51)},{...input,reference:'999999'}])await assert.rejects(storeOfferEnquiry(offerEnquiryServiceClient(),invalid,'fixture-address','fixture-hash-secret'),/Check your enquiry/);
+    assert.equal(rpcCalls,beforeInvalid);
+    assert.ok(logged.length>=3);assert.doesNotMatch(JSON.stringify(logged),/fixture@example.org|01234567890|fixture-key|A fixture question/,'failure logs contain IDs/codes only');
+    const saved=(await rows())[0];assert.equal(saved.name,input.name);assert.equal(saved.offer_snapshot.reference,published.reference);assert.equal(saved.offer_snapshot.total_price_minor,240000);
+  }finally{globalThis.fetch=originalFetch;console.error=originalError;keys.forEach((k,i)=>{if(old[i]===undefined)delete process.env[k];else process.env[k]=old[i];});await db.close();}
+});
+
+test('older notification retries require review, while saved receipts remain idempotent',async()=>{
+  const original=globalThis.fetch,keys=['RESEND_API_KEY','ENQUIRY_EMAIL_FROM','ENQUIRY_EMAIL_TO'],old=keys.map(k=>process.env[k]);
+  Object.assign(process.env,{RESEND_API_KEY:'fixture-key',ENQUIRY_EMAIL_FROM:'Fixture <sender@example.org>',ENQUIRY_EMAIL_TO:'jay@plannedbyjay.com'});
+  const created_at=new Date(Date.now()-25*60*60*1000).toISOString();
+  const enquiry:StoredOfferEnquiry={id:randomUUID(),name:'Fixture customer',email:'fixture@example.org',phone:'',message:'',created_at,notification_id:null,notified_at:null,offer:{reference:'000042'},offer_snapshot:{reference:'000042',title:'Stored title',currency:'GBP',total_price_minor:240600,adults:2,children:1}};
+  let sends=0,marks=0;
+  const client={from:()=>({update:()=>({eq:()=>({is:async()=>{marks++;return {error:null};}})})})} as unknown as import('@supabase/supabase-js').SupabaseClient;
+  globalThis.fetch=async()=>{sends++;return Response.json({id:'fixture-receipt'});};
+  try{
+    assert.equal(notificationNeedsReview(created_at),true);assert.equal(notificationNeedsReview(new Date().toISOString()),false);
+    await assert.rejects(notifyOfferEnquiry(client,enquiry),/Check Resend and the mailbox/);assert.equal(sends,0);
+    await notifyOfferEnquiry(client,enquiry,true);assert.equal(sends,1);assert.equal(marks,1);
+    await notifyOfferEnquiry(client,{...enquiry,notification_id:'already-saved'});assert.equal(sends,1);
+  }finally{globalThis.fetch=original;keys.forEach((k,i)=>{if(old[i]===undefined)delete process.env[k];else process.env[k]=old[i];});}
+});
+
+test('private notification retry honours the existing database administrator decision, including bans',async()=>{
+  const {db,run,admin,other}=await offerFixture();
+  const client=(id:string)=>({rpc:async(name:string)=>{
+    assert.equal(name,'articles_is_admin');
+    const result=await run<{allowed:boolean}>('authenticated',id,'select public.articles_is_admin() allowed');return {data:result.rows[0].allowed,error:null};
+  }}) as unknown as import('@supabase/supabase-js').SupabaseClient;
+  try{
+    await requireEnquiryAdmin(client(admin));
+    await assert.rejects(requireEnquiryAdmin(client(other)),/cannot retry/);
+    await db.query("update auth.users set banned_until=now()+interval '1 day' where id=$1",[admin]);
+    await assert.rejects(requireEnquiryAdmin(client(admin)),/cannot retry/);
+    await assert.rejects(requireEnquiryAdmin({rpc:async()=>({data:null,error:{code:'fixture'}})} as unknown as import('@supabase/supabase-js').SupabaseClient),/cannot retry/);
   }finally{await db.close();}
 });
 
@@ -141,9 +227,9 @@ test("offer preparation calculates dates, permits incomplete drafts and controls
 test("existing Resend notification uses a fixed business recipient, stored snapshot and stable idempotency key",async()=>{
   const keys=["RESEND_API_KEY","ENQUIRY_EMAIL_FROM","ENQUIRY_EMAIL_TO"],old=keys.map(k=>process.env[k]);
   Object.assign(process.env,{RESEND_API_KEY:"fixture-key",ENQUIRY_EMAIL_FROM:"Fixture sender <sender@example.org>",ENQUIRY_EMAIL_TO:"jay@plannedbyjay.com"});
-  const enquiry={id:"70000000-0000-4000-8000-000000000001",name:"Fixture customer",email:"customer@example.org",phone:"",message:"A fixture question",offer_snapshot:{reference:"000042",title:"Stored title",supplier:{name:"Stored supplier"},total_price_minor:240050,currency:"GBP",adults:2,children:0}};
+  const enquiry={id:"70000000-0000-4000-8000-000000000001",name:"Fixture customer",email:"customer@example.org",phone:"",message:"A fixture question",created_at:"2026-10-27T10:30:00Z",offer_snapshot:{reference:"000042",title:"Stored title",supplier:{name:"Stored supplier"},total_price_minor:240050,currency:"GBP",adults:2,children:0}};
   let calls=0;
-  const sender:typeof fetch=async(url,init)=>{calls++;assert.equal(String(url),"https://api.resend.com/emails");assert.equal(new Headers(init?.headers).get("Idempotency-Key"),"offer-enquiry/"+enquiry.id);const body=JSON.parse(String(init?.body));assert.deepEqual(body.to,["jay@plannedbyjay.com"]);assert.equal(body.reply_to,enquiry.email);assert.match(body.text,/Stored title/);assert.match(body.text,/Offer reference: 000042/);assert.equal(body.subject,'Holiday enquiry 000042');assert.match(body.text,/2400.5/);return Response.json({id:"fixture-notification"});};
+  const sender:typeof fetch=async(url,init)=>{calls++;assert.equal(String(url),"https://api.resend.com/emails");assert.equal(new Headers(init?.headers).get("Idempotency-Key"),"offer-enquiry/"+enquiry.id);const body=JSON.parse(String(init?.body));assert.deepEqual(body.to,["jay@plannedbyjay.com"]);assert.equal(body.reply_to,enquiry.email);assert.match(body.text,/Stored title/);assert.match(body.text,/Offer reference: 000042/);assert.equal(body.subject,'Holiday enquiry 000042');assert.match(body.text,/\u00a32,400\.50/);assert.match(body.text,/Submitted: 27 Oct 2026, 10:30 \(Europe\/London\)/);return Response.json({id:"fixture-notification"});};
   try{
     assert.equal(await sendOfferNotification(enquiry,sender),"fixture-notification");
     process.env.ENQUIRY_EMAIL_TO="wrong@example.org";
@@ -156,7 +242,7 @@ test("existing Resend notification uses a fixed business recipient, stored snaps
 test('enquiry completion returns the saved offer reference and resolves historical snapshots without rewriting them',async()=>{
   const keys=['SUPABASE_URL','SUPABASE_SECRET_KEY','RESEND_API_KEY','ENQUIRY_EMAIL_FROM','ENQUIRY_EMAIL_TO'],old=keys.map(k=>process.env[k]),original=globalThis.fetch;
   Object.assign(process.env,{SUPABASE_URL:'https://fixture.supabase.co',SUPABASE_SECRET_KEY:'sb_secret_fixture',RESEND_API_KEY:'fixture-key',ENQUIRY_EMAIL_FROM:'Fixture <sender@example.org>',ENQUIRY_EMAIL_TO:'jay@plannedbyjay.com'});
-  const enquiryId=randomUUID(),offerId=randomUUID(),requestId=randomUUID();
+  const enquiryId=randomUUID(),offerId=randomUUID(),requestId=randomUUID(),created_at=new Date().toISOString();
   let legacy=false,messages=0,updates=0;
   const snapshots:Record<string,unknown>[]=[];
   globalThis.fetch=async(input,init)=>{
@@ -166,7 +252,7 @@ test('enquiry completion returns the saved offer reference and resolves historic
     if(url.pathname.endsWith('/offer_enquiries')){
       assert.match(url.searchParams.get('select')||'',/holiday_offers\(reference\)/);
       const offer_snapshot={reference:legacy?'PBJ-HISTORICAL':'000042',title:'Stored title',currency:'GBP',total_price_minor:240600,adults:2,children:1};snapshots.push(offer_snapshot);
-      return Response.json({id:enquiryId,name:'Fixture customer',email:'fixture@example.org',phone:'',message:'',offer_snapshot,notification_id:null,offer:{reference:'000042'}});
+      return Response.json({id:enquiryId,name:'Fixture customer',email:'fixture@example.org',phone:'',message:'',created_at,offer_snapshot,notification_id:null,notified_at:null,offer:{reference:'000042'}});
     }
     assert.equal(url.href,'https://api.resend.com/emails');messages++;
     const body=JSON.parse(String(init?.body));assert.equal(body.subject,'Holiday enquiry 000042');assert.match(body.text,/Offer reference: 000042/);assert.doesNotMatch(body.text,/PBJ-HISTORICAL/);
@@ -175,7 +261,7 @@ test('enquiry completion returns the saved offer reference and resolves historic
   try{
     const input={request_id:requestId,offer_id:offerId,name:'Fixture customer',email:'fixture@example.org'};
     const complete=()=>completeOfferEnquiry(new Request('https://plannedbyjay.com/api/offer-enquiries'),input);
-    assert.deepEqual(await complete(),{reference:'000042'});legacy=true;assert.deepEqual(await complete(),{reference:'000042'});
+    assert.deepEqual(await complete(),{accepted:true,reference:'000042',notification:'accepted'});legacy=true;assert.deepEqual(await complete(),{accepted:true,reference:'000042',notification:'accepted'});
     assert.equal(messages,2);assert.equal(updates,2);assert.equal(snapshots[1].reference,'PBJ-HISTORICAL');assert.equal(offerEnquiryAvailability().enabled,false);
   }finally{globalThis.fetch=original;keys.forEach((k,i)=>{if(old[i]===undefined)delete process.env[k];else process.env[k]=old[i];});}
 });

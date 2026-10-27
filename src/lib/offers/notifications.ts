@@ -1,20 +1,24 @@
 import "server-only";
 import { z } from "zod";
 import { ArticleError } from "@/lib/articles/client";
-import { isOfferReference } from "./schema";
+import { isOfferReference,money } from "./schema";
 export function offerMailConfig() {
   const key=process.env.RESEND_API_KEY,from=process.env.ENQUIRY_EMAIL_FROM,to=process.env.ENQUIRY_EMAIL_TO;
   if(!key||!from||/[\r\n]/.test(from)||!/@/.test(from)||to?.trim().toLowerCase()!=="jay@plannedbyjay.com")return null;
   return {key,from,to:"jay@plannedbyjay.com"};
 }
-export type EnquiryNotification={id:string;name:string;email:string;phone:string;message:string;offer_snapshot:Record<string,unknown>;offer_reference?:string};
+export type EnquiryNotification={id:string;name:string;email:string;phone:string;message:string;created_at:string;offer_snapshot:Record<string,unknown>;offer_reference?:string};
 export async function sendOfferNotification(enquiry:EnquiryNotification,send:typeof fetch=fetch) {
   const config=offerMailConfig();
   if(!config)throw new ArticleError("Offer enquiry notification delivery is unavailable.",503);
   const s=enquiry.offer_snapshot;
   const reference=enquiry.offer_reference??s.reference;
   if(!isOfferReference(reference))throw new ArticleError("The saved offer reference is unavailable.",503);
-  const text=["Planned by Jay: offer enquiry",`Offer reference: ${reference}`,`Holiday: ${String(s.title)}`,`Internal enquiry ID: ${enquiry.id}`,`Supplier: ${String((s.supplier as {name?:string})?.name||"")}`,`Travel: ${String(s.departure_date||"")} to ${String(s.return_date||"")} (${String(s.nights??"")} nights)`,`Advertised party total: ${String(s.currency)} ${Number(s.total_price_minor||0)/100}`,`Party: ${String(s.adults)} adults, ${String(s.children)} children; child ages: ${JSON.stringify(s.child_ages||[])}`,`Price checked: ${String(s.price_checked_on||"")}`,`Charges: ${String(s.mandatory_charges||"")}`,"",`Name: ${enquiry.name}`,`Email: ${enquiry.email}`,`Phone: ${enquiry.phone||"Not supplied"}`,"Question:",enquiry.message||"No question supplied."].join("\n");
+  if(!Number.isFinite(Date.parse(enquiry.created_at)))throw new ArticleError("The saved enquiry submission date is unavailable.",503);
+  const price=z.number().int().positive().safeParse(s.total_price_minor),currency=z.enum(["GBP","EUR","USD"]).safeParse(s.currency);
+  if(!price.success||!currency.success)throw new ArticleError("The saved enquiry price is unavailable.",503);
+  const submitted=new Intl.DateTimeFormat("en-GB",{dateStyle:"medium",timeStyle:"short",timeZone:"Europe/London"}).format(new Date(enquiry.created_at));
+  const text=["Planned by Jay: offer enquiry",`Offer reference: ${reference}`,`Holiday: ${String(s.title)}`,`Submitted: ${submitted} (Europe/London)`,`Internal enquiry ID: ${enquiry.id}`,`Supplier: ${String((s.supplier as {name?:string})?.name||"")}`,`Travel: ${String(s.departure_date||"")} to ${String(s.return_date||"")} (${String(s.nights??"")} nights)`,`Advertised party total: ${money(price.data,currency.data)} (${currency.data})`,`Party: ${String(s.adults)} adults, ${String(s.children)} children; child ages: ${JSON.stringify(s.child_ages||[])}`,`Price checked: ${String(s.price_checked_on||"")}`,`Charges: ${String(s.mandatory_charges||"")}`,"",`Name: ${enquiry.name}`,`Email: ${enquiry.email}`,`Phone: ${enquiry.phone||"Not supplied"}`,"Question:",enquiry.message||"No question supplied."].join("\n");
   let response:Response;
   try {response=await send("https://api.resend.com/emails",{method:"POST",cache:"no-store",signal:AbortSignal.timeout(10000),headers:{Authorization:`Bearer ${config.key}`,"Content-Type":"application/json","Idempotency-Key":"offer-enquiry/"+enquiry.id},body:JSON.stringify({from:config.from,to:[config.to],reply_to:enquiry.email,subject:"Holiday enquiry "+reference,text})});}
   catch(error) {

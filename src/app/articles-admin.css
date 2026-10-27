@@ -225,4 +225,7 @@
 .article-admin .offer-editor-check { display: flex; align-items: center; gap: 10px; min-height: 44px; }
 .article-admin .offer-editor-check input { width: 20px; min-height: 20px; flex-shrink: 0; }
 .offer-gallery-choice { display: grid; gap: 10px; min-width: 0; }
+.offer-enquiry-message { white-space: pre-wrap; overflow-wrap: anywhere; }
+.offer-enquiry-record { font-size: .8rem; overflow-wrap: anywhere; }
+.offer-notification-retry { margin-top: 16px; }
 @media(max-width:767px){.offer-editor-section{padding:14px;}}

@@ -626,7 +626,7 @@ test("offer enquiry acknowledgement waits for a server reference and prevents re
   const {render,fireEvent,cleanup,waitFor}=await import("@testing-library/react");
   const {OfferEnquiryForm}=await import("../src/components/offers/OfferEnquiryForm");
   const original=globalThis.fetch;let receipt=false,calls=0;const tokens:string[]=[];
-  globalThis.fetch=async(_input,init)=>{calls++;const body=JSON.parse(String(init?.body));assert.equal(body.offer_id,"60000000-0000-4000-8000-000000000001");assert.equal("total_price_minor" in body,false);tokens.push(body.request_id);return Response.json(receipt?{reference:"000042"}:{});};
+  globalThis.fetch=async(_input,init)=>{calls++;const body=JSON.parse(String(init?.body));assert.equal(body.offer_id,"60000000-0000-4000-8000-000000000001");assert.equal("total_price_minor" in body,false);tokens.push(body.request_id);return Response.json(receipt?{accepted:true,reference:"000042",notification:"accepted"}:{});};
   try{
     const view=render(<OfferEnquiryForm offerId="60000000-0000-4000-8000-000000000001" enabled privacyHref="/privacy"/>);
     fireEvent.change(view.getByLabelText("Your name"),{target:{value:"Fixture customer"}});fireEvent.change(view.getByLabelText("Email address"),{target:{value:"customer@example.org"}});
@@ -638,4 +638,49 @@ test("offer enquiry acknowledgement waits for a server reference and prevents re
     fireEvent.submit(view.getByRole("form",{name:"Offer-specific enquiry"}));assert.equal(calls,2);
     assert.ok(view.getByText("Your enquiry has been received. Offer reference: 000042"));assert.ok(view.getByRole("button",{name:"Enquiry received"}).matches(":disabled"));
   }finally{cleanup();globalThis.fetch=original;}
+});
+
+test('offer enquiry shows its saved holiday context and acknowledges pending mail only after durable acceptance',async()=>{
+  const {render,fireEvent,cleanup,waitFor}=await import('@testing-library/react');
+  const {OfferEnquiryForm}=await import('../src/components/offers/OfferEnquiryForm');
+  const original=globalThis.fetch;let calls=0,resolveResponse!:(value:Response)=>void;
+  globalThis.fetch=async(_input,init)=>{
+    calls++;const value=JSON.parse(String(init?.body));assert.equal(value.offer_id,'60000000-0000-4000-8000-000000000001');
+    for(const field of ['reference','title','supplier','total_price_minor','adults','children'])assert.equal(field in value,false,'holiday data is captured by the database, not trusted from the browser');
+    return new Promise<Response>(resolve=>{resolveResponse=resolve;});
+  };
+  try{
+    const view=render(<OfferEnquiryForm offerId="60000000-0000-4000-8000-000000000001" enabled privacyHref="/privacy" summary={{reference:'000042',title:'Saved holiday title',supplier:'Saved supplier',departure_date:'2099-01-01',total_price_minor:240600,currency:'GBP',adults:2,children:1,child_ages:[8]}}/>);
+    assert.ok(view.getByText('Saved holiday title'));assert.ok(view.getByText(/Offer reference: 000042.*Saved supplier/));assert.ok(view.getByText(/2 adults \+ 1 child \(ages 8\)/));
+    assert.equal(view.getByRole('link',{name:'Privacy information'}).getAttribute('href'),'/privacy');
+    fireEvent.change(view.getByLabelText('Your name'),{target:{value:'Fixture customer'}});fireEvent.change(view.getByLabelText('Email address'),{target:{value:'fixture@example.org'}});
+    const form=view.getByRole('form',{name:'Offer-specific enquiry'});fireEvent.submit(form);fireEvent.submit(form);assert.equal(calls,1);
+    assert.equal(view.queryByText(/Your enquiry has been/),null);
+    resolveResponse(Response.json({accepted:true,reference:'000042',notification:'pending'},{status:202}));
+    await waitFor(()=>assert.ok(view.getByText(/Your enquiry has been saved securely.*notification is pending/)));
+    assert.doesNotMatch(view.container.textContent||'',/email (?:was |has been )?delivered/i);
+    fireEvent.submit(form);assert.equal(calls,1);assert.ok(view.getByRole('button',{name:'Enquiry received'}).matches(':disabled'));
+  }finally{cleanup();globalThis.fetch=original;}
+});
+
+test('administrator notification retry retains failed enquiries and checks older messages before resending',async()=>{
+  const {render,fireEvent,cleanup,waitFor}=await import('@testing-library/react');
+  const {AppRouterContext}=await import('next/dist/shared/lib/app-router-context.shared-runtime');
+  const {RetryOfferNotification}=await import('../src/components/offers/RetryOfferNotification');
+  const original=globalThis.fetch,confirm=window.confirm;let calls=0,refreshes=0,fail=true;
+  const router={refresh:()=>{refreshes++;}} as unknown as import('next/dist/shared/lib/app-router-context.shared-runtime').AppRouterInstance;
+  globalThis.fetch=async(input,init)=>{
+    calls++;assert.equal(String(input),'/api/offer-enquiries/notification');assert.equal(init?.method,'POST');
+    const value=JSON.parse(String(init.body));assert.equal(value.id,'70000000-0000-4000-8000-000000000001');
+    return fail?Response.json({error:'Notification pending; enquiry retained.'},{status:503}):Response.json({notification:'accepted'});
+  };
+  try{
+    const element=(needsReview:boolean)=><AppRouterContext.Provider value={router}><RetryOfferNotification id="70000000-0000-4000-8000-000000000001" needsReview={needsReview}/></AppRouterContext.Provider>;
+    const view=render(element(false));fireEvent.click(view.getByRole('button',{name:'Retry email notification'}));
+    await waitFor(()=>assert.ok(view.getByRole('alert')));assert.equal(refreshes,0);
+    view.rerender(element(true));window.confirm=()=>false;fireEvent.click(view.getByRole('button',{name:'Retry email notification'}));assert.equal(calls,1);
+    window.confirm=()=>true;fail=false;fireEvent.click(view.getByRole('button',{name:'Retry email notification'}));
+    await waitFor(()=>assert.ok(view.getByText(/Notification accepted by Resend/)));assert.equal(refreshes,1);assert.equal(calls,2);
+    assert.doesNotMatch(view.container.textContent||'',/email (?:was |has been )?delivered/i);
+  }finally{cleanup();globalThis.fetch=original;window.confirm=confirm;}
 });

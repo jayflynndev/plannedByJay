@@ -66,7 +66,7 @@ test('holiday detail organises saved content once, formats clear inclusions, and
     assert.deepEqual(Array.from(view.getByRole('region',{name:"What's included"}).querySelectorAll('li')).map(li=>li.textContent),['Free Child Place','22kg Baggage per person','Coach transfers to and from the hotel.']);
     assert.equal(view.getAllByText(offer.why_jay).length,1);assert.equal(view.getAllByText(offer.supplier.business_address).length,1);
     assert.equal(view.getAllByText(/ATOL holder for this advertised arrangement/).length,1);
-    assert.ok(view.getByText('2 adults + 1 child'));assert.ok(view.getByText(/£2,406.00/));assert.ok(view.getByText('Offer reference: 000042'));
+    assert.ok(view.getByText('2 adults + 1 child'));assert.match(view.container.querySelector('.offer-price-panel')?.textContent||'',/£2,406.00/);assert.ok(view.getByText('Offer reference: 000042'));
     assert.ok(view.container.querySelector('.offer-price-panel a[href="#ask-jay"]'));assert.ok(view.container.querySelector('#ask-jay > summary'));
     const paragraph='Meals, including breakfast, are served at the hotel. Please confirm dietary requirements.';
     view.rerender(<OfferDetail offer={{...offer,inclusions:paragraph}}/>);
@@ -205,4 +205,48 @@ test('policy routes return not-found for unapproved or unresolved drafts and ren
       cleanup();
     }
   }finally{Object.assign(policies,originals);cleanup();}
+});
+
+test('the privacy draft stays private and one approved policy links both disabled enquiry journeys',async()=>{
+  const marker=require.resolve('server-only'),cached=require.cache[marker];
+  require.cache[marker]={exports:{},id:marker,filename:marker,loaded:true} as NodeModule;
+  const original=policies.privacy;
+  const {render,fireEvent,cleanup}=await import('@testing-library/react');
+  try{
+    const {approvedPolicyHref}=await import('../src/content/policies');
+    const {PolicyPage}=await import('../src/components/layout/PolicyPage');
+    const {PolicyDocument}=await import('../src/components/layout/PolicyDocument');
+    const {Footer}=await import('../src/components/layout/Footer');
+    const {OfferEnquiryForm}=await import('../src/components/offers/OfferEnquiryForm');
+    const {EnquiryForm}=await import('../src/components/enquiry/EnquiryForm');
+    const {offerEnquiryAvailability}=await import('../src/lib/offers/enquiries');
+    assert.equal(original.approved,false);assert.equal(original.updatedAt,null);
+    assert.equal(approvedPolicyHref('privacy'),null);
+    assert.throws(()=>PolicyPage({policy:'privacy'}),{digest:'NEXT_HTTP_ERROR_FALLBACK;404'});
+    const footer=render(<Footer/>);assert.equal(footer.container.querySelector('a[href="/privacy"]'),null);cleanup();
+    const preview=render(<PolicyDocument policy={original}/>);
+    for(const text of ['Supabase','Resend','Microsoft 365','12 calendar months','read-only preview','legitimate interests'])assert.ok(preview.container.textContent?.includes(text));
+    assert.doesNotMatch(preview.container.textContent||'',/pbj-enquiry-session|Turnstile|VHUB|erase_holiday_enquiry/);
+    for(const issue of original.reviewRequired)assert.equal(preview.queryByText(issue),null);
+    cleanup();
+    // Approval is simulated only in this test; it must not open either submission gate.
+    policies.privacy={...original,approved:true,reviewRequired:[],updatedAt:'2026-10-27'};
+    const href=approvedPolicyHref('privacy');assert.equal(href,'/privacy');
+    const page=render(PolicyPage({policy:'privacy'}));assert.ok(page.getByRole('heading',{name:'Privacy Policy',level:1}));cleanup();
+    const publishedFooter=render(<Footer/>);assert.ok(publishedFooter.container.querySelector('a[href="/privacy"]'));cleanup();
+    const offer=render(<OfferEnquiryForm offerId="60000000-0000-4000-8000-000000000001" privacyHref={href}/>);
+    fireEvent.click(offer.container.querySelector('summary')!);
+    assert.ok(offer.container.querySelector('a[href="/privacy"]'));
+    for(const field of offer.container.querySelectorAll('input,textarea'))assert.ok(field.matches(':disabled'));
+    assert.equal(offer.container.querySelector('input[type="checkbox"]'),null);cleanup();
+    const brief=render(<EnquiryForm privacyHref={href}/>);
+    for(let stage=0;stage<2;stage++)fireEvent.click(brief.getByRole('button',{name:/View next stage/}));
+    assert.ok(brief.container.querySelector('a[href="/privacy"]'));
+    for(const field of brief.container.querySelectorAll('input,textarea,select'))assert.ok(field.matches(':disabled'));
+    assert.ok(brief.getByRole('button',{name:/Enquiries unavailable/}).matches(':disabled'));
+    assert.equal(offerEnquiryAvailability().enabled,false);
+  }finally{
+    policies.privacy=original;cleanup();
+    if(cached)require.cache[marker]=cached;else delete require.cache[marker];
+  }
 });

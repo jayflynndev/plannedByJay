@@ -94,7 +94,7 @@ export function OfferDetail({offer:o,preview=false,privacyHref=null,enquiriesEna
       {o.why_jay.trim()&&<section className="offer-editorial" aria-labelledby="offer-why-heading"><p className="eyebrow">A personal selection</p><h2 id="offer-why-heading">Why Jay picked it</h2><p className="offer-paragraphs">{o.why_jay}</p></section>}
       {o.exclusions.trim()&&<section aria-labelledby="offer-conditions-heading"><h2 id="offer-conditions-heading">Important conditions and exclusions</h2><p className="offer-paragraphs">{o.exclusions}</p></section>}
       <section className="offer-supplier-section" aria-labelledby="offer-supplier-heading"><h2 id="offer-supplier-heading">Supplier and price information</h2><p>{copy.disclaimer}</p><details className="offer-supplier-information"><summary>Supplier details and booking conditions</summary><Operator offer={o}/><Protection offer={o}/>{o.supplier.website&&<p><a href={o.supplier.website} rel="noopener noreferrer">Supplier website</a></p>}</details><p><Link href="/booking-information">Read the booking information</Link></p></section>
-      <OfferEnquiryForm offerId={o.id} enabled={available} privacyHref={privacyHref}/>
+      <OfferEnquiryForm offerId={o.id} summary={{reference:o.reference,title:o.title,supplier:o.supplier.name,departure_date:o.departure_date,total_price_minor:o.total_price_minor,currency:o.currency,adults:o.adults,children:o.children,child_ages:o.child_ages}} enabled={available} privacyHref={privacyHref}/>
     </div>
   </div>;
 }
