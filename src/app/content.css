@@ -61,3 +61,65 @@
 /* Keep the holiday description aligned with its own section heading. */
 .offer-description .article-prose{margin-inline:0}
 .offer-description .article-prose>:last-child{margin-bottom:0}
+
+/* Individual holidays use saved content, with price and travel essentials together. */
+.offer-detail-page{padding-top:40px}
+.offer-detail{width:calc(100% - 56px);max-width:1144px;margin:auto;overflow-wrap:anywhere}
+.offer-detail-heading{margin-bottom:26px}
+.offer-detail-heading h1{max-width:1000px;font-size:clamp(2.4rem,4.3vw,4rem)}
+.offer-accommodation{font-family:var(--font-heading);font-size:1.5rem;color:var(--ink);margin-top:14px}
+.offer-destination{font-size:.95rem;margin-top:4px}
+.offer-detail-heading .intro{margin-top:14px;max-width:800px}
+.offer-photos{margin-bottom:28px}
+.offer-photos-grid{display:grid;aspect-ratio:3/1;gap:10px;overflow:hidden;border-radius:5px}
+.offer-photos-multiple{grid-template-columns:minmax(0,2fr) minmax(0,1fr);grid-template-rows:repeat(2,minmax(0,1fr))}
+.offer-photos-multiple .offer-photo-main,.offer-photos-pair .offer-photo-thumb{grid-row:1/3}
+.offer-photos-grid button{position:relative;display:block;width:100%;height:100%;min-width:0;min-height:0;padding:0;border:0;background:var(--sage);overflow:hidden;border-radius:4px}
+.offer-photos-grid button:focus-visible{outline-offset:-5px;outline-color:var(--accent-light)}
+.offer-photo-label{position:absolute;bottom:12px;right:12px;padding:5px 10px;border-radius:3px;background:var(--ink);color:var(--white);font-size:.75rem}
+.offer-photo-dialog{width:min(1100px,96vw);max-width:96vw;max-height:94dvh;margin:auto;padding:20px;overflow:auto;border:1px solid var(--line);border-radius:5px;background:var(--paper);color:var(--ink)}
+.offer-photo-dialog::backdrop{background:rgb(10 30 25 / .86)}
+.offer-photo-close{display:flex;margin-left:auto;margin-bottom:14px}
+.offer-photo-enlarged{position:relative;width:100%;aspect-ratio:4/3;max-height:62dvh}
+.offer-photo-dialog figcaption{margin-top:12px;font-size:.9rem}
+.offer-photo-controls{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-top:16px}
+.offer-photo-controls .button,.offer-photo-close{font-size:.85rem;padding:10px 14px;min-height:44px}
+.offer-summary{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(280px,1fr);grid-template-areas:"facts price";gap:28px;align-items:start;margin-bottom:44px}
+.offer-detail h2{font-size:clamp(1.8rem,3vw,2.3rem);margin:0 0 20px}
+.offer-summary-facts{grid-area:facts;padding:24px;border:1px solid var(--line);border-radius:5px;background:var(--white)}
+.offer-summary dl{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 24px;margin:0}
+.offer-summary dl>div{min-width:0}
+.offer-summary dt{font-size:.75rem;color:var(--muted);margin-bottom:3px}
+.offer-summary dd{margin:0;color:var(--ink);font-weight:600;white-space:pre-wrap;line-height:1.5}
+.offer-price-panel{grid-area:price;padding:24px;border:1px solid var(--line);border-top:4px solid var(--accent);border-radius:5px;background:var(--sage)}
+.offer-price-panel h2{font:700 .85rem var(--font-body);letter-spacing:0;margin-bottom:12px}
+.offer-price-panel .offer-pricing{margin:0 0 16px}
+.offer-price-panel .offer-price{font-size:clamp(2rem,3.6vw,2.7rem);line-height:1.2;margin-bottom:12px}
+.offer-price-panel .offer-price small{margin-top:5px;font-size:.9rem}
+.offer-price-panel p+p{margin-top:8px}
+.offer-price-panel .offer-party{font-weight:600;color:var(--ink)}
+.offer-price-panel .offer-charges{font-size:1rem}
+.offer-availability-note,.offer-price-panel .offer-reference,.offer-enquiry-unavailable{font-size:.8rem;line-height:1.6}
+.offer-price-panel .button{display:flex;justify-content:center;min-height:44px;margin-top:18px;padding:12px 16px;font-size:.95rem}
+.offer-detail-content{max-width:850px}
+.offer-detail-content>section{margin-bottom:38px}
+.offer-detail-content p{line-height:1.85}
+.offer-detail-content .article-prose{max-width:none}
+.offer-inclusion-list{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 24px}
+.offer-inclusion-list li{position:relative;padding-left:27px;line-height:1.7;min-width:0;color:var(--ink)}
+.offer-inclusion-list li::before{content:"\2713";position:absolute;left:0;color:var(--accent);font-weight:700}
+.offer-editorial{padding:26px;background:var(--sage);border-left:4px solid var(--accent);border-radius:4px}
+.offer-editorial .eyebrow{margin-bottom:12px}
+.offer-editorial h2{margin-bottom:16px}
+.offer-detail .offer-supplier-information{margin:20px 0}
+.offer-supplier-information summary{font-size:.95rem;line-height:1.5;align-content:center}
+.offer-supplier-information[open] summary{margin-bottom:16px}
+.offer-supplier-information p+p,.offer-supplier-information .offer-disclosures+.offer-disclosures{margin-top:12px}
+.offer-supplier-section>p>a{text-decoration:underline;display:inline-block;min-height:44px}
+.offer-detail .offer-enquiry{margin-top:0}
+.offer-detail .offer-enquiry>summary{display:flex;justify-content:center;width:100%;font-size:1rem}
+.offer-detail .offer-enquiry[open]>summary{margin-bottom:24px}
+@media(max-width:900px){.offer-summary{grid-template-columns:minmax(0,1fr);grid-template-areas:"price" "facts";gap:20px}.offer-detail-content{max-width:none}.offer-photos-grid{aspect-ratio:5/2}}
+@media(max-width:767px){.offer-detail{width:calc(100% - 44px)}.offer-detail-heading{margin-bottom:22px}.offer-photos-grid{aspect-ratio:3/2}.offer-photos-multiple{aspect-ratio:auto;grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:auto}.offer-photos-multiple .offer-photo-main{grid-column:1/-1;grid-row:auto;aspect-ratio:3/2}.offer-photo-thumb{aspect-ratio:16/9}.offer-photos-pair .offer-photo-thumb{grid-column:1/-1;grid-row:auto;aspect-ratio:3/1}.offer-price-panel,.offer-summary-facts{padding:20px}.offer-summary{margin-bottom:34px}.offer-summary dl{gap:16px}.offer-inclusion-list{grid-template-columns:minmax(0,1fr)}.offer-editorial{padding:22px}.offer-photo-dialog{padding:14px}.offer-photo-controls .button{flex:1;justify-content:center}}
+@media(max-width:359px){.offer-summary dl{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:767px){.offer-detail-page{padding-top:28px}}

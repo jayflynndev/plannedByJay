@@ -4,14 +4,14 @@ export function AskJayLink() {
   return <a className="button" href="#ask-jay" onClick={()=>{
     const form=document.getElementById("ask-jay") as HTMLDetailsElement|null;
     if(form?.tagName==="DETAILS"){form.open=true;form.querySelector("summary")?.focus();}
-  }}>Ask Jay About This Holiday</a>;
+  }}>Ask Jay about this holiday</a>;
 }
 export function OfferEnquiryForm({offerId,enabled=false,privacyHref=null}:{offerId:string;enabled?:boolean;privacyHref?:string|null}) {
   const [busy,setBusy]=useState(false),[message,setMessage]=useState(""),[failed,setFailed]=useState(false);
   const [received,setReceived]=useState(false);
   const working=useRef(false),requestId=useRef("");
   const available=enabled && !!privacyHref;
-  return <details className="offer-enquiry" id="ask-jay"><summary className="button">Ask Jay About This Holiday</summary>
+  return <details className="offer-enquiry" id="ask-jay"><summary className="button">Ask Jay about this holiday</summary>
     <h2>Ask Jay about this holiday</h2>
     {!available && <p role="status">Offer enquiries are not available yet. No details are collected by this form.</p>}
     <form aria-label="Offer-specific enquiry" onSubmit={async e=>{

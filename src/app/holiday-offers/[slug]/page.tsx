@@ -15,5 +15,5 @@ export async function generateMetadata({params}:Props) {
 export default async function HolidayOfferPage({params}:Props) {
   const o=await publicOffer((await params).slug);if(!o)notFound();
   const structured={"@context":"https://schema.org","@type":"WebPage",name:o.title,description:o.summary,url:publicOrigin()+"/holiday-offers/"+o.slug,...(o.image?{image:o.image}:{}),dateModified:o.updated_at};
-  return <main id="main-content" tabIndex={-1} className="offer-page section"><script type="application/ld+json" dangerouslySetInnerHTML={{__html:JSON.stringify(structured).replace(/</g,"\\u003c")}}/><OfferDetail offer={o} privacyHref={approvedPolicyHref("privacy")} enquiriesEnabled={offerEnquiryAvailability().enabled}/></main>;
+  return <main id="main-content" tabIndex={-1} className="offer-page offer-detail-page section"><script type="application/ld+json" dangerouslySetInnerHTML={{__html:JSON.stringify(structured).replace(/</g,"\\u003c")}}/><OfferDetail offer={o} privacyHref={approvedPolicyHref("privacy")} enquiriesEnabled={offerEnquiryAvailability().enabled}/></main>;
 }

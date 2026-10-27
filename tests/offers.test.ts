@@ -7,7 +7,7 @@ import { emptyOffer,averagePrice,displayedSash,offerQuery } from "../src/lib/off
 import { offerEnquiryAvailability,completeOfferEnquiry } from "../src/lib/offers/enquiries";
 import { duplicateInput,offerRecord } from "../src/lib/offers/data";
 import { sendOfferNotification } from "../src/lib/offers/notifications";
-import { cardBenefit,cardReason } from "../src/lib/offers/presentation";
+import { cardBenefit,cardReason,inclusionItems } from "../src/lib/offers/presentation";
 test("offers migrations support private drafts, atomic multi-type saves, stable URLs, eligibility and private enquiry snapshots",async()=>{
   const {db,admin,other,run,sample,save,supplierId,dates}=await offerFixture();
   const publicList=async(params:unknown[]=[]) => (await db.query<{result:{offers:Record<string,unknown>[];total:number}}>("select public.public_holiday_offers() result",params)).rows[0].result;
@@ -115,6 +115,13 @@ test('card highlights use only explicit unqualified saved inclusions and comment
   assert.equal(cardBenefit({...o,children:0,inclusions:'Free Child Place'}),'');
   assert.equal(cardReason('A short saved reason.'),'A short saved reason.');
   assert.ok(cardReason('A saved reason with many words. '.repeat(20)).length<=111);
+});
+
+test('inclusion formatting keeps clauses and numerical commas intact rather than manufacturing checklist items',()=>{
+  assert.deepEqual(inclusionItems('Return flights, 22kg baggage, Coach transfers'),['Return flights','22kg baggage','Coach transfers']);
+  assert.deepEqual(inclusionItems('Return flights\n22kg baggage\nCoach transfers'),['Return flights','22kg baggage','Coach transfers']);
+  assert.deepEqual(inclusionItems('- Return flights\n- Transfers, subject to arrival time'),['Return flights','Transfers, subject to arrival time']);
+  for(const text of ['', 'Accommodation only','Meals, including breakfast, are provided.','A £1,000 allowance, transfers','Transfers (hotel, airport), baggage','Flights included. Baggage, seats and transfers are optional.','Flights included, baggage costs extra','Breakfast and lunch, served at the hotel'])assert.equal(inclusionItems(text),null);
 });
 test("offer preparation calculates dates, permits incomplete drafts and controls price/claim display without blanket protection",()=>{
   assert.equal(prepareOffer({}).status,"draft");

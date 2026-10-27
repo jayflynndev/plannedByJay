@@ -6,17 +6,18 @@ import { offersCopy as copy } from "@/content/offers";
 import { money,averagePrice,displayedSash,travelLabels,offerListHref,type PublicOffer,type OfferQuery } from "@/lib/offers/schema";
 import { OfferEnquiryForm,AskJayLink } from "./OfferEnquiryForm";
 import { OfferReference } from "./OfferReference";
-import { cardBenefit,cardReason } from "@/lib/offers/presentation";
+import { OfferGallery } from "./OfferGallery";
+import { cardBenefit,cardReason,inclusionItems } from "@/lib/offers/presentation";
 export const checkedDate=(date:string)=>new Intl.DateTimeFormat("en-GB",{dateStyle:"medium",timeZone:"UTC"}).format(new Date(date+"T00:00:00Z"));
 function Price({offer:o}:{offer:PublicOffer}) {
   const average=averagePrice(o);
   return <div className="offer-pricing"><p className="offer-price">{o.total_price_minor?money(o.total_price_minor,o.currency):"Price not entered"} <small>total for the stated party</small></p>
-    <p>{o.adults} {o.adults===1?"adult":"adults"}{o.children?`, ${o.children} ${o.children===1?"child":"children"}${o.child_ages.length?` (ages ${o.child_ages.join(", ")})`:""}`:""} · {o.adults+o.children} priced travellers</p>
+    <p className="offer-party">{o.adults} {o.adults===1?"adult":"adults"}{o.children?` + ${o.children} ${o.children===1?"child":"children"}${o.child_ages.length?` (ages ${o.child_ages.join(", ")})`:""}`:""}</p>
     {average&&<p>Average {money(average,o.currency)} per adult</p>}
     {o.mandatory_charges&&<p className="offer-charges">{o.mandatory_charges}</p>}
     {o.price_checked_on&&<p>Price checked: {checkedDate(o.price_checked_on)}</p>}
     {o.booking_deadline&&<p>Book by: {checkedDate(o.booking_deadline)} (UK date)</p>}
-    <p>{copy.disclaimer}</p>
+    <p className="offer-availability-note">Prices and availability may change.</p>
   </div>;
 }
 function Protection({offer:o}:{offer:PublicOffer}) {
@@ -25,8 +26,8 @@ function Protection({offer:o}:{offer:PublicOffer}) {
 }
 function Operator({offer:o}:{offer:PublicOffer}) {
   const s=o.supplier;
-  return <div className="offer-disclosures"><p>Supplied by <strong>{s.name}</strong>{s.legal_name&&s.legal_name!==s.name?` · ${s.legal_name}`:""}</p><p>{s.business_address}</p>
-    <p>{s.contact_email&&<a href={`mailto:${s.contact_email}`}>{s.contact_email}</a>}{s.contact_email&&s.contact_url?" · ":""}{s.contact_url&&<a href={s.contact_url} rel="noopener noreferrer">Supplier contact page</a>}</p>
+  return <div className="offer-disclosures"><p>Supplied by <strong>{s.name}</strong>{s.legal_name&&s.legal_name!==s.name?` · ${s.legal_name}`:""}</p>{s.business_address&&<p>{s.business_address}</p>}
+    {(s.contact_email||s.contact_url)&&<p>{s.contact_email&&<a href={`mailto:${s.contact_email}`}>{s.contact_email}</a>}{s.contact_email&&s.contact_url?" · ":""}{s.contact_url&&<a href={s.contact_url} rel="noopener noreferrer">Supplier contact page</a>}</p>}
     {s.booking_conditions_url&&<p><a href={s.booking_conditions_url} rel="noopener noreferrer">Supplier booking conditions</a></p>}
   </div>;
 }
@@ -76,18 +77,24 @@ export function OffersListing({query,offers,total,holidayTypes=[],error}:{query:
   </Container></main>;
 }
 export function OfferDetail({offer:o,preview=false,privacyHref=null,enquiriesEnabled=false}:{offer:PublicOffer;preview?:boolean;privacyHref?:string|null;enquiriesEnabled?:boolean}) {
-  return <div className="offer-detail"><OfferReference reference={o.reference}/><h1>{o.title||"Your holiday title"}</h1><p className="intro">{o.summary}</p>
-    <p>{[o.country,o.resort,o.accommodation].filter(Boolean).join(" · ")}</p>
-    <div className="offer-detail-photo"><SiteImage src={o.image} alt={o.featured_alt} fill sizes="(max-width:767px) 100vw,900px"/>{displayedSash(o)&&<span className="offer-sash">{displayedSash(o)}</span>}</div>
-    <AskJayLink/>
-    <h2>Your holiday at a glance</h2><dl>{Object.entries({"Travel arrangement":travelLabels[o.travel_type],"Departure":o.departure_date?checkedDate(o.departure_date):"", "From":o.departure_point,"Return":o.return_date?checkedDate(o.return_date):"", "Duration":o.nights!==null?(o.nights===0?"Same-day trip":`${o.nights} nights`):"", "Board / fare":o.board_basis,"Room / cabin":o.room_type}).filter(([,v])=>v).map(([k,v])=><div key={k}><dt>{k}</dt><dd>{v}</dd></div>)}</dl>
-    {o.body&&<section className="offer-description" aria-labelledby="offer-description-heading"><h2 id="offer-description-heading">About this holiday</h2><div className="article-prose" dangerouslySetInnerHTML={{__html:o.body}}/></section>}
-    {o.why_jay&&<section><h2>Why Jay picked it</h2><p>{o.why_jay}</p></section>}
-    <h2>What&apos;s included</h2><p className="offer-paragraphs">{o.inclusions}</p>{o.exclusions&&<><h2>Important exclusions and conditions</h2><p className="offer-paragraphs">{o.exclusions}</p></>}
-    <h2>Price for your party</h2><Price offer={o}/><Operator offer={o}/><Protection offer={o}/>
-    <details className="offer-supplier-information" open><summary>About this supplier / tour operator</summary><Operator offer={o}/><Protection offer={o}/>{o.supplier.website&&<p><a href={o.supplier.website} rel="noopener noreferrer">Supplier website</a></p>}</details>
-    {o.galleryImages.length>0&&<div className="offer-gallery">{o.galleryImages.map(i=><figure key={i.src}><SiteImage src={i.src} alt={i.alt} width={800} height={600}/></figure>)}</div>}
-    <p><Link href="/booking-information">Read the booking information</Link></p>
-    <OfferEnquiryForm offerId={o.id} enabled={!preview&&enquiriesEnabled} privacyHref={privacyHref}/>
+  const photos=[...(o.image?[{src:o.image,alt:o.featured_alt}]:[]),...o.galleryImages].filter((photo,index,all)=>all.findIndex(p=>p.src===photo.src)===index);
+  const included=inclusionItems(o.inclusions),available=!preview&&enquiriesEnabled&&!!privacyHref;
+  const hasBody=!!o.body.replace(/<[^>]*>/g,"").replace(/&nbsp;|&#160;|&#xA0;/gi," ").trim();
+  const facts=Object.entries({"Travel arrangement":travelLabels[o.travel_type],"Departure":o.departure_date?checkedDate(o.departure_date):"", "Return":o.return_date?checkedDate(o.return_date):"", "Nights":o.nights!==null?(o.nights===0?"Same-day trip":String(o.nights)):"", "Departing from":o.departure_point,"Board / fare":o.board_basis,"Room / cabin":o.room_type}).filter(([,value])=>value);
+  return <div className="offer-detail">
+    <header className="offer-detail-heading"><h1>{o.title||"Your holiday title"}</h1>{o.accommodation&&<p className="offer-accommodation">{o.accommodation}</p>}{(o.country||o.resort)&&<p className="offer-destination">{[o.country,o.resort].filter(Boolean).join(" · ")}</p>}{o.summary&&<p className="intro">{o.summary}</p>}</header>
+    <OfferGallery photos={photos} sash={displayedSash(o)}/>
+    <section className="offer-summary" aria-label="Holiday summary and price">
+      <div className="offer-price-panel"><h2>Price for your party</h2><Price offer={o}/><p>Supplied by <strong>{o.supplier.name}</strong></p><OfferReference reference={o.reference}/><AskJayLink/>{!available&&<p className="offer-enquiry-unavailable">Online enquiries are currently unavailable.</p>}</div>
+      <div className="offer-summary-facts"><h2>Your holiday at a glance</h2><dl>{facts.map(([label,value])=><div key={label}><dt>{label}</dt><dd>{value}</dd></div>)}</dl></div>
+    </section>
+    <div className="offer-detail-content">
+      {hasBody&&<section className="offer-description" aria-labelledby="offer-description-heading"><h2 id="offer-description-heading">About this holiday</h2><div className="article-prose" dangerouslySetInnerHTML={{__html:o.body}}/></section>}
+      {o.inclusions.trim()&&<section className="offer-inclusions" aria-labelledby="offer-inclusions-heading"><h2 id="offer-inclusions-heading">What&apos;s included</h2>{included?<ul className="offer-inclusion-list">{included.map((item,index)=><li key={index}>{item}</li>)}</ul>:<p className="offer-paragraphs">{o.inclusions}</p>}</section>}
+      {o.why_jay.trim()&&<section className="offer-editorial" aria-labelledby="offer-why-heading"><p className="eyebrow">A personal selection</p><h2 id="offer-why-heading">Why Jay picked it</h2><p className="offer-paragraphs">{o.why_jay}</p></section>}
+      {o.exclusions.trim()&&<section aria-labelledby="offer-conditions-heading"><h2 id="offer-conditions-heading">Important conditions and exclusions</h2><p className="offer-paragraphs">{o.exclusions}</p></section>}
+      <section className="offer-supplier-section" aria-labelledby="offer-supplier-heading"><h2 id="offer-supplier-heading">Supplier and price information</h2><p>{copy.disclaimer}</p><details className="offer-supplier-information"><summary>Supplier details and booking conditions</summary><Operator offer={o}/><Protection offer={o}/>{o.supplier.website&&<p><a href={o.supplier.website} rel="noopener noreferrer">Supplier website</a></p>}</details><p><Link href="/booking-information">Read the booking information</Link></p></section>
+      <OfferEnquiryForm offerId={o.id} enabled={available} privacyHref={privacyHref}/>
+    </div>
   </div>;
 }

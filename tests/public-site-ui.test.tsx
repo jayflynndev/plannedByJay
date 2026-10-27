@@ -34,23 +34,70 @@ test('compact offer cards show party totals and references while full disclosure
     assert.doesNotMatch(cards.container.textContent||'',/1234|Should not be inferred/);cleanup();
     const body='<p>The first saved description paragraph.</p><p>The second saved description paragraph.</p>';
     const detail=render(<OfferDetail offer={{...offer,body,why_jay:'A personal reason.',inclusions:'Saved inclusions.',exclusions:'Saved conditions.'}}/>);
-    assert.ok(detail.getByRole('heading',{name:offer.title}));assert.ok(detail.container.querySelector('details.offer-supplier-information[open]'));
+    assert.ok(detail.getByRole('heading',{name:offer.title}));assert.equal(detail.container.querySelector('details.offer-supplier-information[open]'),null);
+    fireEvent.click(detail.getByText('Supplier details and booking conditions'));
     assert.ok(detail.getByText('Offer reference: 000042'));assert.ok(detail.getAllByText(offer.supplier.business_address).length);
+    assert.equal(detail.getAllByRole('link',{name:'Supplier booking conditions'}).length,1);
     assert.ok(detail.getAllByRole('link',{name:'Supplier booking conditions'}).every(a=>a.getAttribute('href')==='https://example.org/terms'));
     const description=detail.getByRole('region',{name:'About this holiday'});
-    assert.equal(description.previousElementSibling?.tagName,'DL');
+    assert.ok(detail.getByRole('region',{name:'Holiday summary and price'}).compareDocumentPosition(description)&Node.DOCUMENT_POSITION_FOLLOWING);
     assert.equal(description.querySelector('.article-prose')?.innerHTML,body,'saved paragraphs remain intact');
     assert.equal(description.querySelectorAll('p').length,2);
-    assert.ok(detail.getByRole('heading',{name:'Why Jay picked it'}));assert.ok(detail.getByRole('heading',{name:"What's included"}));assert.ok(detail.getByRole('heading',{name:'Important exclusions and conditions'}));
+    assert.ok(detail.getByRole('heading',{name:'Why Jay picked it'}));assert.ok(detail.getByRole('heading',{name:"What's included"}));assert.ok(detail.getByRole('heading',{name:'Important conditions and exclusions'}));
     assert.equal(detail.container.querySelector('a[href="/plan-my-holiday"]'),null);
     assert.ok(detail.container.querySelector('#ask-jay'));
-    fireEvent.click(detail.getByRole('link',{name:'Ask Jay About This Holiday'}));assert.ok(detail.container.querySelector('details#ask-jay[open]'));
+    fireEvent.click(detail.getByRole('link',{name:'Ask Jay about this holiday'}));assert.ok(detail.container.querySelector('details#ask-jay[open]'));
     for(const input of detail.container.querySelectorAll('#ask-jay input,#ask-jay textarea'))assert.ok(input.matches(':disabled'));
     assert.doesNotMatch(detail.container.textContent||'',/1234|Should not be inferred/);
     detail.rerender(<OfferDetail offer={offer}/>);assert.equal(detail.queryByRole('region',{name:'About this holiday'}),null);
     cleanup();
     const sameDay=render(<OfferGrid offers={[{...offer,nights:0}]}/>);assert.ok(sameDay.getByText(/Same-day trip/));
   }finally{cleanup();style.remove();}
+});
+
+test('holiday detail organises saved content once, formats clear inclusions, and omits empty optional sections',async()=>{
+  const {render,cleanup}=await import('@testing-library/react');
+  const {OfferDetail}=await import('../src/components/offers/OfferViews');
+  const {emptyOffer}=await import('../src/lib/offers/schema');
+  const offer:import('../src/lib/offers/schema').PublicOffer={...emptyOffer(),id:'60000000-0000-4000-8000-000000000001',reference:'000042',title:'Saved holiday',accommodation:'Saved accommodation',country:'Saved destination',total_price_minor:240600,adults:2,children:1,price_checked_on:'2026-10-26',inclusions:'Free Child Place, 22kg Baggage per person, Coach transfers to and from the hotel.',why_jay:'The full saved editorial text.',body:'<p>The saved first paragraph.</p><p>The saved second paragraph.</p>',exclusions:'Saved conditions.',protection:'supplier-atol',archived:false,created_at:'',updated_at:'',published_at:null,image:'/images/home/hero.jpg',galleryImages:[],supplier:{id:'50000000-0000-4000-8000-000000000001',name:'Saved supplier',legal_name:'Saved legal company',business_address:'Saved public address',website:'https://example.org',contact_email:'',contact_url:'https://example.org/contact',booking_conditions_url:'https://example.org/terms',atol_holder:'Saved holder',atol_number:'1234'}};
+  try{
+    const view=render(<OfferDetail offer={offer}/>);
+    assert.deepEqual(Array.from(view.container.querySelectorAll('h2')).filter(h=>!h.closest('#ask-jay')).map(h=>h.textContent),['Price for your party','Your holiday at a glance','About this holiday',"What's included",'Why Jay picked it','Important conditions and exclusions','Supplier and price information']);
+    assert.deepEqual(Array.from(view.getByRole('region',{name:"What's included"}).querySelectorAll('li')).map(li=>li.textContent),['Free Child Place','22kg Baggage per person','Coach transfers to and from the hotel.']);
+    assert.equal(view.getAllByText(offer.why_jay).length,1);assert.equal(view.getAllByText(offer.supplier.business_address).length,1);
+    assert.equal(view.getAllByText(/ATOL holder for this advertised arrangement/).length,1);
+    assert.ok(view.getByText('2 adults + 1 child'));assert.ok(view.getByText(/£2,406.00/));assert.ok(view.getByText('Offer reference: 000042'));
+    assert.ok(view.container.querySelector('.offer-price-panel a[href="#ask-jay"]'));assert.ok(view.container.querySelector('#ask-jay > summary'));
+    const paragraph='Meals, including breakfast, are served at the hotel. Please confirm dietary requirements.';
+    view.rerender(<OfferDetail offer={{...offer,inclusions:paragraph}}/>);
+    const inclusions=view.getByRole('region',{name:"What's included"});assert.equal(inclusions.querySelector('ul'),null);assert.equal(inclusions.querySelector('p')?.textContent,paragraph);
+    view.rerender(<OfferDetail offer={{...offer,body:'<p>&nbsp;<br /></p>',inclusions:' ',why_jay:'',exclusions:'',image:null,galleryImages:[]}}/>);
+    for(const name of ['About this holiday',"What's included",'Why Jay picked it','Important conditions and exclusions'])assert.equal(view.queryByRole('region',{name}),null);
+    assert.equal(view.queryByRole('region',{name:'Holiday photographs'}),null);
+  }finally{cleanup();}
+});
+
+test('holiday photographs enlarge, navigate saved images, and restore focus and scrolling on close',async()=>{
+  const {render,fireEvent,cleanup}=await import('@testing-library/react');
+  const {OfferGallery}=await import('../src/components/offers/OfferGallery');
+  const prototype=dom.window.HTMLDialogElement.prototype,originalShow=prototype.showModal,originalClose=prototype.close;
+  prototype.showModal=function(){this.open=true;this.querySelector<HTMLButtonElement>('button')?.focus();};
+  prototype.close=function(){this.open=false;this.dispatchEvent(new dom.window.Event('close'));};
+  const photos=[1,2,3,4].map(i=>({src:`/images/holiday-${i}.jpg`,alt:`Saved photograph ${i}`}));
+  try{
+    const view=render(<OfferGallery photos={photos} sash="Jay's Pick"/>);
+    assert.equal(view.container.querySelectorAll('.offer-photos-grid button').length,3);assert.ok(view.getByText('View all 4 photographs'));
+    const first=view.getByRole('button',{name:'Enlarge photograph 1: Saved photograph 1'});first.focus();fireEvent.click(first);
+    const dialog=view.getByRole('dialog',{name:'Enlarged holiday photographs'});
+    assert.ok(view.getByText('Photograph 1 of 4 · Saved photograph 1'));assert.equal(document.body.style.overflow,'hidden');
+    fireEvent.click(view.getByRole('button',{name:'Previous photograph'}));assert.ok(view.getByText('Photograph 4 of 4 · Saved photograph 4'));
+    fireEvent.keyDown(dialog,{key:'ArrowRight'});assert.ok(view.getByText('Photograph 1 of 4 · Saved photograph 1'));
+    fireEvent.click(view.getByRole('button',{name:'Close photographs'}));assert.equal(view.queryByRole('dialog'),null);assert.equal(document.activeElement,first);assert.equal(document.body.style.overflow,'');
+    view.rerender(<OfferGallery photos={[photos[0]]}/>);assert.equal(view.container.querySelectorAll('.offer-photos-grid button').length,1);assert.equal(view.queryByText(/View all/),null);
+    fireEvent.click(view.getByRole('button',{name:'Enlarge photograph 1: Saved photograph 1'}));assert.equal(document.body.style.overflow,'hidden');
+    view.rerender(<OfferGallery photos={[]}/>);assert.equal(view.container.innerHTML,'');
+    assert.equal(document.body.style.overflow,'','removing the photographs also releases the page scroll lock');
+  }finally{cleanup();prototype.showModal=originalShow;prototype.close=originalClose;}
 });
 
 test('holiday landing, six shared pages and homepage cards render meaningful routes with accessible headings and real related reading only',async()=>{
