@@ -123,3 +123,33 @@
 @media(max-width:767px){.offer-detail{width:calc(100% - 44px)}.offer-detail-heading{margin-bottom:22px}.offer-photos-grid{aspect-ratio:3/2}.offer-photos-multiple{aspect-ratio:auto;grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:auto}.offer-photos-multiple .offer-photo-main{grid-column:1/-1;grid-row:auto;aspect-ratio:3/2}.offer-photo-thumb{aspect-ratio:16/9}.offer-photos-pair .offer-photo-thumb{grid-column:1/-1;grid-row:auto;aspect-ratio:3/1}.offer-price-panel,.offer-summary-facts{padding:20px}.offer-summary{margin-bottom:34px}.offer-summary dl{gap:16px}.offer-inclusion-list{grid-template-columns:minmax(0,1fr)}.offer-editorial{padding:22px}.offer-photo-dialog{padding:14px}.offer-photo-controls .button{flex:1;justify-content:center}}
 @media(max-width:359px){.offer-summary dl{grid-template-columns:minmax(0,1fr)}}
 @media(max-width:767px){.offer-detail-page{padding-top:28px}}
+
+/* Snagging: compact filters retain 44px controls and all existing GET behaviour. */
+.advice-search{grid-template-columns:minmax(0,2fr) minmax(150px,1fr) auto;align-items:start;gap:14px;padding:16px;margin-bottom:20px}
+.advice-search-query,.advice-search-actions{grid-column:auto}
+.advice-search-actions{padding-top:29px;gap:14px}
+.advice-search input,.advice-search select{min-height:44px;padding:9px 10px}
+.advice-search .cms-hint{margin:5px 0 0;font-size:.78rem}
+.advice-search .button{min-height:44px;padding:10px 16px}
+.article-table-scroll table{min-width:100%;width:max-content;max-width:none;margin-bottom:0}
+.article-prose u,.holiday-rich-text u{text-decoration:none}
+.article-prose a{text-decoration:underline;text-underline-offset:4px}
+.offer-card-totals{min-width:0}
+@media(max-width:900px){.advice-search{grid-template-columns:minmax(0,1fr) minmax(140px,1fr)}.advice-search-actions{grid-column:1/-1;padding-top:0}}
+@media(max-width:767px){
+ .offer-page.section{padding-top:30px;padding-bottom:48px}
+ .offer-page>.container>.section-heading{margin-bottom:22px}
+ .offer-compact-filters{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;padding:14px;margin-bottom:20px}
+ .offer-compact-filters :is(input,select){min-height:44px;padding:9px;font-size:16px}
+ .offer-compact-filters>.button-row{gap:10px}
+ .offer-compact-filters .button{min-height:44px;padding:10px 14px}
+ .offer-card{grid-template-areas:"photo" "heading" "price" "details" "action"}
+ .offer-card-photo{grid-area:photo}.offer-card .card-photo{height:auto;aspect-ratio:16/10}
+ .offer-card-copy,.offer-card-price{display:contents}
+ .offer-card-heading{grid-area:heading;padding:18px 18px 0}
+ .offer-card-totals{grid-area:price;padding:12px 18px;background:var(--paper);border-block:1px solid var(--line)}
+ .offer-card-details{grid-area:details;padding:12px 18px}
+ .offer-card-price .button{grid-area:action;margin:0 18px 18px}
+ .offer-card-facts{margin-top:0}
+}
+@media(max-width:480px){.advice-search{grid-template-columns:minmax(0,1fr);padding:14px;gap:12px}.advice-search-actions{padding-top:0}.advice-index header{margin-bottom:24px}}

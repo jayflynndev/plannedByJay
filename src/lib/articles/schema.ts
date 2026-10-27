@@ -21,6 +21,8 @@ export const articleInput = z
     expires_on: z.union([z.literal(""), z.iso.date()]).default(""),
     featured_image: z.union([z.literal(""), imagePath]).default(""),
     featured_alt: z.string().trim().max(300).default(""),
+    homepage_featured: z.boolean().default(false),
+    advice_pinned: z.boolean().default(false),
     status: z.enum(["draft", "published"]).default("draft"),
   })
   .strict();

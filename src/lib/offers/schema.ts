@@ -28,7 +28,7 @@ export const offerInput = z.object({
   status: z.enum(["draft", "published"]).default("draft"),
 }).strict();
 export type OfferInput = z.output<typeof offerInput>;
-export type Offer = OfferInput & {id: string; reference: string; archived: boolean; created_at: string; updated_at: string; published_at: string | null};
+export type Offer = OfferInput & {id: string; reference: string; previous_reference?:string|null; archived: boolean; created_at: string; updated_at: string; published_at: string | null};
 export type PublicSupplier = {id: string; name: string; website: string; legal_name: string; business_address: string; contact_email: string; contact_url: string; booking_conditions_url: string; atol_holder: string; atol_number: string};
 export type PublicOffer = Offer & {supplier: PublicSupplier; image: string | null; galleryImages: {src: string; alt: string}[]};
 export const isOfferReference = (value: unknown): value is string => typeof value === "string" && /^[0-9]{6}$/.test(value);

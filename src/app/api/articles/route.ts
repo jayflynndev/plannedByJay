@@ -11,7 +11,8 @@ import { cleanHtml, bodyText } from "@/lib/articles/html";
 export async function POST(request: Request) {
   try {
     const client = await writeClient(request);
-    const parsed = articleInput.safeParse(await readJson(request));
+    const raw = await readJson(request);
+    const parsed = articleInput.safeParse(raw);
     if (!parsed.success)
       throw new ArticleError(
         parsed.error.issues.map((i) => i.message).join(" "),
@@ -22,8 +23,11 @@ export async function POST(request: Request) {
     if (value.status === "published" && (!value.title || !bodyText(value.body)))
       throw new ArticleError("Add a title and article text before publishing.");
     const { tags, ...article } = value;
+    // Preserve placement when an older, already-open editor omits the new controls.
+    const record:Record<string,unknown>={...article};
+    for(const key of ['homepage_featured','advice_pinned'])if(!Object.hasOwn(raw,key))delete record[key];
     const result = await client.rpc("save_article", {
-      p_article: article,
+      p_article: record,
       p_tags: tags,
     });
     databaseError(result.error);

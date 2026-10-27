@@ -7,6 +7,7 @@ import { getSupplier } from "@/lib/suppliers/data";
 import { supplierInput } from "@/lib/suppliers/schema";
 import { emptyOffer, offerInput, emptyOfferQuery, type Offer, type OfferInput, type OfferQuery, type PublicOffer, type PublicSupplier } from "./schema";
 import { prepareOffer, supplierPublicationIssue } from "./validation";
+import {imageDescription} from '@/content/image-descriptions';
 export function offerError(error: {code?: string} | null) {
   if (!error) return;
   const messages: Record<string,[string,number]> = {
@@ -21,7 +22,7 @@ export function offerError(error: {code?: string} | null) {
 export function offerRecord(raw: Record<string, unknown>): Offer {
   const fields = Object.fromEntries(Object.keys(emptyOffer()).map(k => [k,raw[k]]));
   for (const key of ["departure_date","return_date","price_checked_on","booking_deadline"]) fields[key] ||= "";
-  return {...offerInput.parse(fields), body: cleanHtml(String(raw.body || "")), id: String(raw.id), reference: String(raw.reference || ""), archived: raw.archived === true, created_at: String(raw.created_at || ""), updated_at: String(raw.updated_at || ""), published_at: raw.published_at ? String(raw.published_at) : null};
+  return {...offerInput.parse(fields), featured_alt:imageDescription(String(raw.featured_image||''),String(raw.featured_alt||'')),body: cleanHtml(String(raw.body || "")), id: String(raw.id), reference: String(raw.reference || ""), previous_reference:typeof raw.previous_reference==='string'?raw.previous_reference:null,archived: raw.archived === true, created_at: String(raw.created_at || ""), updated_at: String(raw.updated_at || ""), published_at: raw.published_at ? String(raw.published_at) : null};
 }
 const publicSupplierFields = {id:true,name:true,website:true,legal_name:true,business_address:true,contact_email:true,contact_url:true,booking_conditions_url:true,atol_holder:true,atol_number:true} as const;
 export function displayOffer(o: Offer, supplier: Record<string, unknown>): PublicOffer {

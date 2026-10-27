@@ -170,7 +170,7 @@ export function ArticleEditor({
           status === "published"
             ? next.expires_on && next.expires_on < today
               ? "Saved as published, but the expiry date has passed so this article is not public."
-              : "Article published successfully."
+              : saved?.status === "published" ? "Article changes saved successfully." : "Article published successfully."
             : saved?.status === "published"
               ? "Article unpublished and returned to drafts."
               : "Draft saved successfully.",
@@ -194,6 +194,7 @@ export function ArticleEditor({
         <a href="/admin/articles">All Articles</a>
       </div>
       <p>
+        <strong>{saved?.status === "published" ? "Published" : "Draft"}</strong>{" · "}
         {dirty ? "Unsaved changes" : "Saved"}
         {saved
           ? " - Created " +
@@ -310,6 +311,8 @@ export function ArticleEditor({
           An expiry date keeps the article public through that date in UK time.
           Leave blank for no expiry.
         </p>
+        <label className="article-check"><input type="checkbox" checked={value.homepage_featured} onChange={e=>change("homepage_featured",e.target.checked)}/>Feature on Homepage</label>
+        <label className="article-check"><input type="checkbox" checked={value.advice_pinned} onChange={e=>change("advice_pinned",e.target.checked)}/>Pin to Top of Travel Advice</label>
         <div>
           <label>
             Tags
@@ -421,7 +424,7 @@ export function ArticleEditor({
             className="button"
             onClick={() => void save("published")}
           >
-            Publish
+            {saved?.status === "published" ? "Save Changes" : "Publish"}
           </button>
         </div>
         <div aria-live={failed ? "assertive" : "polite"} aria-atomic="true" className="article-save-feedback">

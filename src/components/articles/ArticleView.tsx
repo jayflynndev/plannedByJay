@@ -2,6 +2,8 @@ import Image from "next/image";
 
 import { articleCopy } from "@/content/articles";
 import type { ImageAsset } from "@/types/public-content";
+import {articleBodyForDisplay} from '@/lib/article-presentation';
+import {imageDescription} from '@/content/image-descriptions';
 
 export type ArticleDisplay = {
   title: string;
@@ -62,7 +64,7 @@ export function ArticleView({
         <Image
           className="article-featured"
           src={media.src}
-          alt={article.featured_alt}
+          alt={imageDescription(media.src,article.featured_alt)}
           width={media.width}
           height={media.height}
           sizes="(max-width: 900px) 100vw, 900px"
@@ -70,7 +72,7 @@ export function ArticleView({
       )}
       <div
         className="article-prose"
-        dangerouslySetInnerHTML={{ __html: article.body }}
+        dangerouslySetInnerHTML={{ __html: articleBodyForDisplay(article.body,article.title) }}
       />
       <aside className="article-cta">
         <h2>{articleCopy.ctaTitle}</h2>

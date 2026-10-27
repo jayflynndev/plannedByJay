@@ -1,0 +1,3 @@
+// Deliberate links between existing holiday styles; no article matching or automatic recommendations.
+const related:Record<string,string[]>={family:['all-inclusive','cruises'],cruises:['something-different','accessible'],couples:['city-breaks','something-different'],'city-breaks':['couples','something-different'],'something-different':['cruises','city-breaks'],accessible:['cruises','all-inclusive'],'all-inclusive':['family','couples']};
+export function relatedHolidays<T extends {slug:string}>(slug:string,holidays:T[]){return (related[slug]||[]).flatMap(key=>{const found=holidays.find(h=>h.slug===key);return found?[found]:[];});}

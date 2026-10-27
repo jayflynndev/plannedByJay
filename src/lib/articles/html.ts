@@ -16,15 +16,25 @@ export function cleanHtml(html: string) {
       "a",
       "blockquote",
       "br",
+      "table","thead","tbody","tfoot","tr","th","td","caption",
     ],
-    allowedAttributes: { a: ["href", "title", "rel"] },
+    allowedAttributes: { a: ["href", "title", "rel"], th:['colspan','rowspan','scope','style'],td:['colspan','rowspan','style'] },
+    allowedStyles: {th:{'text-align':[/^(?:left|right|center|justify)$/]},td:{'text-align':[/^(?:left|right|center|justify)$/]}},
     allowedSchemes: ["https", "http", "mailto"],
     allowProtocolRelative: false,
     transformTags: {
       h1: "h2",
       a: sanitize.simpleTransform("a", { rel: "noopener noreferrer" }),
+      th: safeCell,
+      td: safeCell,
     },
   });
+}
+function safeCell(tagName:string,attribs:Record<string,string>){
+  const safe={...attribs};
+  for(const name of ['colspan','rowspan'])if(!/^[1-9][0-9]?$|^100$/.test(safe[name]||''))delete safe[name];
+  if(!['col','row','colgroup','rowgroup'].includes(safe.scope))delete safe.scope;
+  return {tagName,attribs:safe};
 }
 export function bodyText(html: string) {
   return sanitize(html, { allowedTags: [], allowedAttributes: {} })

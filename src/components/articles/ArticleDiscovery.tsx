@@ -1,4 +1,5 @@
 import Image from "next/image";
+import {imageDescription} from '@/content/image-descriptions';
 import Link from "next/link";
 import { articleCopy, discoveryCopy as copy } from "@/content/articles";
 import type { DiscoveryResults } from "@/types/public-content";
@@ -92,7 +93,7 @@ export function ArticleDiscovery({
                     {article.image && (
                       <Image
                         src={article.image.src}
-                        alt={article.featured_alt}
+                        alt={imageDescription(article.image.src,article.featured_alt)}
                         width={article.image.width}
                         height={article.image.height}
                         sizes="(max-width: 650px) 100vw, (max-width: 1000px) 50vw, 400px"

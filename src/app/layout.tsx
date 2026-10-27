@@ -5,12 +5,13 @@ import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
 import { site } from '@/content/site';
 import { navigation, primaryNavigation } from '@/content/navigation';
-export const metadata: Metadata = {
+import {publicRobots} from '@/lib/indexing';
+export function generateMetadata():Metadata {return {
   title: site.title,
   description: site.description,
-  robots: { index: false, follow: false },
-};
-// Development indexing is disabled until real contact and approved business information are ready.
+  robots: publicRobots(),
+};}
+// Jay enables SITE_INDEXABLE only for the intended public production launch.
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {

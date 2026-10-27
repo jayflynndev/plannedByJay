@@ -1,9 +1,11 @@
 "use client";
-import { useEffect,useRef,useState } from "react";
+import { useEffect,useRef,useState,useMemo } from "react";
 import { SiteImage } from "@/components/ui/SiteImage";
+import {imageDescription} from '@/content/image-descriptions';
 
 type Photograph={src:string;alt:string};
-export function OfferGallery({photos,sash=""}:{photos:Photograph[];sash?:string}) {
+export function OfferGallery({photos:originalPhotos,sash=""}:{photos:Photograph[];sash?:string}) {
+  const photos=useMemo(()=>originalPhotos.map(photo=>({...photo,alt:imageDescription(photo.src,photo.alt)})),[originalPhotos]);
   const [active,setActive]=useState<number|null>(null);
   const dialog=useRef<HTMLDialogElement>(null),trigger=useRef<HTMLButtonElement|null>(null);
   useEffect(()=>{

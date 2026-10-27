@@ -3,8 +3,9 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import { articleInput, imageAlt, type Article, type Category } from "./schema";
 import { cleanHtml, excerpt } from "./html";
 import { articleConfig, publicArticlesClient, databaseError } from "./client";
+import {imageDescription} from '@/content/image-descriptions';
 export const articleProjection =
-  "id,title,slug,body,author,category_id,status,excerpt,expires_on,featured_image,featured_alt,created_at,updated_at,published_at,version";
+  "id,title,slug,body,author,category_id,status,excerpt,expires_on,featured_image,featured_alt,homepage_featured,advice_pinned,created_at,updated_at,published_at,version";
 export function articleRecord(raw: Record<string, unknown>, publicPreview = false): Article {
   const fields = Object.fromEntries(
     Object.keys(articleInput.parse({})).map((k) => [k, raw[k]]),
@@ -18,6 +19,7 @@ export function articleRecord(raw: Record<string, unknown>, publicPreview = fals
     }),
     id: String(raw.id),
     body: cleanHtml(String(raw.body || "")),
+    featured_alt:imageDescription(String(raw.featured_image||''),String(raw.featured_alt||'')),
     excerpt: String(raw.excerpt || "").trim() || (publicPreview ? excerpt(String(raw.body || "")) : ""),
     created_at: String(raw.created_at),
     updated_at: String(raw.updated_at),
@@ -77,7 +79,8 @@ export async function publicArticleList({
   category = "",
   page = 1,
   limit = 12,
-}: { q?: string; category?: string; page?: number; limit?: number } = {}) {
+  featured = false,
+}: { q?: string; category?: string; page?: number; limit?: number; featured?: boolean } = {}) {
   const c = publicArticlesClient();
   if (!c)
     return {
@@ -91,6 +94,8 @@ export async function publicArticleList({
     .eq("status", "published");
   if (q) req = req.ilike("title", "%" + q.replace(/[\\%_*]/g, "") + "%");
   if (category) req = req.eq("category_id", category);
+  if (featured) req = req.eq("homepage_featured", true);
+  else req = req.order("advice_pinned", {ascending:false});
   const r = await req
     .order("published_at", { ascending: false })
     .order("id")

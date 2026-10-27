@@ -229,3 +229,11 @@
 .offer-enquiry-record { font-size: .8rem; overflow-wrap: anywhere; }
 .offer-notification-retry { margin-top: 16px; }
 @media(max-width:767px){.offer-editor-section{padding:14px;}}
+
+.article-admin-form .article-check{display:flex;align-items:center;gap:10px;min-height:44px}
+.article-admin-form .article-check input{width:20px;min-height:20px;flex-shrink:0}
+.article-word-editor .tiptap{overflow-x:auto}
+.article-word-editor table{border-collapse:collapse;min-width:100%;margin:16px 0}
+.article-word-editor :is(th,td){border:1px solid var(--line);min-width:110px;padding:10px;vertical-align:top}
+.article-word-editor th{background:var(--sage);font-weight:700}
+.article-word-editor .selectedCell{background:var(--sage)}

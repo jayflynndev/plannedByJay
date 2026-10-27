@@ -2,6 +2,7 @@
 import { useEffect, useRef } from "react";
 import { useEditor, EditorContent, useEditorState } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
+import {TableKit} from '@tiptap/extension-table';
 export function VisualEditor({
   value,
   onChange,
@@ -32,6 +33,7 @@ export function VisualEditor({
           protocols: ["http", "https", "mailto"],
         },
       }),
+      TableKit.configure({table:{resizable:false}}),
     ],
     content: value,
     editorProps: {
@@ -68,6 +70,7 @@ export function VisualEditor({
       ordered: e?.isActive("orderedList"),
       quote: e?.isActive("blockquote"),
       link: e?.isActive("link"),
+      table: e?.isActive("table"),
     }),
   });
   if (!editor)
@@ -162,6 +165,16 @@ export function VisualEditor({
         <span className="article-toolbar-separator" aria-hidden="true" />
         {button("Undo", () => editor.chain().focus().undo().run())}
         {button("Redo", () => editor.chain().focus().redo().run())}
+        <select aria-label="Table actions" disabled={disabled} value="" onChange={e=>{
+          const action=e.target.value;
+          if(action==='insert')editor.chain().focus().insertTable({rows:3,cols:3,withHeaderRow:true}).run();
+          if(action==='row')editor.chain().focus().addRowAfter().run();
+          if(action==='column')editor.chain().focus().addColumnAfter().run();
+          if(action==='delete-row')editor.chain().focus().deleteRow().run();
+          if(action==='delete-column')editor.chain().focus().deleteColumn().run();
+          if(action==='header')editor.chain().focus().toggleHeaderCell().run();
+          if(action==='delete')editor.chain().focus().deleteTable().run();
+        }}><option value="">Table</option><option value="insert">Insert table</option>{state?.table&&<><option value="row">Add row</option><option value="column">Add column</option><option value="header">Toggle header cell</option><option value="delete-row">Delete row</option><option value="delete-column">Delete column</option><option value="delete">Delete table</option></>}</select>
       </div>
       <EditorContent editor={editor} />
     </div>

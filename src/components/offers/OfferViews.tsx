@@ -34,7 +34,7 @@ function Operator({offer:o}:{offer:PublicOffer}) {
 export function OfferGrid({offers}:{offers:PublicOffer[]}) {
   return <div className="offer-grid">{offers.map(o=><article className="offer-card" key={o.id}>
     <Link className="offer-card-photo" href={`/holiday-offers/${o.slug}`} aria-label={`View ${o.title}`}><div className="card-photo"><SiteImage src={o.image} alt={o.featured_alt} fill sizes="(max-width:767px) 100vw,(max-width:1023px) 38vw,350px" fallback={<span className="article-photo-fallback">{o.country}</span>}/>{displayedSash(o)&&<span className="offer-sash">{displayedSash(o)}</span>}</div></Link>
-    <div className="offer-card-copy"><p className="eyebrow">{[o.country,o.resort].filter(Boolean).join(" · ")}</p><h3><Link href={`/holiday-offers/${o.slug}`}>{o.title}</Link></h3>{o.accommodation&&<p>{o.accommodation}</p>}
+    <div className="offer-card-copy"><div className="offer-card-heading"><p className="eyebrow">{[o.country,o.resort].filter(Boolean).join(" · ")}</p><h3><Link href={`/holiday-offers/${o.slug}`}>{o.title}</Link></h3>{o.accommodation&&<p>{o.accommodation}</p>}</div><div className="offer-card-details">
       <ul className="offer-card-facts">
         {o.departure_date&&<li><time dateTime={o.departure_date}>{checkedDate(o.departure_date)}</time></li>}
         {o.nights!==null&&<li>{o.nights===0?"Same-day trip":`${o.nights} ${o.nights===1?"night":"nights"}`}</li>}
@@ -43,9 +43,9 @@ export function OfferGrid({offers}:{offers:PublicOffer[]}) {
       {cardBenefit(o)&&<p className="offer-card-benefit">{cardBenefit(o)}</p>}
       {o.why_jay&&<p className="offer-card-why"><strong>Why Jay picked it:</strong> {cardReason(o.why_jay)}</p>}
       <p className="offer-card-supplier">Supplied by <strong>{o.supplier.name}</strong></p><OfferReference reference={o.reference}/>
-    </div>
+    </div></div>
     <div className="offer-card-price">
-      <div>
+      <div className="offer-card-totals">
       <p className="offer-price">{o.total_price_minor?money(o.total_price_minor,o.currency):"Price not entered"}{o.total_price_minor&&<span> total</span>}</p>
       <p>{o.adults} {o.adults===1?"adult":"adults"}{o.children?` + ${o.children} ${o.children===1?"child":"children"}${o.child_ages.length?` (ages ${o.child_ages.join(", ")})`:""}`:""}</p>
       {averagePrice(o)&&<p className="offer-card-note">Average {money(averagePrice(o),o.currency)} per adult</p>}
@@ -64,14 +64,14 @@ export function OfferSection({offers,title,type}:{offers:PublicOffer[];title:str
 }
 export function OffersListing({query,offers,total,holidayTypes=[],error}:{query:OfferQuery;offers:PublicOffer[];total:number;holidayTypes?:{id:string;name:string}[];error?:string}) {
   return <main id="main-content" className="offer-page section" tabIndex={-1}><Container><header className="section-heading"><p className="eyebrow">Curated holiday offers</p><h1>{copy.title}</h1><p className="intro">{copy.description}</p></header>
-    <form className="offer-filters offer-compact-filters" method="get" action="/holiday-offers" aria-label="Filter holiday offers">
+    <form key={offerListHref(query)} className="offer-filters offer-compact-filters" method="get" action="/holiday-offers" aria-label="Filter holiday offers">
       <label>Destination<input name="destination" defaultValue={query.destination} maxLength={100}/></label>
       <label>Holiday Type<select name="type" defaultValue={query.type}><option value="">All Holiday Types</option>{holidayTypes.map(t=><option key={t.id} value={t.id}>{t.name}</option>)}</select></label>
       <label>Departure month<input name="month" type="month" defaultValue={query.month}/></label>
       <label>Sort by<select name="sort" defaultValue={query.sort}><option value="departure">Departure date</option><option value="price">Total price (by currency)</option></select></label>
       <div className="button-row"><button className="button" type="submit">Apply filters</button><Link className="button button-secondary" href="/holiday-offers">Reset filters</Link></div>
     </form>
-    {error?<p role="status">{error}</p>:offers.length?<><p>{total} offers · Page {query.page}</p><OfferGrid offers={offers}/></>:<p>{copy.empty}</p>}
+    {error?<p role="status">{error}</p>:offers.length?<><p>{total} {total===1?'offer':'offers'} · Page {query.page}</p><OfferGrid offers={offers}/></>:<p>{copy.empty}</p>}
     <nav className="offer-pagination" aria-label="Offer pages">{query.page>1&&<Link href={offerListHref(query,query.page-1)}>Previous page</Link>}{query.page*12<total&&<Link href={offerListHref(query,query.page+1)}>Next page</Link>}</nav>
     <Link className="holiday-library-link" href="/holidays">Explore Holiday Types</Link>
   </Container></main>;

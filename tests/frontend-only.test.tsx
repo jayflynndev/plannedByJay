@@ -31,5 +31,5 @@ test('authorised bespoke enquiries use private server handling while obsolete in
  for(const path of ['src/app/api/cms','src/lib/suppliers/lookup.ts'])await assert.rejects(access(path));
  const form=await readFile('src/components/enquiry/EnquiryForm.tsx','utf8');assert.doesNotMatch(form,/localStorage|sessionStorage|SUPABASE_SECRET|RESEND_API_KEY/);
  for(const path of ['src/lib/enquiries/server.ts','src/app/api/enquiries/route.ts'])await access(path);
- const migrations=await readdir('supabase/migrations');assert.deepEqual(migrations.sort(),['20261025_articles_cms.sql','20261026_holiday_offers_cms.sql','20261026_holiday_offer_references.sql','20261026_holiday_types_cms.sql','20261026_suppliers_directory.sql','20261027_bespoke_enquiries.sql','20261027_bespoke_enquiry_references.sql'].sort());
+ const migrations=await readdir('supabase/migrations');assert.deepEqual(migrations.sort(),['20261025_articles_cms.sql','20261026_holiday_offers_cms.sql','20261026_holiday_offer_references.sql','20261026_holiday_types_cms.sql','20261026_suppliers_directory.sql','20261027_bespoke_enquiries.sql','20261027_bespoke_enquiry_references.sql','20261027_article_placement.sql','20261027_random_offer_references.sql'].sort());
 });

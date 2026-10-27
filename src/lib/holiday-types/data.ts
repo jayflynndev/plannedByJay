@@ -4,12 +4,13 @@ import { publicArticlesClient, ArticleError } from "@/lib/articles/client";
 import { imageUrl } from "@/lib/articles/data";
 import { cleanHtml } from "@/lib/articles/html";
 import { holidayInput, type HolidayType } from "./schema";
+import {imageDescription} from '@/content/image-descriptions';
 
 export const holidayProjection = "id,name,slug,introduction,heading,body,image,image_alt,image_position,closing_heading,closing_body,status,is_original,display_order,created_at,updated_at,published_at,version";
 export function holidayRecord(raw: Record<string, unknown>): HolidayType {
   return {
     ...holidayInput.parse(Object.fromEntries(Object.keys(holidayInput.parse({})).map(k => [k, raw[k]]))),
-    id: String(raw.id), body: cleanHtml(String(raw.body || "")),
+    id: String(raw.id), body: cleanHtml(String(raw.body || "")),image_alt:imageDescription(String(raw.image||''),String(raw.image_alt||'')),
     is_original: raw.is_original === true, display_order: Number(raw.display_order),
     created_at: String(raw.created_at), updated_at: String(raw.updated_at),
     published_at: raw.published_at ? String(raw.published_at) : null,

@@ -13,6 +13,7 @@ export async function holidayFixture() {
     alter table storage.objects enable row level security;grant usage on schema auth,storage to anon,authenticated;grant select,insert on storage.objects to anon,authenticated;`);
   await db.query("insert into auth.users values($1,'jay@plannedbyjay.com',now(),null),($2,'other@example.com',now(),null)", [admin, other]);
   await db.exec(await readFile("supabase/migrations/20261025_articles_cms.sql", "utf8"));
+  await db.exec(await readFile("supabase/migrations/20261027_article_placement.sql", "utf8"));
   await db.exec(await holidaySql());
   async function run<T = HolidayType>(role: "anon" | "authenticated", id: string, sql: string, args: unknown[] = []) {
     await db.exec("begin");

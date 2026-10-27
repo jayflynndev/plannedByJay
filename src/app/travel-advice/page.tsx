@@ -30,7 +30,7 @@ export default async function TravelAdvice({
   let error:string|undefined;
   try {
     const r=await publicArticleList({q,category,page});
-    results={total:r.total,categories:r.categories,tags:[],articles:r.articles.map(a=>({...a,content_type:'Travel advice',advice_pinned:false,image:a.featured_image?{src:imageUrl(a.featured_image)!,width:1200,height:800}:null}))};
+    results={total:r.total,categories:r.categories,tags:[],articles:r.articles.map(a=>({...a,content_type:'Travel advice',image:a.featured_image?{src:imageUrl(a.featured_image)!,width:1200,height:800}:null}))};
   }catch{error='Travel articles are temporarily unavailable. Please try again shortly.';}
   return <ArticleDiscovery query={{q,category,page,type:'',tag:''}} results={results} error={error}/>;
 }

@@ -33,7 +33,7 @@ export default async function Home() {
   catch { /* Holiday Type service failure never breaks the homepage. */ }
   let articles: import("@/types/public-content").ArticlePreview[] = [];
   try {
-    const r = await publicArticleList({ limit: 3 });
+    const r = await publicArticleList({ limit: 3, featured: true });
     articles = r.articles.map((a) => ({
       id: a.id,
       title: a.title,

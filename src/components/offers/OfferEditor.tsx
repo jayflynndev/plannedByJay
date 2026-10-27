@@ -52,6 +52,7 @@ export function OfferEditor({initial,suppliers,holidayTypes,initialImageUrl="",g
     <div className="article-admin-heading"><h1>{value.id?"Edit Holiday Offer":"Add Holiday Offer"}</h1><a href="/admin/holiday-offers">All Holiday Offers</a></div>
     <p>{dirty?"Unsaved changes":saved?"Saved":"Not saved yet"}</p>
     {saved?<OfferReference reference={saved.reference}/>:<p>Offer reference assigned automatically on first save.</p>}
+    {saved?.previous_reference&&<p>Earlier customer reference (still valid): {saved.previous_reference}</p>}
     {saved?.archived&&<p>Archived. Restore this offer from All Holiday Offers before publishing.</p>}
     <fieldset disabled={!!busy} className="article-admin-form">
       <section className="offer-editor-section"><h2>A. Holiday</h2>
