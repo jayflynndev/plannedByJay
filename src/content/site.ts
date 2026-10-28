@@ -10,7 +10,10 @@ export const site = {
     phone: null as string | null,
     pending: 'Contact details are being finalised. Enquiries are not yet open on this development site.',
   },
-  social: [] as { label: string; href: string }[],
+  social: [
+    { label: 'Facebook', href: 'https://www.facebook.com/plannedbyjay' },
+    { label: 'Instagram', href: 'https://www.instagram.com/plannedbyjayhols/' },
+  ] as { label: string; href: string }[],
   policies: [] as { label: string; href: string }[],
   business: {
     tradingStatement: 'Planned by Jay is trading on behalf of New Travel Holidays.',
