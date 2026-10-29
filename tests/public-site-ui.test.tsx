@@ -110,7 +110,7 @@ test('holiday landing, six shared pages and homepage cards render meaningful rou
   try {
     const landing=render(<HolidayLanding holidays={holidayTypes}/>);assert.equal(landing.getAllByRole('heading',{level:1}).length,1);
     assert.equal(landing.getByRole('link',{name:'View All Holiday Offers'}).getAttribute('href'),'/holiday-offers');for(const item of holidayTypes)assert.ok(landing.container.querySelector(`a[href="/holidays/${item.slug}"]`));cleanup();
-    const home=render(<HolidayExperiences holidays={holidayTypes}/>);assert.equal(home.container.querySelectorAll('a[href^="/holidays/"]').length,6);assert.equal(home.container.querySelector('a[href="/plan-my-holiday"]'),null);cleanup();
+    const home=render(<HolidayExperiences holidays={holidayTypes}/>);assert.equal(home.container.querySelectorAll('a[href^="/holidays/"]').length,3);assert.equal(home.container.querySelector('a[href="/plan-my-holiday"]'),null);assert.equal(home.getByRole('link',{name:'See more holiday types'}).getAttribute('href'),'/holidays');cleanup();
     for(const item of holidayTypes){
       const page=render(<HolidayTypePage holiday={item}/>);
       assert.equal(page.getAllByRole('heading',{level:1}).length,1);assert.ok(page.getByRole('heading',{level:1,name:item.heading}));

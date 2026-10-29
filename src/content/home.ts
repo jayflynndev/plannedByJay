@@ -70,6 +70,7 @@ export const home = {
     description:
       "Browse the styles below for ideas. If you’re planning a trip, tell me which appeals and I’ll research suitable options. These aren’t ready-made offers.",
     actionLabel: "Explore",
+    action: { label: "See more holiday types", href: "/holidays" } satisfies Action,
     // Cards are supplied by the published Holiday Types CMS records.
 
   },

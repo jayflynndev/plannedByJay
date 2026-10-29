@@ -1,4 +1,9 @@
 /* Preserved public article and holiday presentation styles. */
+.article-body-section{padding:32px clamp(18px,4vw,40px)}
+.article-body-section:nth-child(odd){background:var(--paper)}
+.article-body-section:nth-child(even){background:var(--sage)}
+.article-body-section .article-prose>:first-child{margin-top:0}
+.article-body-section .article-prose>:last-child{margin-bottom:0}
 /* Shared section colours survive visual-editor saves; the closing CTA keeps its established colour. */
 .holiday-type-page > .section:not(.cta):nth-of-type(odd){background:var(--paper)}
 .holiday-type-page > .section:not(.cta):nth-of-type(even){background:var(--sage)}

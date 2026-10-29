@@ -65,6 +65,23 @@ test('edited Holiday Type sections alternate cream and sage without changing ric
  }finally{cleanup();style.remove();}
 });
 
+test('Travel Advice main sections alternate colours and retain saved formatting',async()=>{
+ const {render,cleanup}=await import('@testing-library/react');
+ const {ArticleView}=await import('../src/components/articles/ArticleView');
+ const {readFile}=await import('node:fs/promises');
+ const style=document.createElement('style');style.textContent=(await readFile('src/app/content.css','utf8')).replaceAll('var(--paper)','#f8f6ef').replaceAll('var(--sage)','#e8ede4');document.head.append(style);
+ const body='<p>A <strong>saved introduction</strong>.</p><h2>Planning</h2><p>First detail.</p><h3>Practical tip</h3><ul><li>Keep this list.</li></ul><h2>Ideas</h2><p><em>Saved ideas.</em></p>';
+ try{
+  const view=render(<ArticleView article={{title:'Fixture guide',excerpt:'Introduction',body,author:'',content_type:'Travel advice',featured_alt:''}} media={null}/>);
+  const sections=Array.from(view.container.querySelectorAll('.article-body-section'));
+  assert.equal(sections.length,3);
+  sections.forEach((section,index)=>assert.equal(window.getComputedStyle(section).backgroundColor,index%2?'rgb(232, 237, 228)':'rgb(248, 246, 239)'));
+  assert.equal(Array.from(view.container.querySelectorAll('.article-prose')).map(el=>el.innerHTML).join(''),body);
+  assert.ok(sections[1].querySelector('h3'));
+  assert.ok(view.getByRole('link',{name:/Plan My Holiday/}));
+ }finally{cleanup();style.remove();}
+});
+
 test('all offer filter controls reset together and a single result has the right label',async()=>{
  const {render,fireEvent,cleanup}=await import('@testing-library/react');const {OffersListing}=await import('../src/components/offers/OfferViews');
  const type='b0000000-0000-4000-8000-000000000001';

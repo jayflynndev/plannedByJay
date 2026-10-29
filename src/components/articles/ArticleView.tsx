@@ -70,10 +70,13 @@ export function ArticleView({
           sizes="(max-width: 900px) 100vw, 900px"
         />
       )}
-      <div
-        className="article-prose"
-        dangerouslySetInnerHTML={{ __html: articleBodyForDisplay(article.body,article.title) }}
-      />
+      <div className="article-body-sections">
+        {articleBodyForDisplay(article.body,article.title).split(/(?=<h2\b)/i).filter(html => html.trim()).map((html,index) => (
+          <section className="article-body-section" key={index}>
+            <div className="article-prose" dangerouslySetInnerHTML={{__html:html}}/>
+          </section>
+        ))}
+      </div>
       <aside className="article-cta">
         <h2>{articleCopy.ctaTitle}</h2>
         <p>{articleCopy.ctaBody}</p>
