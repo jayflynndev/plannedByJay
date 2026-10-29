@@ -1,6 +1,7 @@
 "use client";
 import { useRef, useState } from "react";
 import { money,isOfferReference } from "@/lib/offers/schema";
+import { enquiryResponseExpectation } from "@/content/enquiry";
 export type OfferEnquirySummary={reference:string;title:string;supplier:string;departure_date:string;total_price_minor:number|null;currency:string;adults:number;children:number;child_ages:number[]};
 export function AskJayLink() {
   return <a className="button" href="#ask-jay" onClick={()=>{
@@ -36,9 +37,10 @@ export function OfferEnquiryForm({offerId,summary,enabled=false,privacyHref=null
         <label>Message or question (optional)<textarea name="message" rows={3} maxLength={3000}/></label>
         <div hidden aria-hidden="true"><label>Website<input name="website" tabIndex={-1} autoComplete="off" defaultValue=""/></label></div>
         <p>Your details and this holiday&apos;s information will be saved and used to respond to your enquiry, with an email notification to Jay. Please do not include passport, payment or medical information. {privacyHref?<a href={privacyHref}>Privacy information</a>:"Privacy information will be available before enquiries open."}</p>
+        {!received && <p>{enquiryResponseExpectation}</p>}
         <button className="button" type="submit">{!available?"Enquiries unavailable":received?"Enquiry received":busy?"Sending...":"Send enquiry"}</button>
       </fieldset>
-      <div aria-live="polite">{message&&<p role={failed?"alert":"status"}>{message}</p>}</div>
+      <div aria-live="polite">{message&&<div role={failed?"alert":"status"}><p>{message}</p>{received&&<p>{enquiryResponseExpectation}</p>}</div>}</div>
     </form>
   </details>;
 }

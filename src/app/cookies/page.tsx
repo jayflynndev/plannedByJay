@@ -1,3 +1,4 @@
 import { PolicyPage } from '@/components/layout/PolicyPage';
-export const metadata={title:'Cookie Policy | Planned by Jay',robots:{index:false,follow:false}};
+import {publicOrigin} from '@/lib/presentation';
+export function generateMetadata(){return {title:'Cookies Policy | Planned by Jay',alternates:{canonical:publicOrigin()+'/cookies'}};}
 export default function Cookies(){return <PolicyPage policy="cookies"/>;}

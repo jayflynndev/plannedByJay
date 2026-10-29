@@ -629,6 +629,7 @@ test("offer enquiry acknowledgement waits for a server reference and prevents re
   globalThis.fetch=async(_input,init)=>{calls++;const body=JSON.parse(String(init?.body));assert.equal(body.offer_id,"60000000-0000-4000-8000-000000000001");assert.equal("total_price_minor" in body,false);tokens.push(body.request_id);return Response.json(receipt?{accepted:true,reference:"000042",notification:"accepted"}:{});};
   try{
     const view=render(<OfferEnquiryForm offerId="60000000-0000-4000-8000-000000000001" enabled privacyHref="/privacy"/>);
+    assert.ok(view.getByText('I aim to reply personally within three working days. More detailed holiday research and quotations may take a little longer.'));
     fireEvent.change(view.getByLabelText("Your name"),{target:{value:"Fixture customer"}});fireEvent.change(view.getByLabelText("Email address"),{target:{value:"customer@example.org"}});
     fireEvent.submit(view.getByRole("form",{name:"Offer-specific enquiry"}));
     await waitFor(()=>assert.ok(view.getByRole("alert")));assert.equal(view.queryByText(/Your enquiry has been received/),null);
@@ -637,6 +638,7 @@ test("offer enquiry acknowledgement waits for a server reference and prevents re
     assert.equal(tokens[0],tokens[1]);assert.equal(calls,2);
     fireEvent.submit(view.getByRole("form",{name:"Offer-specific enquiry"}));assert.equal(calls,2);
     assert.ok(view.getByText("Your enquiry has been received. Offer reference: 000042"));assert.ok(view.getByRole("button",{name:"Enquiry received"}).matches(":disabled"));
+    assert.match(view.getByRole('status').textContent||'',/I aim to reply personally within three working days\. More detailed holiday research and quotations may take a little longer\./);
   }finally{cleanup();globalThis.fetch=original;}
 });
 

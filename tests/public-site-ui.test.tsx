@@ -161,7 +161,7 @@ test('policy layouts retain semantic headings, real links and reviewed dates wit
       assert.equal(view.queryAllByRole('heading',{level:2}).length,policy.sections.length);
       assert.equal(view.container.querySelector('time')?.getAttribute('dateTime')||null,policy.updatedAt);
       if(policy.updatedAt)assert.ok(view.getByText(new Date(`${policy.updatedAt}T00:00:00Z`).toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric',timeZone:'UTC'})));
-      assert.ok(view.queryAllByRole('link').every(link=>/^(https:\/\/|mailto:)/.test(link.getAttribute('href')||'')));
+      assert.ok(view.queryAllByRole('link').every(link=>/^(https:\/\/|mailto:|\/(?!\/)|#[a-z])/.test(link.getAttribute('href')||'')));
       for(const issue of policy.reviewRequired)assert.equal(view.queryByText(issue),null);
       assert.doesNotMatch(view.container.textContent || '', /before (?:this (?:notice|policy) can be|publication)|must (?:be )?(?:confirmed|checked).*publish|proposed basis|criteria to finalise|TODO/i);
 

@@ -35,12 +35,12 @@ export function RelatedHolidayReading({articles}: {articles: ArticlePreview[]}) 
 // Heading levels retain the planning/ideas grids without a second content format.
 // The server sanitises all HTML before public rendering or authenticated preview.
 function HolidayBody({body}: {body: string}) {
-  const parts = body.split(/(?=<h2>)/);
+  const parts = body.split(/(?=<h2>)/).filter(part => part.trim());
   const firstGrid = parts.findIndex(part => part.includes("<h3>"));
   const introduction = firstGrid < 0 ? parts : parts.slice(0, firstGrid);
   const groups = firstGrid < 0 ? [] : parts.slice(firstGrid);
   return <>
-    {introduction.join("") && <section className="section holiday-explanation"><Container><div className="holiday-narrow holiday-rich-text" dangerouslySetInnerHTML={{__html: introduction.join("")}}/></Container></section>}
+    {introduction.map((html, index) => <section key={index} className="section holiday-explanation"><Container><div className="holiday-narrow holiday-rich-text" dangerouslySetInnerHTML={{__html: html}}/></Container></section>)}
     {groups.map((group, index) => {
       const at = group.indexOf("<h3>");
       return <section className={index === 0 ? "section why" : "section"} key={index}><Container>
@@ -62,5 +62,5 @@ export function HolidayTypePage({holiday, others = [], articles = [], offers = [
     <OfferSection offers={offers} title={offersCopy.relatedTitle} type={holiday.id || undefined}/>
     <section className="section cta"><Container><h2>{holiday.closing_heading}</h2><p className="intro">{holiday.closing_body}</p><Button {...copy.action}/></Container></section>
   </>;
-  return preview ? <div className="holiday-page">{content}</div> : <main id="main-content" tabIndex={-1} className="holiday-page">{content}</main>;
+  return preview ? <div className="holiday-page holiday-type-page">{content}</div> : <main id="main-content" tabIndex={-1} className="holiday-page holiday-type-page">{content}</main>;
 }

@@ -153,3 +153,6 @@ export const enquiryContent = {
   },
   messages:{unavailable:'Holiday enquiries are temporarily unavailable. This is a read-only preview: these fields cannot collect or send your information.'},
 };
+
+// Shared by both customer enquiry routes, before submission and after acceptance.
+export const enquiryResponseExpectation = 'I aim to reply personally within three working days. More detailed holiday research and quotations may take a little longer.';

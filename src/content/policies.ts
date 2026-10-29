@@ -20,7 +20,7 @@ export type Policy = {
   }[];
 };
 
-// EDIT HERE: Approved public policy content. Cookies remains unpublished.
+// EDIT HERE: Public policy content, maintained directly in this file.
 // Both enquiry journeys use the established New Travel trading arrangement.
 // A document stays 404/unlinked/out of the sitemap until reviewed AND explicitly approved.
 export const policies: Record<PolicyKey, Policy> = {
@@ -177,11 +177,65 @@ export const policies: Record<PolicyKey, Policy> = {
     ],
   },
   cookies: {
-    title: "Cookie Policy",
-    approved: false,
-    updatedAt: null,
+    title: "Cookies Policy",
+    approved: true,
+    updatedAt: "2026-10-29",
     reviewRequired: [],
-    sections: [],
+    sections: [
+      {
+        heading: "About cookies and browser storage",
+        paragraphs: [
+          "This policy explains how Planned by Jay uses cookies and similar browser technologies. Cookies are small files a website stores in your browser and receives with later requests. Local storage keeps information in your browser for the same website; it is separate from cookies and is not automatically sent with every request.",
+          "The current website uses essential cookies for administrator authentication, cookieless Vercel Web Analytics and a local-storage setting for your analytics preference. The enquiry forms do not save your answers in cookies, local storage or session storage. Their answers and retry references are held in page memory while the form is open.",
+        ],
+        links: [{ label: "Read the Privacy Policy", href: "/privacy" }],
+      },
+      {
+        heading: "Essential administrator authentication cookies",
+        paragraphs: [
+          "Supabase Auth cookies support the authorised administrator signing in, remaining signed in and securely managing website content and private enquiries. Browsing public pages or sending a holiday enquiry does not require an administrator account or set a Supabase sign-in cookie. An administrator who has signed in may also send their existing cookie when visiting public pages because its path covers this website.",
+          "These cookies are HttpOnly, so page scripts cannot read them, use SameSite=Lax, and are Secure in production so they are sent over HTTPS. They are necessary for the requested administrator sign-in service and are separate from the optional analytics setting. Blocking them can prevent administrator access.",
+        ],
+        technologies: [{
+          name: "sb-<project-reference>-auth-token (including numbered parts such as .0 and .1)",
+          provider: "Supabase Auth on this website",
+          purpose: "Stores the administrator authentication session. Larger values can be split across several cookies.",
+          duration: "The installed Supabase library sets a maximum of 400 days from each cookie write. Refreshing a session can rewrite cookies. Browser limits, session expiry or sign-out can end use sooner; this does not guarantee a 400-day login.",
+        }],
+      },
+      {
+        heading: "Cookieless website analytics",
+        paragraphs: [
+          "We use Vercel Web Analytics for aggregate statistics about page visits, referral sources, approximate locations, browsers and devices, to understand use of the website and improve it. It does not use analytics cookies. Vercel describes visitor counting as using a hash derived from the incoming request, reset daily, rather than an identifier that follows you across days or websites.",
+          "Page-view information includes the visited URL, referrer and technical browser information. The website does not send enquiry answers to Web Analytics or add custom analytics events containing those answers. Hosting and security request handling are separate from optional analytics and are described in the Privacy Policy.",
+          "Cookieless does not mean that no browser access or network communication takes place: the analytics script runs in your browser, reads page and browser information and sends page-view information to Vercel when analytics is enabled.",
+        ],
+        links: [{ label: "Vercel Web Analytics privacy information", href: "https://vercel.com/docs/analytics/privacy-policy" }],
+      },
+      {
+        heading: "Your analytics choice and browser-storage access",
+        paragraphs: [
+          "Use the Website analytics control on this page or in the footer to switch analytics on or off at any time. With both this policy and the Privacy Policy published, analytics defaults to on unless you have switched it off. Switching it off stops further analytics events from this website, including from an already-loaded analytics script; it does not erase statistics already sent. Your choice does not affect holiday enquiries or essential administrator authentication.",
+          "The website reads its local-storage preference and briefly writes and checks a temporary value under the same key to verify that your choice can be saved. If you have not chosen, it removes that temporary value; otherwise it restores your existing choice. If storage is blocked or cannot reliably save a choice, analytics stays off.",
+          "The preference applies to this website in this browser, including other open tabs. It does not follow you to another browser or device. Clearing this website's browser storage removes the choice and restores the default on your next visit. You can also manage or delete cookies and website storage in your browser settings; private browsing may discard them when the private session ends.",
+        ],
+        technologies: [{
+          name: "pbj.analytics (local storage)",
+          provider: "Planned by Jay",
+          purpose: "Remembers only on or off for website analytics, without a visitor identifier. The temporary storage-capability check uses the value checking under this same key.",
+          duration: "No automatic expiry: retained until you change the choice, clear this website's browser storage or your browser removes it.",
+        }],
+        links: [{ label: "Change your analytics preference", href: "#cookie-analytics-preferences" }],
+      },
+      {
+        heading: "Changes and contact",
+        paragraphs: [
+          "We will review this policy when the website's cookies or browser technologies change, and explain any new tracking and required choices before introducing it. The date above shows when this policy was last updated.",
+          "For questions about cookies, browser storage or your privacy, email Jay at jay@plannedbyjay.com. The Privacy Policy explains wider information handling and your privacy rights.",
+        ],
+        links: [{ label: "Email Jay", href: "mailto:jay@plannedbyjay.com" }],
+      },
+    ],
   },
   "booking-information": {
     title: "Booking Information",

@@ -1,7 +1,7 @@
 'use client';
 import Link from 'next/link';
 import {useRef,useState,useEffect} from 'react';
-import {enquiryContent as content,enquiryOptions as options} from '@/content/enquiry';
+import {enquiryContent as content,enquiryOptions as options,enquiryResponseExpectation} from '@/content/enquiry';
 import {optionLabel} from '@/lib/presentation';
 import {Field,ChoiceGroup,descriptionIds} from './Fields';
 import {emptyBrief,briefErrors,stageFields,isCustomerEnquiryReference,BESPOKE_REFERENCE_FORMAT,type EnquiryDraft} from '@/lib/enquiries/schema';
@@ -46,7 +46,7 @@ export function EnquiryForm({privacyHref=null,enabled=false}:{privacyHref?:strin
    finally{working.current=false;setBusy(false);}
  }
  useEffect(()=>{if(receipt){titleRef.current?.focus({preventScroll:true});titleRef.current?.closest('.enquiry-success')?.scrollIntoView?.({block:'start'});}},[receipt]);
- if(receipt)return <div className="enquiry-success" role="status"><span className="success-mark" aria-hidden="true">✓</span><h2 ref={titleRef} tabIndex={-1}>Your holiday brief has been received.</h2><p className="intro">Jay will review your holiday ideas and get in touch using your contact details.</p><p>Enquiry reference</p><p className="enquiry-reference">{receipt.reference}</p>{receipt.notification==='pending'&&<p className="reference-note">Your brief is saved securely. Jay’s email notification is pending and can be recovered privately. You do not need to submit it again.</p>}<p className="reference-note">This is an enquiry, not a booking or a confirmation of holiday availability or prices.</p></div>;
+ if(receipt)return <div className="enquiry-success" role="status"><span className="success-mark" aria-hidden="true">✓</span><h2 ref={titleRef} tabIndex={-1}>Your holiday brief has been received.</h2><p className="intro">Jay will review your holiday ideas and get in touch using your contact details.</p><p>{enquiryResponseExpectation}</p><p>Enquiry reference</p><p className="enquiry-reference">{receipt.reference}</p>{receipt.notification==='pending'&&<p className="reference-note">Your brief is saved securely. Jay’s email notification is pending and can be recovered privately. You do not need to submit it again.</p>}<p className="reference-note">This is an enquiry, not a booking or a confirmation of holiday availability or prices.</p></div>;
   const input = (
     key: keyof EnquiryDraft,
     label: string,
@@ -431,6 +431,7 @@ export function EnquiryForm({privacyHref=null,enabled=false}:{privacyHref?:strin
           )}
         </fieldset>
         <div className="honeypot" aria-hidden="true"><label htmlFor="brief-website">Leave this blank</label><input id="brief-website" name="website" ref={honeypot} tabIndex={-1} autoComplete="off" disabled={!available||busy}/></div>
+        {step === 2 && <p className="field-hint">{enquiryResponseExpectation}</p>}
         <div className="form-actions">
           {step > 0 && (
             <button

@@ -4,7 +4,7 @@ import { approvedPolicies,approvedPolicyHref,policies } from '../src/content/pol
 import { navigation } from '../src/content/navigation';
 import { site } from '../src/content/site';
 test('policy links require explicit approval, resolved review, date and actual text; trading details do not assert independent protection',()=>{
-  const booking=[{href:'/booking-information',label:'Booking Information'}];
+  const booking=[{href:'/cookies',label:'Cookies Policy'},{href:'/booking-information',label:'Booking Information'}];
   assert.deepEqual(approvedPolicies(),[{href:'/privacy',label:'Privacy Policy'},...booking]);const original=policies.privacy;
   try{policies.privacy={...original,approved:false};assert.deepEqual(approvedPolicies(),booking);
     assert.equal(approvedPolicyHref('privacy'),null);

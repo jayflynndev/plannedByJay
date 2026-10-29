@@ -34,6 +34,7 @@ test('existing three stages validate, review and edit answers, retain failures a
     fill('What matters most to you? (optional)','A quiet pool.\nPlease discuss practical arrangements.');
     fireEvent.click(view.getByLabelText('I have accessibility or other practical requirements I’d like to discuss.'));next();
     assert.ok(view.getByRole('link',{name:'Read the privacy policy'}));assert.ok(view.getByText(/Italy or Greece/));
+    assert.ok(view.getByText('I aim to reply personally within three working days. More detailed holiday research and quotations may take a little longer.'));
     fireEvent.click(view.getByRole('button',{name:'Edit Your holiday'}));fill('Number of children','1');next();
     assert.ok((view.getByLabelText('What matters most to you? (optional)') as HTMLTextAreaElement).value.includes('quiet pool'));next();
     fill('Your name','Fixture customer');fill('Email address','customer@example.org');fireEvent.click(view.getByLabelText('Telephone'));
@@ -48,6 +49,7 @@ test('existing three stages validate, review and edit answers, retain failures a
     resolve!(Response.json({accepted:true,reference:'000042',notification:'pending'},{status:202}));
     await waitFor(()=>assert.ok(view.getByRole('heading',{name:'Your holiday brief has been received.'})));
     assert.ok(view.getByText('000042'));assert.match(view.getByRole('status').textContent||'',/saved securely[\s\S]*pending[\s\S]*do not need to submit/);
+    assert.match(view.getByRole('status').textContent||'',/I aim to reply personally within three working days\. More detailed holiday research and quotations may take a little longer\./);
     assert.equal(view.queryByRole('form'),null);assert.equal(bodies.length,2);
   }finally{globalThis.fetch=fetch;cleanup();}
 });

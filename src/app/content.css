@@ -1,4 +1,14 @@
 /* Preserved public article and holiday presentation styles. */
+/* Shared section colours survive visual-editor saves; the closing CTA keeps its established colour. */
+.holiday-type-page > .section:not(.cta):nth-of-type(odd){background:var(--paper)}
+.holiday-type-page > .section:not(.cta):nth-of-type(even){background:var(--sage)}
+.article-save-feedback:not(:empty){margin-block:18px;padding:16px 20px;border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:4px;background:var(--sage);scroll-margin-block:120px}
+.analytics-preferences{max-width:760px;margin-block:24px;padding:18px;border:1px solid var(--line);border-radius:5px;background:var(--sage);font-size:.85rem}
+.analytics-preferences h2{font:700 1rem var(--font-body);letter-spacing:0;margin:0 0 10px}
+.analytics-preferences p{margin:8px 0;line-height:1.6}
+.analytics-preferences label{display:flex;align-items:center;gap:12px;min-height:44px;font-weight:600;cursor:pointer}
+.analytics-preferences input{width:20px;height:20px;flex-shrink:0;accent-color:var(--ink)}
+.analytics-preferences input:disabled{cursor:not-allowed}
 .advice-index,.article-page {width:min(1200px,100%);margin-inline:auto;padding:48px 28px 80px;color:var(--ink);min-width:0;overflow-wrap:anywhere;}
 .advice-index h1,.article-view h1 {font-family:Georgia,serif;font-size:clamp(2rem,5vw,3.4rem);line-height:1.13;margin:0 0 22px;}
 .article-view h2 {font-family:Georgia,serif;font-size:clamp(1.45rem,3vw,2rem);line-height:1.25;}

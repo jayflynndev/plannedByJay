@@ -50,7 +50,11 @@ export function ArticleEditor({
   const locked = !!saved?.published_at,
     dirty = JSON.stringify(value) !== baseline,
     slugEdited = useRef(!!initial?.slug),
-    saving = useRef(false);
+    saving = useRef(false),
+    feedback = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (message && !busy) feedback.current?.focus();
+  }, [message, busy]);
   useEffect(() => {
     if (!dirty) return;
     const warn = (e: BeforeUnloadEvent) => e.preventDefault();
@@ -113,6 +117,7 @@ export function ArticleEditor({
     if (saving.current) return;
     saving.current = true;
     setBusy(true);
+    setFailed(false);
     setMessage("");
     setPublicLink("");
     setCopyMessage("");
@@ -427,7 +432,7 @@ export function ArticleEditor({
             {saved?.status === "published" ? "Save Changes" : "Publish"}
           </button>
         </div>
-        <div aria-live={failed ? "assertive" : "polite"} aria-atomic="true" className="article-save-feedback">
+        <div ref={feedback} tabIndex={-1} aria-live={failed ? "assertive" : "polite"} aria-atomic="true" className="article-save-feedback">
           {(busy || message) && <p role={failed ? "alert" : "status"} className={failed ? "article-admin-error" : "article-admin-notice"}>
             {busy ? "Working... Please wait." : message}
           </p>}

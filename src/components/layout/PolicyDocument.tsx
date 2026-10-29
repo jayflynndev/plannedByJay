@@ -2,7 +2,7 @@ import type { Policy } from '@/content/policies';
 import { Container } from '@/components/ui/Container';
 
 /** Presentation only. Public routes must pass through PolicyPage's approval check. */
-export function PolicyDocument({ policy }: { policy: Policy }) {
+export function PolicyDocument({ policy, children }: { policy: Policy; children?: React.ReactNode }) {
   return (
     <main id="main-content" tabIndex={-1} className="section policy-page">
       <Container>
@@ -25,6 +25,7 @@ export function PolicyDocument({ policy }: { policy: Policy }) {
             {section.links && <ul className="policy-links">{section.links.map(link => <li key={link.href}><a href={link.href}>{link.label}</a></li>)}</ul>}
           </section>
         ))}
+        {children}
       </Container>
     </main>
   );

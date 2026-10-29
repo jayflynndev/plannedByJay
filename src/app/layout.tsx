@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
-import { Analytics } from '@vercel/analytics/next';
+import { AnalyticsPreferencesProvider } from '@/components/analytics/AnalyticsPreferences';
+import {policies, isPolicyPublished} from '@/content/policies';
 import './globals.css';
 import './content.css';
 import { Navbar } from '@/components/layout/Navbar';
@@ -19,6 +20,7 @@ export default function RootLayout({
   return (
     <html lang="en-GB">
       <body>
+        <AnalyticsPreferencesProvider defaultEnabled={isPolicyPublished(policies.cookies) && isPolicyPublished(policies.privacy)}>
         <a className="skip-link" href="#main-content">
           Skip to content
         </a>
@@ -29,7 +31,7 @@ export default function RootLayout({
         />
         {children}
         <Footer />
-        <Analytics />
+        </AnalyticsPreferencesProvider>
       </body>
     </html>
   );
